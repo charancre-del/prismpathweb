@@ -1,0 +1,31 @@
+<?php
+/**
+ * Team member detail template.
+ *
+ * @package Prismpath_Health
+ */
+
+get_header();
+
+while (have_posts()) :
+    the_post();
+    ?>
+    <section class="page-hero bio-hero">
+        <div class="container bio-layout">
+            <div>
+                <a class="back-link" href="<?php echo esc_url(home_url('/team/')); ?>">Back to team</a>
+                <h1><?php the_title(); ?></h1>
+                <?php if (has_excerpt()) : ?><p><?php echo esc_html(get_the_excerpt()); ?></p><?php endif; ?>
+            </div>
+            <?php if (has_post_thumbnail()) : ?>
+                <?php the_post_thumbnail('prismpath-card', array('class' => 'bio-photo')); ?>
+            <?php endif; ?>
+        </div>
+    </section>
+    <section class="page-content">
+        <div class="container narrow prose"><?php the_content(); ?></div>
+    </section>
+    <?php
+endwhile;
+
+get_footer();
