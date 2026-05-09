@@ -56,6 +56,7 @@ Do not launch until every item below passes on staging.
 - CSS and JS load without 404s.
 - Mobile navigation works without console errors.
 - No large unused debug assets are included in production.
+- Rendered pages should not request external image, font, favicon, manifest, CSS, JS, or emoji assets; expected public asset requests should resolve under the site host or theme asset directory.
 - Lighthouse should be rerun on staging after production caching/hosting is enabled; local Studio audit evidence reached `100` for Accessibility, Best Practices, and SEO across audited templates, with Performance ranging from `97` to `100` because of local root document response/FCP timing.
 
 ## Rollback

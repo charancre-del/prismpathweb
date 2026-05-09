@@ -48,6 +48,8 @@ Date: 2026-05-09
 - PHP lint passed across all theme and plugin PHP files.
 - Theme CSS verifier passed through `npm run build`.
 - Lighthouse-driven template fixes added optimized WebP assets, explicit image dimensions, inline minified CSS and navigation script loading, system font stacks, improved CTA contrast, and descriptive service-card link text.
+- Local asset hardening completed: browser-requested images, favicons, touch icons, manifest, CSS, JS, and fonts are served from the theme/local WordPress install rather than outside asset hosts.
+- Disabled WordPress remote emoji asset output so public pages no longer reference `s.w.org` emoji image bases.
 - Public theme/plugin string audit returned no hits for legacy or incorrect brand strings:
   - `LBee`
   - `LBee Health`

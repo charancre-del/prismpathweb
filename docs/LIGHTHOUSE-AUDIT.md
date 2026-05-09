@@ -15,6 +15,7 @@ Theme-level performance fixes completed:
 - Added explicit image dimensions, async decoding, lazy loading where appropriate, and high-priority loading for the homepage hero image.
 - Added generated `main.min.css` and wired the small production stylesheet to inline the minified CSS when available.
 - Inlined the tiny production navigation script when available to avoid a render-blocking request.
+- Added local favicon, touch icon, and web manifest assets, and disabled WordPress remote emoji asset output.
 - Fixed CTA color contrast.
 - Replaced generic `Learn more` service-card links with descriptive link text.
 
