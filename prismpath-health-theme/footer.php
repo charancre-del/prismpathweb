@@ -45,7 +45,7 @@
         </div>
         <div class="container footer-bottom">
             <p>&copy; <?php echo esc_html(gmdate('Y')); ?> Prismpath Health. All rights reserved.</p>
-            <a href="<?php echo esc_url(home_url('/?sitemap=xml')); ?>">Site Map</a>
+            <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>">Site Map</a>
         </div>
     </footer>
 

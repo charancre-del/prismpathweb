@@ -13,7 +13,7 @@ Do not launch until every item below passes on staging.
 
 ## SEO
 
-- `/?sitemap=xml` returns valid XML.
+- `/sitemap.xml` returns valid XML.
 - `robots.txt` includes the sitemap URL.
 - Canonical URLs use the new Prismpath Health domain.
 - Homepage emits `MedicalOrganization` and `WebSite` schema.

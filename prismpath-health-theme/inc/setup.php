@@ -77,8 +77,23 @@ function prismpath_create_page_if_missing(string $title, string $slug, string $e
     ));
 }
 
+function prismpath_seed_site_identity(): void
+{
+    $current_name = trim((string) get_option('blogname'));
+    if ('' === $current_name || in_array($current_name, array('Prismpath', 'Just another WordPress site'), true)) {
+        update_option('blogname', 'Prismpath Health');
+    }
+
+    $current_description = trim((string) get_option('blogdescription'));
+    if ('' === $current_description || 'Just another WordPress site' === $current_description) {
+        update_option('blogdescription', 'Whole-family neuroaffirming mental health care');
+    }
+}
+
 function prismpath_seed_required_pages(): void
 {
+    prismpath_seed_site_identity();
+
     $pages = array(
         array('Home', 'home', 'A clearer path to mental health care for every brain and every family.'),
         array('Services', 'services', 'Neuroaffirming therapy, psychiatry, occupational therapy, assessments, and whole-family support.'),

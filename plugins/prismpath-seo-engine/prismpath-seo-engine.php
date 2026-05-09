@@ -124,9 +124,34 @@ function prismpath_schema_output(): void
 }
 add_action('wp_head', 'prismpath_schema_output', 20);
 
+function prismpath_is_sitemap_request(): bool
+{
+    return (isset($_GET['sitemap']) && 'xml' === sanitize_text_field(wp_unslash($_GET['sitemap'])))
+        || '1' === get_query_var('prismpath_sitemap');
+}
+
+function prismpath_sitemap_rewrite(): void
+{
+    add_rewrite_rule('^sitemap\.xml$', 'index.php?prismpath_sitemap=1', 'top');
+}
+add_action('init', 'prismpath_sitemap_rewrite');
+
+function prismpath_sitemap_query_vars(array $vars): array
+{
+    $vars[] = 'prismpath_sitemap';
+    return $vars;
+}
+add_filter('query_vars', 'prismpath_sitemap_query_vars');
+
+function prismpath_prevent_sitemap_canonical_redirect($redirect_url)
+{
+    return prismpath_is_sitemap_request() ? false : $redirect_url;
+}
+add_filter('redirect_canonical', 'prismpath_prevent_sitemap_canonical_redirect');
+
 function prismpath_custom_sitemap(): void
 {
-    if (!isset($_GET['sitemap']) || 'xml' !== $_GET['sitemap']) {
+    if (!prismpath_is_sitemap_request()) {
         return;
     }
     status_header(200);
@@ -145,11 +170,11 @@ function prismpath_custom_sitemap(): void
     echo '</urlset>';
     exit;
 }
-add_action('template_redirect', 'prismpath_custom_sitemap');
+add_action('template_redirect', 'prismpath_custom_sitemap', 0);
 
 function prismpath_robots_txt(string $output): string
 {
-    $output .= "Sitemap: " . home_url('/?sitemap=xml') . "\n";
+    $output .= "Sitemap: " . home_url('/sitemap.xml') . "\n";
     return $output;
 }
 add_filter('robots_txt', 'prismpath_robots_txt');
@@ -163,6 +188,8 @@ add_filter('cron_schedules', 'prismpath_add_monthly_cron_interval');
 
 function prismpath_schedule_seo_cron(): void
 {
+    prismpath_sitemap_rewrite();
+    flush_rewrite_rules();
     if (!wp_next_scheduled('prismpath_monthly_seo_event')) {
         wp_schedule_event(time(), 'monthly', 'prismpath_monthly_seo_event');
     }
@@ -171,6 +198,7 @@ register_activation_hook(__FILE__, 'prismpath_schedule_seo_cron');
 
 function prismpath_unschedule_seo_cron(): void
 {
+    flush_rewrite_rules();
     $timestamp = wp_next_scheduled('prismpath_monthly_seo_event');
     if ($timestamp) {
         wp_unschedule_event($timestamp, 'prismpath_monthly_seo_event');
@@ -180,7 +208,7 @@ register_deactivation_hook(__FILE__, 'prismpath_unschedule_seo_cron');
 
 function prismpath_monthly_seo_ping(): void
 {
-    $sitemap = home_url('/?sitemap=xml');
+    $sitemap = home_url('/sitemap.xml');
     wp_remote_get('https://www.google.com/ping?sitemap=' . rawurlencode($sitemap), array('timeout' => 5, 'blocking' => false));
     wp_remote_get('https://www.bing.com/ping?sitemap=' . rawurlencode($sitemap), array('timeout' => 5, 'blocking' => false));
 }
