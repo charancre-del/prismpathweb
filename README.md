@@ -1,6 +1,6 @@
-# Prismpath Health WordPress Package
+# Prismpath Health WordPress Source
 
-Production package for the rebrand from LBee Health to Prismpath Health.
+Production WordPress source for the rebrand from LBee Health to Prismpath Health.
 
 ## Included
 
@@ -10,20 +10,19 @@ Production package for the rebrand from LBee Health to Prismpath Health.
 - `plugins/prismpath-consult-form/` - secure consultation form shortcode.
 - `plugins/chroma-agent-api/` - API-key protected automation layer from the Wptstchroma repo.
 - `docs/` - install, redirects, content inventory, launch QA, and rollback notes.
-- `dist/` - generated installable zip files after packaging.
 
-## Build And Package
+## Git Sync To WordPress
 
-```powershell
-cd "C:\Users\chara\Documents\New project 2"
-Compress-Archive -Path .\prismpath-health-theme\* -DestinationPath .\dist\prismpath-health-theme.zip -Force
-Compress-Archive -Path .\plugins\prismpath-seo-engine\* -DestinationPath .\dist\prismpath-seo-engine.zip -Force
-Compress-Archive -Path .\plugins\prismpath-lead-log\* -DestinationPath .\dist\prismpath-lead-log.zip -Force
-Compress-Archive -Path .\plugins\prismpath-consult-form\* -DestinationPath .\dist\prismpath-consult-form.zip -Force
-Compress-Archive -Path .\plugins\chroma-agent-api\* -DestinationPath .\dist\chroma-agent-api.zip -Force
-Compress-Archive -Path .\docs -DestinationPath .\dist\prismpath-production-docs.zip -Force
-```
+Sync these source folders into the matching WordPress locations:
+
+- `prismpath-health-theme/` -> `wp-content/themes/prismpath-health-theme/`
+- `plugins/prismpath-seo-engine/` -> `wp-content/plugins/prismpath-seo-engine/`
+- `plugins/prismpath-lead-log/` -> `wp-content/plugins/prismpath-lead-log/`
+- `plugins/prismpath-consult-form/` -> `wp-content/plugins/prismpath-consult-form/`
+- `plugins/chroma-agent-api/` -> `wp-content/plugins/chroma-agent-api/`
+
+Generated ZIP files are intentionally not tracked. The repository is ready for direct git/file sync into WordPress.
 
 ## Verification
 
-Run PHP lint across the theme and plugins, run the theme CSS verifier, then activate on staging and complete `docs/LAUNCH-QA.md`.
+Run PHP lint across the theme and plugins, run the theme CSS verifier, sync the folders to staging, then activate and complete `docs/LAUNCH-QA.md`.

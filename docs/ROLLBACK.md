@@ -1,7 +1,7 @@
 # Rollback
 
 1. Keep a full database and `wp-content` backup before activating the package.
-2. Keep the previous theme and plugin zip files available.
+2. Keep the previous theme and plugin folders or git revision available.
 3. If activation causes an issue:
    - Switch back to the previous theme in Appearance -> Themes.
    - Deactivate Prismpath plugins.

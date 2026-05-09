@@ -34,14 +34,11 @@ Date: 2026-05-09
 - Captured browser screenshot evidence outside the repo:
   - `C:\Users\chara\AppData\Local\Temp\prismpath-insurance-payment.png`
 
-## Package Outputs
+## Git Sync Outputs
 
-- `dist/prismpath-health-theme.zip`
-- `dist/prismpath-seo-engine.zip`
-- `dist/prismpath-lead-log.zip`
-- `dist/prismpath-consult-form.zip`
-- `dist/chroma-agent-api.zip`
-- `dist/prismpath-production-docs.zip`
+- `prismpath-health-theme/` is the WordPress theme source folder.
+- `plugins/prismpath-seo-engine/`, `plugins/prismpath-lead-log/`, `plugins/prismpath-consult-form/`, and `plugins/chroma-agent-api/` are the WordPress plugin source folders.
+- ZIP artifacts are intentionally not tracked; deployment is by git/file sync into `wp-content/themes/` and `wp-content/plugins/`.
 
 ## Static Verification Completed
 
@@ -87,11 +84,11 @@ Date: 2026-05-09
 - Seeded 15 migrated team profiles with real bio content and theme-managed team photos.
 - Published Privacy Policy and Accessibility Statement pages, and moved the default WordPress Sample Page to draft.
 
-## Package Structure Verified
+## Source Structure Verified
 
-- Theme zip contains `prismpath-health-theme/` as the WordPress theme root.
-- Plugin zips contain one plugin root folder each.
-- Package sizes are verified in the final packaging command output.
+- Theme source folder contains `prismpath-health-theme/` as the WordPress theme root.
+- Plugin source folders each contain one plugin root.
+- Deployment artifacts are source directories, not ZIP packages.
 - Theme includes `style.css`, `functions.php`, `index.php`, templates, assets, settings, redirects, and activation seeding.
 
 ## Implemented Production Items
@@ -111,4 +108,4 @@ Date: 2026-05-09
 
 ## Remaining External Gate
 
-The package-level implementation is complete and has been verified in WordPress Studio. Final launch validation must still be executed in the target WordPress staging/production environment because SMTP delivery, production domain canonical URLs, analytics, indexing controls, and hosting rules are environment-specific.
+The source-level implementation is complete and has been verified in WordPress Studio. Final launch validation must still be executed in the target WordPress staging/production environment because SMTP delivery, production domain canonical URLs, analytics, indexing controls, and hosting rules are environment-specific.

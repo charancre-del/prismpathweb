@@ -62,5 +62,5 @@ Do not launch until every item below passes on staging.
 ## Rollback
 
 - Production site backup exists.
-- Previous active theme/plugin package is available.
+- Previous active theme/plugin folders or git revision are available.
 - DNS or hosting rollback contact/process is known before activation.
