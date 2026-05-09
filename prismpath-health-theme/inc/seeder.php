@@ -85,3 +85,34 @@ function prismpath_seed_all_page_editor_meta(array $page_ids_by_slug): void
         }
     }
 }
+
+function prismpath_seed_static_page_seo_meta_if_empty(): void
+{
+    if (!function_exists('prismpath_static_page_seo')) {
+        return;
+    }
+
+    foreach (array('services', 'insurance-payment', 'team', 'contact', 'privacy-policy', 'hipaa-policy', 'accessibility-statement') as $slug) {
+        $page = get_page_by_path($slug);
+        $content = prismpath_static_page_seo($slug);
+        if (!$page instanceof WP_Post || !is_array($content)) {
+            continue;
+        }
+
+        prismpath_seed_meta_if_empty((int) $page->ID, '_prismpath_seo_title', (string) ($content['seo_title'] ?? ''));
+        prismpath_seed_meta_if_empty((int) $page->ID, 'meta_description', (string) ($content['meta_description'] ?? ''));
+    }
+}
+
+function prismpath_seed_existing_page_meta_once(): void
+{
+    $version = '2026-05-09-seo-metaboxes';
+    if (get_option('prismpath_existing_page_meta_seed_version') === $version) {
+        return;
+    }
+
+    prismpath_seed_all_page_editor_meta(array());
+    prismpath_seed_static_page_seo_meta_if_empty();
+    update_option('prismpath_existing_page_meta_seed_version', $version, false);
+}
+add_action('init', 'prismpath_seed_existing_page_meta_once', 30);

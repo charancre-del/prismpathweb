@@ -576,7 +576,11 @@ class SEO_Routes
 
     private static function sanitize_meta_value_by_key(string $meta_key, $value)
     {
-        if (in_array($meta_key, ['_chroma_post_schemas', '_chroma_schema_data', '_chroma_schema_history', '_chroma_schema_errors', '_chroma_schema_override'], true)) {
+        if ($meta_key === '_chroma_schema_override') {
+            return Utils::truthy($value);
+        }
+
+        if (in_array($meta_key, ['_chroma_post_schemas', '_chroma_schema_data', '_chroma_schema_history', '_chroma_schema_errors'], true)) {
             return Utils::sanitize_mixed_for_storage_preserve_keys($value);
         }
 
@@ -622,7 +626,6 @@ class SEO_Routes
             '_chroma_schema_data',
             '_chroma_schema_history',
             '_chroma_schema_errors',
-            '_chroma_schema_override',
         ], true);
     }
 

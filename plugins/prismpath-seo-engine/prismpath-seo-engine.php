@@ -36,9 +36,51 @@ function prismpath_seo_content_record(int $post_id): ?array
     return is_array($record) ? $record : null;
 }
 
+function prismpath_seo_static_record(int $post_id): ?array
+{
+    if (!$post_id || !function_exists('prismpath_static_page_seo')) {
+        return null;
+    }
+
+    $slug = get_post_field('post_name', $post_id);
+    if (!$slug) {
+        return null;
+    }
+
+    $record = prismpath_static_page_seo((string) $slug);
+    return is_array($record) ? $record : null;
+}
+
+function prismpath_seo_truthy($value): bool
+{
+    if (is_bool($value)) {
+        return $value;
+    }
+
+    if (is_numeric($value)) {
+        return (int) $value === 1;
+    }
+
+    if (!is_string($value)) {
+        return false;
+    }
+
+    return in_array(strtolower(trim($value)), array('1', 'true', 'yes', 'on'), true);
+}
+
+function prismpath_seo_schema_filter(array $schema): array
+{
+    return array_filter($schema, static function ($value): bool {
+        return !($value === null || $value === '' || $value === array());
+    });
+}
+
 function prismpath_seo_document_title(string $title): string
 {
     if (!is_singular()) {
+        if (is_404()) {
+            return 'Page Not Found | Prismpath Health';
+        }
         return $title;
     }
 
@@ -51,6 +93,15 @@ function prismpath_seo_document_title(string $title): string
     $record = prismpath_seo_content_record((int) $post_id);
     if ($record && !empty($record['seo_title'])) {
         return wp_strip_all_tags($record['seo_title']);
+    }
+
+    $static_record = prismpath_seo_static_record((int) $post_id);
+    if ($static_record && !empty($static_record['seo_title'])) {
+        return wp_strip_all_tags($static_record['seo_title']);
+    }
+
+    if ('team_member' === get_post_type($post_id)) {
+        return wp_strip_all_tags(get_the_title($post_id) . ' | Prismpath Health Team');
     }
 
     return $title;
@@ -70,10 +121,49 @@ function prismpath_seo_description(): string
     if ($record && !empty($record['meta_description'])) {
         return wp_strip_all_tags($record['meta_description']);
     }
+    $static_record = prismpath_seo_static_record((int) get_the_ID());
+    if ($static_record && !empty($static_record['meta_description'])) {
+        return wp_strip_all_tags($static_record['meta_description']);
+    }
+    if (is_singular('team_member')) {
+        $role = get_the_excerpt();
+        return wp_strip_all_tags(sprintf(
+            'Meet %s, %s at Prismpath Health, part of the team supporting neuroaffirming mental health care.',
+            get_the_title(),
+            $role ? $role : 'a clinician'
+        ));
+    }
     if (has_excerpt()) {
         return wp_strip_all_tags(get_the_excerpt());
     }
     return 'A clearer path to neuroaffirming mental health care for every brain and every family.';
+}
+
+function prismpath_seo_canonical_url(): string
+{
+    if (is_404() || is_search()) {
+        return '';
+    }
+
+    if (is_singular()) {
+        return (string) get_permalink();
+    }
+
+    if (is_front_page()) {
+        return home_url('/');
+    }
+
+    $request = isset($GLOBALS['wp']->request) ? trim((string) $GLOBALS['wp']->request, '/') : '';
+    return $request ? home_url('/' . $request . '/') : home_url('/');
+}
+
+function prismpath_seo_robots_content(): string
+{
+    if (is_404() || is_search()) {
+        return 'noindex, follow';
+    }
+
+    return 'index, follow, max-image-preview:large';
 }
 
 function prismpath_seo_meta_tags(): void
@@ -83,15 +173,20 @@ function prismpath_seo_meta_tags(): void
     }
     $title = is_front_page() ? 'Prismpath Health | Neuroaffirming Mental Health Care' : wp_get_document_title();
     $description = prismpath_seo_description();
-    $url = is_singular() ? get_permalink() : home_url(add_query_arg(array(), $GLOBALS['wp']->request ?? ''));
+    $url = prismpath_seo_canonical_url();
     $image = is_singular() && has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'full') : get_template_directory_uri() . '/assets/images/hero-family-prismpath-health.png';
 
+    echo '<meta name="robots" content="' . esc_attr(prismpath_seo_robots_content()) . '">' . "\n";
     echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
-    echo '<link rel="canonical" href="' . esc_url($url) . '">' . "\n";
+    if ($url) {
+        echo '<link rel="canonical" href="' . esc_url($url) . '">' . "\n";
+    }
     echo '<meta property="og:type" content="website">' . "\n";
     echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
     echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
-    echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
+    if ($url) {
+        echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
+    }
     echo '<meta property="og:site_name" content="Prismpath Health">' . "\n";
     echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
     echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
@@ -141,7 +236,7 @@ function prismpath_seo_normalize_agent_schema_item($item): ?array
 function prismpath_seo_agent_schemas(int $post_id): array
 {
     $override = get_post_meta($post_id, '_chroma_schema_override', true);
-    if (!$override) {
+    if (!prismpath_seo_truthy($override)) {
         return array();
     }
 
@@ -180,6 +275,99 @@ function prismpath_seo_agent_schemas(int $post_id): array
     return $schemas;
 }
 
+function prismpath_seo_organization_ref(): array
+{
+    return array('@id' => home_url('/#organization'));
+}
+
+function prismpath_seo_organization_schema(): array
+{
+    $same_as = array_filter(array(
+        prismpath_seo_setting('facebook_url'),
+        prismpath_seo_setting('instagram_url'),
+        prismpath_seo_setting('linkedin_url'),
+    ));
+
+    return prismpath_seo_schema_filter(array(
+        '@context' => 'https://schema.org',
+        '@type' => 'MedicalOrganization',
+        '@id' => home_url('/#organization'),
+        'name' => 'Prismpath Health',
+        'legalName' => prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC'),
+        'alternateName' => 'Lbee Health Practive Group PLLC dba Prismpath Health',
+        'url' => home_url('/'),
+        'logo' => get_template_directory_uri() . '/assets/icons/icon-512.png',
+        'image' => get_template_directory_uri() . '/assets/images/hero-family-prismpath-health.png',
+        'description' => prismpath_seo_description(),
+        'email' => prismpath_seo_setting('primary_email'),
+        'telephone' => prismpath_seo_setting('phone'),
+        'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
+        'medicalSpecialty' => array('MentalHealth', 'Psychiatric'),
+        'sameAs' => $same_as,
+    ));
+}
+
+function prismpath_seo_webpage_type(): string
+{
+    if (is_page('contact')) {
+        return 'ContactPage';
+    }
+
+    if (is_page('team')) {
+        return 'CollectionPage';
+    }
+
+    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'approach', 'group-support', 'referral-partners', 'accommodations'))) {
+        return 'MedicalWebPage';
+    }
+
+    return 'WebPage';
+}
+
+function prismpath_seo_webpage_schema(): array
+{
+    return prismpath_seo_schema_filter(array(
+        '@context' => 'https://schema.org',
+        '@type' => prismpath_seo_webpage_type(),
+        '@id' => get_permalink() . '#webpage',
+        'url' => get_permalink(),
+        'name' => wp_get_document_title(),
+        'description' => prismpath_seo_description(),
+        'isPartOf' => array('@id' => home_url('/#website')),
+        'publisher' => prismpath_seo_organization_ref(),
+        'datePublished' => get_the_date('c'),
+        'dateModified' => get_the_modified_date('c'),
+    ));
+}
+
+function prismpath_seo_team_photo_url(int $post_id): string
+{
+    if (has_post_thumbnail($post_id)) {
+        return (string) get_the_post_thumbnail_url($post_id, 'full');
+    }
+
+    if (function_exists('prismpath_team_photo_url')) {
+        return (string) prismpath_team_photo_url($post_id);
+    }
+
+    return '';
+}
+
+function prismpath_seo_person_schema(int $post_id): array
+{
+    return prismpath_seo_schema_filter(array(
+        '@context' => 'https://schema.org',
+        '@type' => 'Person',
+        '@id' => get_permalink($post_id) . '#person',
+        'name' => get_the_title($post_id),
+        'jobTitle' => get_the_excerpt($post_id),
+        'url' => get_permalink($post_id),
+        'image' => prismpath_seo_team_photo_url($post_id),
+        'worksFor' => prismpath_seo_organization_ref(),
+        'affiliation' => prismpath_seo_organization_ref(),
+    ));
+}
+
 function prismpath_schema_output(): void
 {
     $agent_schemas = is_singular() ? prismpath_seo_agent_schemas((int) get_the_ID()) : array();
@@ -191,30 +379,14 @@ function prismpath_schema_output(): void
     }
 
     if (is_front_page()) {
-        $same_as = array_filter(array(
-            prismpath_seo_setting('facebook_url'),
-            prismpath_seo_setting('instagram_url'),
-            prismpath_seo_setting('linkedin_url'),
-        ));
-        prismpath_jsonld(array_filter(array(
-            '@context' => 'https://schema.org',
-            '@type' => 'MedicalOrganization',
-            'name' => 'Prismpath Health',
-            'legalName' => prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC'),
-            'alternateName' => 'Prismpath Health',
-            'url' => home_url('/'),
-            'description' => prismpath_seo_description(),
-            'email' => prismpath_seo_setting('primary_email'),
-            'telephone' => prismpath_seo_setting('phone'),
-            'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
-            'medicalSpecialty' => array('MentalHealth', 'Psychiatric'),
-            'sameAs' => $same_as,
-        )));
+        prismpath_jsonld(prismpath_seo_organization_schema());
         prismpath_jsonld(array(
             '@context' => 'https://schema.org',
             '@type' => 'WebSite',
+            '@id' => home_url('/#website'),
             'name' => 'Prismpath Health',
             'url' => home_url('/'),
+            'publisher' => prismpath_seo_organization_ref(),
             'potentialAction' => array(
                 '@type' => 'SearchAction',
                 'target' => home_url('/?s={search_term_string}'),
@@ -223,16 +395,26 @@ function prismpath_schema_output(): void
         ));
     }
 
+    if (is_singular()) {
+        prismpath_jsonld(prismpath_seo_webpage_schema());
+    }
+
+    if (is_singular('team_member')) {
+        prismpath_jsonld(prismpath_seo_person_schema((int) get_the_ID()));
+    }
+
     if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'group-support', 'referral-partners', 'accommodations'))) {
         $record = prismpath_seo_content_record((int) get_the_ID());
-        prismpath_jsonld(array_filter(array(
+        prismpath_jsonld(prismpath_seo_schema_filter(array(
             '@context' => 'https://schema.org',
             '@type' => 'Service',
+            '@id' => get_permalink() . '#service',
             'name' => get_the_title(),
             'description' => prismpath_seo_description(),
             'serviceType' => $record['schema_service_type'] ?? null,
             'provider' => array(
                 '@type' => 'MedicalOrganization',
+                '@id' => home_url('/#organization'),
                 'name' => 'Prismpath Health',
                 'legalName' => prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC'),
             ),
@@ -308,6 +490,11 @@ function prismpath_prevent_sitemap_canonical_redirect($redirect_url)
 }
 add_filter('redirect_canonical', 'prismpath_prevent_sitemap_canonical_redirect');
 
+function prismpath_sitemap_xml_escape(string $value): string
+{
+    return function_exists('esc_xml') ? esc_xml($value) : esc_html($value);
+}
+
 function prismpath_custom_sitemap(): void
 {
     if (!prismpath_is_sitemap_request()) {
@@ -315,16 +502,41 @@ function prismpath_custom_sitemap(): void
     }
     status_header(200);
     header('Content-Type: application/xml; charset=' . get_bloginfo('charset'));
-    $urls = array(home_url('/'));
+
+    $urls = array();
+    $add_url = static function (string $loc, string $lastmod = '') use (&$urls): void {
+        $loc = esc_url_raw($loc);
+        if (!$loc) {
+            return;
+        }
+        $urls[$loc] = array(
+            'loc' => $loc,
+            'lastmod' => $lastmod,
+        );
+    };
+
+    $front_page_id = (int) get_option('page_on_front');
+    $add_url(
+        home_url('/'),
+        $front_page_id ? get_post_modified_time('c', true, $front_page_id) : ''
+    );
+
     $pages = get_posts(array('post_type' => array('page', 'team_member'), 'post_status' => 'publish', 'posts_per_page' => -1));
     foreach ($pages as $page) {
-        $urls[] = get_permalink($page);
+        $permalink = get_permalink($page);
+        if ($permalink) {
+            $add_url($permalink, get_post_modified_time('c', true, $page));
+        }
     }
-    $urls = array_unique(array_filter($urls));
+
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
     echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
     foreach ($urls as $url) {
-        echo '  <url><loc>' . esc_url($url) . '</loc></url>' . "\n";
+        echo '  <url><loc>' . prismpath_sitemap_xml_escape($url['loc']) . '</loc>';
+        if (!empty($url['lastmod'])) {
+            echo '<lastmod>' . prismpath_sitemap_xml_escape($url['lastmod']) . '</lastmod>';
+        }
+        echo '</url>' . "\n";
     }
     echo '</urlset>';
     exit;
@@ -338,20 +550,11 @@ function prismpath_robots_txt(string $output): string
 }
 add_filter('robots_txt', 'prismpath_robots_txt');
 
-function prismpath_add_monthly_cron_interval(array $schedules): array
-{
-    $schedules['monthly'] = array('interval' => 30 * DAY_IN_SECONDS, 'display' => __('Once Monthly', 'prismpath-seo-engine'));
-    return $schedules;
-}
-add_filter('cron_schedules', 'prismpath_add_monthly_cron_interval');
-
 function prismpath_schedule_seo_cron(): void
 {
     prismpath_sitemap_rewrite();
     flush_rewrite_rules();
-    if (!wp_next_scheduled('prismpath_monthly_seo_event')) {
-        wp_schedule_event(time(), 'monthly', 'prismpath_monthly_seo_event');
-    }
+    prismpath_unschedule_seo_cron();
 }
 register_activation_hook(__FILE__, 'prismpath_schedule_seo_cron');
 
@@ -367,8 +570,6 @@ register_deactivation_hook(__FILE__, 'prismpath_unschedule_seo_cron');
 
 function prismpath_monthly_seo_ping(): void
 {
-    $sitemap = home_url('/sitemap.xml');
-    wp_remote_get('https://www.google.com/ping?sitemap=' . rawurlencode($sitemap), array('timeout' => 5, 'blocking' => false));
-    wp_remote_get('https://www.bing.com/ping?sitemap=' . rawurlencode($sitemap), array('timeout' => 5, 'blocking' => false));
+    prismpath_unschedule_seo_cron();
 }
 add_action('prismpath_monthly_seo_event', 'prismpath_monthly_seo_ping');

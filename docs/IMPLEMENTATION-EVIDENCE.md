@@ -44,6 +44,18 @@ Date: 2026-05-09
 
 - PHP lint passed across all theme and plugin PHP files.
 - Theme CSS verifier passed through `npm run build`.
+- Audited and hardened the Prismpath SEO Engine for healthcare SEO:
+  - Page titles and meta descriptions now fall back to the seeded static-page SEO model when editor meta is missing.
+  - Public indexed pages emit `index, follow, max-image-preview:large`; search and 404 routes emit `noindex, follow`.
+  - Homepage schema uses `MedicalOrganization` with stable `@id`, legal DBA naming, local logo/image assets, national virtual-care service area, and mental health specialties.
+  - Service templates emit `MedicalWebPage`, `Service`, breadcrumb, and visible-FAQ schema where appropriate.
+  - Team bios emit `Person` schema linked back to the Prismpath Health organization.
+  - Agent API schema overrides now require a strict truthy `_chroma_schema_override` value before replacing default schema.
+  - Sitemap output now includes `<lastmod>` values for published pages and team profiles.
+  - Deprecated unauthenticated sitemap ping calls were removed/no-oped; sitemap discovery remains through `/robots.txt` and `/sitemap.xml`.
+- Audited and hardened Chroma Agent API schema wiring:
+  - Optional HMAC signatures now use the intended newline-delimited canonical message.
+  - `_chroma_schema_override` is sanitized as a boolean while JSON-LD schema payload keys are preserved.
 - Lighthouse-driven template fixes added optimized WebP assets, explicit image dimensions, inline minified CSS and navigation script loading, system font stacks, improved CTA contrast, and descriptive service-card link text.
 - Local asset hardening completed: browser-requested images, favicons, touch icons, manifest, CSS, JS, and fonts are served from the theme/local WordPress install rather than outside asset hosts.
 - Disabled WordPress remote emoji asset output so public pages no longer reference `s.w.org` emoji image bases.
