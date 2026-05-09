@@ -14,5 +14,22 @@ get_header();
     </div>
 </section>
 <?php get_template_part('template-parts/sections/services'); ?>
+<section class="section resource-index-section">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Care guides for the next step.</h2>
+            <p>Read practical, conservative guides that explain assessment, therapy, psychiatry, occupational therapy, family support, and accommodations before you reach out.</p>
+        </div>
+        <div class="resource-card-grid">
+            <?php foreach (array_slice(prismpath_resource_pages(), 0, 3, true) as $slug => $resource) : ?>
+                <article class="resource-card">
+                    <h2><?php echo esc_html($resource['title']); ?></h2>
+                    <p><?php echo esc_html($resource['excerpt']); ?></p>
+                    <a href="<?php echo esc_url(prismpath_resource_url($slug)); ?>">Read the guide</a>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
 <?php get_template_part('template-parts/sections/consult'); ?>
 <?php get_footer(); ?>

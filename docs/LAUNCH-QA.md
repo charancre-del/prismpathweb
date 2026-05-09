@@ -7,6 +7,7 @@ Do not launch until every item below passes on staging.
 - Theme activates without fatal errors.
 - All three plugins activate without fatal errors.
 - Required pages exist and use the expected templates.
+- Resource hub and all six resource guide child pages are published under `/resources/`.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
 - Contact settings are populated with final production details.
@@ -18,7 +19,10 @@ Do not launch until every item below passes on staging.
 - Canonical URLs use the new Prismpath Health domain.
 - Homepage emits `MedicalOrganization` and `WebSite` schema.
 - Service pages emit `Service` schema.
+- Resource guide pages emit `Article` schema.
+- FAQ schema appears only where matching FAQ content is visible on the page.
 - Breadcrumb schema appears on non-home pages.
+- Every indexed page has a unique meta description and canonical URL.
 - Legacy URLs in `REDIRECTS.csv` return 301 and land on the expected new URL.
 - Search crawl finds no public LBee Health or Prismpath Wellness strings.
 

@@ -12,6 +12,8 @@ All public-facing content is rebranded to Prismpath Health. LBee Health and Pris
 - Occupational Therapy -> `page-occupational-therapy.php`
 - Whole Family Mental Health -> `page-whole-family-mental-health.php`
 - Approach -> `page-approach.php`
+- Resources -> `page-resources.php`
+- Resource guides -> child pages under `/resources/`, rendered by `template-parts/resource-detail.php`
 - Team -> `page-team.php`
 - Contact -> `page-contact.php`
 - Group Support -> `page-group-support.php`
@@ -27,6 +29,8 @@ Prismpath Health offers adult neuroaffirming therapy, psychiatric care, occupati
 
 Whole Family Mental Health is framed as family-systems support: parent/caregiver guidance, communication, co-regulation, routines, and coordinated care. Pediatric ABA, speech, and occupational therapy services should be routed to Chroma Early Start.
 
+The resource hub supports people-first SEO with plain-language guides for adult ADHD and Autism assessment, neuroaffirming therapy, psychiatric medication management, occupational therapy for sensory regulation and daily life, whole-family caregiver support, and accommodations documentation support.
+
 ## Content Guardrails
 
 - Do not promise diagnoses, outcomes, coverage, or availability.
@@ -36,3 +40,5 @@ Whole Family Mental Health is framed as family-systems support: parent/caregiver
 - Default WordPress starter content, including Sample Page, must not be public.
 - Team profiles are seeded from the migrated legacy bio templates and should be reviewed before final launch if credentials or availability change.
 - Use "where provider licensure allows" for virtual care claims.
+- FAQ content should be visible on the page before FAQ schema is emitted.
+- Resource content is educational and should not be presented as diagnosis, treatment guarantees, or emergency guidance.

@@ -19,6 +19,7 @@
                     <a href="<?php echo esc_url(home_url('/services/')); ?>">Services</a>
                     <a href="<?php echo esc_url(home_url('/adhd-autism-assessments/')); ?>">Assessments</a>
                     <a href="<?php echo esc_url(home_url('/whole-family-mental-health/')); ?>">Whole Family Mental Health</a>
+                    <a href="<?php echo esc_url(home_url('/resources/')); ?>">Resources</a>
                     <a href="<?php echo esc_url(home_url('/approach/')); ?>">Approach</a>
                 </nav>
             </div>
@@ -29,7 +30,7 @@
                     <?php if ($email) : ?><a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a><?php endif; ?>
                     <?php if ($phone) : ?><a href="<?php echo esc_url(prismpath_phone_href($phone)); ?>">Call <?php echo esc_html($phone); ?></a><?php endif; ?>
                     <?php if ($text) : ?><a href="<?php echo esc_url(prismpath_phone_href($text)); ?>">Text <?php echo esc_html($text); ?></a><?php endif; ?>
-                    <span>Virtual care nationwide</span>
+                    <span>Virtual care where provider licensure allows</span>
                 </div>
             </div>
 

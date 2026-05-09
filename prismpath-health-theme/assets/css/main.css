@@ -203,10 +203,33 @@ p { margin: 0; color: var(--muted); }
 .page-content { padding: 64px 0; background: #fff; }
 .prose > * + * { margin-top: 1rem; }
 .prose p, .prose li { color: var(--muted); font-size: 1.06rem; }
+.content-section { margin-top: 2rem; }
+.content-section h2 { font-size: clamp(1.55rem, 2.6vw, 2.35rem); margin-bottom: .8rem; }
 .service-panel, .detail-list, .contact-card, .team-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow); }
 .reverse { grid-template-columns: minmax(0, 1.05fr) minmax(300px, .75fr); }
 .detail-list ul { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: .9rem; }
 .detail-list li svg { color: var(--teal); }
+.detail-list a { color: var(--teal-dark); font-weight: 800; }
+.resource-support-section { padding: 64px 0; background: linear-gradient(135deg, var(--soft), #eef7f3); }
+.resource-support-grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: 1.3rem; align-items: start; }
+.resource-support-grid.single-column { grid-template-columns: minmax(0, 1fr); max-width: 920px; }
+.support-panel, .resource-card { background: rgba(255,255,255,.86); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(1.3rem, 3vw, 2rem); box-shadow: 0 14px 44px rgba(13,76,83,.06); }
+.support-panel h2, .resource-card h2 { font-size: clamp(1.35rem, 2vw, 1.9rem); }
+.related-list { display: grid; gap: .8rem; margin-top: 1.2rem; }
+.related-list a { display: grid; gap: .3rem; padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.related-list span { color: var(--teal-dark); font-weight: 900; }
+.related-list small { color: var(--muted); font-size: .9rem; line-height: 1.45; }
+.faq-list { display: grid; gap: .75rem; margin-top: 1.2rem; }
+.faq-list details { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 1rem; }
+.faq-list summary { cursor: pointer; color: var(--ink); font-weight: 900; }
+.faq-list details p { margin-top: .75rem; font-size: .98rem; }
+.resource-index-section { background: #fff; }
+.resource-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.resource-card { min-height: 260px; display: flex; flex-direction: column; }
+.resource-card p { margin-top: .8rem; }
+.resource-card a { margin-top: auto; padding-top: 1.2rem; color: var(--teal-dark); font-weight: 900; }
+.resource-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .55fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+.resource-hero .button { margin-top: 0; }
 .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .contact-card { display: grid; gap: .35rem; font-weight: 800; }
 .contact-card span { color: var(--teal); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; }
@@ -229,8 +252,8 @@ p { margin: 0; color: var(--muted); }
   .mobile-toggle { display: block; }
   .mobile-nav { display: none; position: fixed; inset: 82px 0 auto 0; background: #fff; padding: 1.4rem 20px 2rem; box-shadow: var(--shadow); }
   .mobile-nav.is-open { display: grid; gap: 1rem; }
-  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
-  .split-full, .approach-layout, .ot-layout, .split, .consult-layout, .bio-layout, .reverse { grid-template-columns: 1fr; }
+  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .resource-card-grid, .resource-support-grid { grid-template-columns: repeat(2, 1fr); }
+  .split-full, .approach-layout, .ot-layout, .split, .consult-layout, .bio-layout, .reverse, .resource-layout { grid-template-columns: 1fr; }
   .split-full > img { min-height: 360px; }
   .ot-points { grid-template-columns: repeat(2, 1fr); }
   .home-hero { background: #fff; align-items: end; }
@@ -241,7 +264,7 @@ p { margin: 0; color: var(--muted); }
   .container, .narrow { width: min(100% - 28px, var(--max)); }
   .header-inner { min-height: 72px; }
   .mobile-nav { inset-top: 72px; }
-  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .form-grid, .check-grid { grid-template-columns: 1fr; }
+  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .form-grid, .check-grid, .resource-card-grid, .resource-support-grid { grid-template-columns: 1fr; }
   .hero-copy { max-width: 100%; }
   .hero-actions .button { width: 100%; }
   .whole-copy { padding: 42px 20px; }

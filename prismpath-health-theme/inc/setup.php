@@ -86,6 +86,85 @@ function prismpath_create_page_if_missing(string $title, string $slug, string $e
     ));
 }
 
+function prismpath_update_page_seo_meta(int $post_id, array $content): void
+{
+    if (!$post_id) {
+        return;
+    }
+
+    if (!empty($content['meta_description'])) {
+        update_post_meta($post_id, 'meta_description', sanitize_text_field($content['meta_description']));
+    }
+
+    if (!empty($content['seo_title'])) {
+        update_post_meta($post_id, '_prismpath_seo_title', sanitize_text_field($content['seo_title']));
+    }
+}
+
+function prismpath_static_page_seo(string $slug): ?array
+{
+    $pages = array(
+        'services' => array(
+            'seo_title' => 'Neuroaffirming Mental Health Services | Prismpath Health',
+            'meta_description' => 'Explore Prismpath Health services for adult therapy, psychiatry, occupational therapy, ADHD and Autism assessment, caregiver support, and accommodations.',
+        ),
+        'resources' => array(
+            'seo_title' => 'Neuroaffirming Mental Health Resources | Prismpath Health',
+            'meta_description' => 'Prismpath Health resources for neuroaffirming therapy, psychiatry, ADHD and Autism assessment, occupational therapy, family support, and accommodations.',
+        ),
+        'team' => array(
+            'seo_title' => 'Prismpath Health Team | Neuroaffirming Mental Health Providers',
+            'meta_description' => 'Meet the Prismpath Health team providing neuroaffirming therapy, psychiatric care, occupational therapy, assessment, and family mental health support.',
+        ),
+        'contact' => array(
+            'seo_title' => 'Contact Prismpath Health | Book a Consultation',
+            'meta_description' => 'Contact Prismpath Health to ask about neuroaffirming therapy, psychiatry, ADHD and Autism assessment, occupational therapy, and family support.',
+        ),
+        'privacy-policy' => array(
+            'seo_title' => 'Privacy Policy | Prismpath Health',
+            'meta_description' => 'Read how Prismpath Health handles website inquiry information, consultation requests, privacy review, and care-related privacy notices.',
+        ),
+        'accessibility-statement' => array(
+            'seo_title' => 'Accessibility Statement | Prismpath Health',
+            'meta_description' => 'Prismpath Health is committed to clear, responsive, keyboard-friendly, and accessible website experiences for visitors with diverse access needs.',
+        ),
+    );
+
+    return $pages[$slug] ?? null;
+}
+
+function prismpath_create_child_page_if_missing(string $title, string $slug, int $parent_id, string $excerpt = ''): int
+{
+    $path = $parent_id ? get_post_field('post_name', $parent_id) . '/' . $slug : $slug;
+    $existing = get_page_by_path($path);
+    if (!$existing instanceof WP_Post) {
+        $existing = get_page_by_path($slug);
+    }
+
+    if ($existing instanceof WP_Post) {
+        $updates = array(
+            'ID' => $existing->ID,
+            'post_excerpt' => $excerpt,
+            'post_status' => 'publish',
+        );
+        if ($parent_id && (int) $existing->post_parent !== $parent_id) {
+            $updates['post_parent'] = $parent_id;
+        }
+        wp_update_post($updates);
+        return (int) $existing->ID;
+    }
+
+    return (int) wp_insert_post(array(
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'post_title' => $title,
+        'post_name' => $slug,
+        'post_parent' => $parent_id,
+        'post_excerpt' => $excerpt,
+        'post_content' => '',
+    ));
+}
+
 function prismpath_create_policy_page_if_missing(string $title, string $slug, string $content, string $excerpt = ''): int
 {
     $existing = get_page_by_path($slug);
@@ -150,14 +229,18 @@ function prismpath_seed_policy_pages(): void
     );
     if ($privacy) {
         update_option('wp_page_for_privacy_policy', $privacy);
+        prismpath_update_page_seo_meta($privacy, prismpath_static_page_seo('privacy-policy') ?? array());
     }
 
-    prismpath_create_policy_page_if_missing(
+    $accessibility = prismpath_create_policy_page_if_missing(
         'Accessibility Statement',
         'accessibility-statement',
         '<p>Prismpath Health is committed to making its website usable and welcoming for visitors with diverse access needs. We aim for clear language, keyboard-friendly navigation, readable contrast, responsive layouts, and meaningful alternative text where images communicate content.</p><p>If you encounter an accessibility barrier, contact us through the Contact page so our team can review the issue and improve the experience.</p>',
         'Prismpath Health website accessibility commitment.'
     );
+    if ($accessibility) {
+        prismpath_update_page_seo_meta($accessibility, prismpath_static_page_seo('accessibility-statement') ?? array());
+    }
 }
 
 function prismpath_seed_team_members(): void
@@ -200,24 +283,43 @@ function prismpath_seed_required_pages(): void
     $pages = array(
         array('Home', 'home', 'A clearer path to mental health care for every brain and every family.'),
         array('Services', 'services', 'Neuroaffirming therapy, psychiatry, occupational therapy, assessments, and whole-family support.'),
-        array('Therapy', 'therapy', 'Collaborative therapy that honors each person in the room.'),
-        array('Psychiatry', 'psychiatry', 'Thoughtful psychiatric care and medication management.'),
-        array('ADHD & Autism Assessments', 'adhd-autism-assessments', 'Respectful assessments for adults seeking clarity.'),
-        array('Occupational Therapy', 'occupational-therapy', 'Practical supports for sensory regulation, routines, and daily life.'),
-        array('Whole Family Mental Health', 'whole-family-mental-health', 'Family-systems support for caregivers, with pediatric therapy pathways through Chroma Early Start.'),
-        array('Approach', 'approach', 'Neuroaffirming, whole-person care grounded in collaboration.'),
+        array('Therapy', 'therapy', prismpath_page_content('therapy')['intro']),
+        array('Psychiatry', 'psychiatry', prismpath_page_content('psychiatry')['intro']),
+        array('ADHD & Autism Assessments', 'adhd-autism-assessments', prismpath_page_content('adhd-autism-assessments')['intro']),
+        array('Occupational Therapy', 'occupational-therapy', prismpath_page_content('occupational-therapy')['intro']),
+        array('Whole Family Mental Health', 'whole-family-mental-health', prismpath_page_content('whole-family-mental-health')['intro']),
+        array('Approach', 'approach', prismpath_page_content('approach')['intro']),
+        array('Resources', 'resources', 'Guides for neuroaffirming care decisions, caregiver support, and accommodations planning.'),
         array('Team', 'team', 'Meet the people behind Prismpath Health.'),
         array('Contact', 'contact', 'Start the conversation with Prismpath Health.'),
-        array('Group Support', 'group-support', 'Structured support and connection.'),
-        array('Referral Partners', 'referral-partners', 'Referral pathways for partners and providers.'),
-        array('Accommodations', 'accommodations', 'Support for care-aligned accommodations planning.'),
+        array('Group Support', 'group-support', prismpath_page_content('group-support')['intro']),
+        array('Referral Partners', 'referral-partners', prismpath_page_content('referral-partners')['intro']),
+        array('Accommodations', 'accommodations', prismpath_page_content('accommodations')['intro']),
     );
 
     $home_id = 0;
+    $resources_id = 0;
     foreach ($pages as $page) {
         $id = prismpath_create_page_if_missing($page[0], $page[1], $page[2]);
+        $content_record = prismpath_content_record_by_slug($page[1]);
+        if ($content_record) {
+            prismpath_update_page_seo_meta($id, $content_record);
+        } else {
+            prismpath_update_page_seo_meta($id, prismpath_static_page_seo($page[1]) ?? array());
+        }
         if ('home' === $page[1]) {
             $home_id = $id;
+        }
+        if ('resources' === $page[1]) {
+            $resources_id = $id;
+            prismpath_update_page_seo_meta($id, prismpath_static_page_seo('resources') ?? array());
+        }
+    }
+
+    if ($resources_id) {
+        foreach (prismpath_resource_pages() as $slug => $resource) {
+            $resource_id = prismpath_create_child_page_if_missing($resource['title'], $slug, $resources_id, $resource['excerpt']);
+            prismpath_update_page_seo_meta($resource_id, $resource);
         }
     }
 
@@ -240,6 +342,7 @@ function prismpath_seed_required_pages(): void
             'Services' => '/services/',
             'Assessments' => '/adhd-autism-assessments/',
             'Whole Family Mental Health' => '/whole-family-mental-health/',
+            'Resources' => '/resources/',
             'Approach' => '/approach/',
             'Contact' => '/contact/',
         );
@@ -253,8 +356,30 @@ function prismpath_seed_required_pages(): void
         $locations = get_theme_mod('nav_menu_locations', array());
         $locations['primary'] = $menu_id;
         set_theme_mod('nav_menu_locations', $locations);
+    } else {
+        $menu_items = wp_get_nav_menu_items($menu->term_id);
+        $labels = is_array($menu_items) ? wp_list_pluck($menu_items, 'title') : array();
+        if (!in_array('Resources', $labels, true)) {
+            wp_update_nav_menu_item($menu->term_id, 0, array(
+                'menu-item-title' => 'Resources',
+                'menu-item-url' => home_url('/resources/'),
+                'menu-item-status' => 'publish',
+            ));
+        }
     }
 
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'prismpath_seed_required_pages');
+
+function prismpath_seed_content_updates(): void
+{
+    $target_version = '2026-05-08-seo-content-hub-v2';
+    if (get_option('prismpath_content_seed_version') === $target_version) {
+        return;
+    }
+
+    prismpath_seed_required_pages();
+    update_option('prismpath_content_seed_version', $target_version);
+}
+add_action('init', 'prismpath_seed_content_updates', 20);

@@ -21,6 +21,42 @@ function prismpath_seo_setting(string $key, string $default = ''): string
     return is_string($value) ? $value : $default;
 }
 
+function prismpath_seo_content_record(int $post_id): ?array
+{
+    if (!$post_id || !function_exists('prismpath_content_record_by_slug')) {
+        return null;
+    }
+
+    $slug = get_post_field('post_name', $post_id);
+    if (!$slug) {
+        return null;
+    }
+
+    $record = prismpath_content_record_by_slug((string) $slug);
+    return is_array($record) ? $record : null;
+}
+
+function prismpath_seo_document_title(string $title): string
+{
+    if (!is_singular()) {
+        return $title;
+    }
+
+    $post_id = get_the_ID();
+    $custom = get_post_meta($post_id, '_prismpath_seo_title', true);
+    if ($custom) {
+        return wp_strip_all_tags($custom);
+    }
+
+    $record = prismpath_seo_content_record((int) $post_id);
+    if ($record && !empty($record['seo_title'])) {
+        return wp_strip_all_tags($record['seo_title']);
+    }
+
+    return $title;
+}
+add_filter('pre_get_document_title', 'prismpath_seo_document_title');
+
 function prismpath_seo_description(): string
 {
     if (is_front_page()) {
@@ -29,6 +65,10 @@ function prismpath_seo_description(): string
     $custom = get_post_meta(get_the_ID(), 'meta_description', true);
     if ($custom) {
         return wp_strip_all_tags($custom);
+    }
+    $record = prismpath_seo_content_record((int) get_the_ID());
+    if ($record && !empty($record['meta_description'])) {
+        return wp_strip_all_tags($record['meta_description']);
     }
     if (has_excerpt()) {
         return wp_strip_all_tags(get_the_excerpt());
@@ -99,16 +139,63 @@ function prismpath_schema_output(): void
         ));
     }
 
-    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health'))) {
-        prismpath_jsonld(array(
+    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'group-support', 'referral-partners', 'accommodations'))) {
+        $record = prismpath_seo_content_record((int) get_the_ID());
+        prismpath_jsonld(array_filter(array(
             '@context' => 'https://schema.org',
             '@type' => 'Service',
             'name' => get_the_title(),
             'description' => prismpath_seo_description(),
+            'serviceType' => $record['schema_service_type'] ?? null,
             'provider' => array('@type' => 'MedicalOrganization', 'name' => 'Prismpath Health'),
+            'audience' => array('@type' => 'Audience', 'audienceType' => 'Adults, caregivers, families, and referral partners'),
             'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
+            'availableChannel' => array('@type' => 'ServiceChannel', 'serviceUrl' => get_permalink(), 'availableLanguage' => 'English'),
             'url' => get_permalink(),
-        ));
+        )));
+    }
+
+    if (is_page() && function_exists('prismpath_resource_by_slug')) {
+        $slug = get_post_field('post_name', get_the_ID());
+        $resource = prismpath_resource_by_slug((string) $slug);
+        if ($resource) {
+            prismpath_jsonld(array(
+                '@context' => 'https://schema.org',
+                '@type' => 'Article',
+                'headline' => get_the_title(),
+                'description' => prismpath_seo_description(),
+                'author' => array('@type' => 'Organization', 'name' => 'Prismpath Health'),
+                'publisher' => array('@type' => 'MedicalOrganization', 'name' => 'Prismpath Health'),
+                'mainEntityOfPage' => get_permalink(),
+            ));
+        }
+    }
+
+    if (is_singular()) {
+        $record = prismpath_seo_content_record((int) get_the_ID());
+        if ($record && !empty($record['faqs']) && is_array($record['faqs'])) {
+            $questions = array();
+            foreach ($record['faqs'] as $faq) {
+                if (empty($faq['question']) || empty($faq['answer'])) {
+                    continue;
+                }
+                $questions[] = array(
+                    '@type' => 'Question',
+                    'name' => wp_strip_all_tags($faq['question']),
+                    'acceptedAnswer' => array(
+                        '@type' => 'Answer',
+                        'text' => wp_strip_all_tags($faq['answer']),
+                    ),
+                );
+            }
+            if ($questions) {
+                prismpath_jsonld(array(
+                    '@context' => 'https://schema.org',
+                    '@type' => 'FAQPage',
+                    'mainEntity' => $questions,
+                ));
+            }
+        }
     }
 
     if (!is_front_page()) {

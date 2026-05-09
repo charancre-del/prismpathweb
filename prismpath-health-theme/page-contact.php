@@ -21,7 +21,7 @@ $text = prismpath_setting('text_number', '');
         <?php if ($email) : ?><a class="contact-card" href="mailto:<?php echo esc_attr($email); ?>"><span>Email</span><?php echo esc_html($email); ?></a><?php endif; ?>
         <?php if ($phone) : ?><a class="contact-card" href="<?php echo esc_url(prismpath_phone_href($phone)); ?>"><span>Call</span><?php echo esc_html($phone); ?></a><?php endif; ?>
         <?php if ($text) : ?><a class="contact-card" href="<?php echo esc_url(prismpath_phone_href($text)); ?>"><span>Text</span><?php echo esc_html($text); ?></a><?php endif; ?>
-        <div class="contact-card"><span>Care</span>Virtual care nationwide</div>
+        <div class="contact-card"><span>Care</span>Virtual care where provider licensure allows</div>
     </div>
 </section>
 <?php get_template_part('template-parts/sections/consult'); ?>
