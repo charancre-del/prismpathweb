@@ -42,5 +42,5 @@ Insurance and payment content carries forward LBee Health's listed plan coverage
 - Use "where provider licensure allows" for virtual care claims.
 - FAQ content should be visible on the page before FAQ schema is emitted.
 - Do not publish blog/resource pages unless requested.
-- Page-level SEO and service-template copy can be adjusted from the Prismpath SEO & Template Content metabox. Blank fields fall back to the seeded content model.
+- Page-level SEO and service-template copy can be adjusted from the Prismpath SEO & Template Content metabox. `inc/seeder.php` fills those fields from the seeded content model for service-style pages and leaves later editor changes intact.
 - Agent API schema writes should use the dedicated schema endpoints; the SEO plugin will render approved Agent-managed schema overrides when enabled.

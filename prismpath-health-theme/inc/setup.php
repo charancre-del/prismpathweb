@@ -341,8 +341,10 @@ function prismpath_seed_required_pages(): void
     );
 
     $home_id = 0;
+    $page_ids_by_slug = array();
     foreach ($pages as $page) {
         $id = prismpath_create_page_if_missing($page[0], $page[1], $page[2]);
+        $page_ids_by_slug[$page[1]] = $id;
         $content_record = prismpath_content_record_by_slug($page[1]);
         if ($content_record) {
             prismpath_update_page_seo_meta($id, $content_record);
@@ -352,6 +354,9 @@ function prismpath_seed_required_pages(): void
         if ('home' === $page[1]) {
             $home_id = $id;
         }
+    }
+    if (function_exists('prismpath_seed_all_page_editor_meta')) {
+        prismpath_seed_all_page_editor_meta($page_ids_by_slug);
     }
 
     if ($home_id) {
@@ -411,7 +416,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-08-page-template-seo-v4-no-resources';
+    $target_version = '2026-05-09-page-template-metabox-seeder-v5';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }

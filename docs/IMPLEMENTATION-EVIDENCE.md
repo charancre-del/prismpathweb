@@ -17,6 +17,7 @@ Date: 2026-05-09
 - Verified `/sitemap.xml` includes service, insurance, whole-family, team, contact, policy, and accessibility pages, and does not include `/resources/`.
 - Verified the Chroma Agent API schema endpoints are registered at `/wp-json/chroma-agent/v1/seo/schema` and `/wp-json/chroma-agent/v1/schema/seo`; local HTTP access correctly returns `caa_https_required`.
 - Added a Prismpath page editor metabox for SEO title, meta description, hero title, intro copy, side-panel copy, service highlights, long-form sections, and FAQs.
+- Added `inc/seeder.php` to seed the editable metabox values for every service-style template page from the approved Prismpath content model without overwriting later editor changes.
 - Wired Agent API SEO allowlists to Prismpath-specific SEO and template-content meta keys.
 - Wired the SEO plugin to render Agent API-managed schema overrides when `_chroma_schema_override` and schema payload meta are present.
 - Verified the public rendered route audit found no `LBee`, `Prismpath Wellness`, `lbeehealth`, `childcare`, or unsupported bee-brand language.
