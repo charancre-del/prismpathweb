@@ -137,6 +137,18 @@ function prismpath_static_page_seo(string $slug): ?array
     return $pages[$slug] ?? null;
 }
 
+function prismpath_legal_name(): string
+{
+    return function_exists('prismpath_setting')
+        ? prismpath_setting('legal_name', 'Lbee Health Practive Group PLLC')
+        : 'Lbee Health Practive Group PLLC';
+}
+
+function prismpath_dba_notice(): string
+{
+    return '<p><strong>Legal entity notice:</strong> Prismpath Health is a DBA of ' . esc_html(prismpath_legal_name()) . '.</p>';
+}
+
 function prismpath_create_child_page_if_missing(string $title, string $slug, int $parent_id, string $excerpt = ''): int
 {
     $path = $parent_id ? get_post_field('post_name', $parent_id) . '/' . $slug : $slug;
@@ -176,11 +188,19 @@ function prismpath_create_policy_page_if_missing(string $title, string $slug, st
         $old_generated_content = false !== strpos((string) $existing->post_content, 'review against the final production')
             || false !== strpos((string) $existing->post_content, 'reviewed against the final production')
             || false !== strpos((string) $existing->post_content, 'Final privacy practices should reflect');
+        $missing_legal_entity = false === strpos((string) $existing->post_content, prismpath_legal_name());
         if ('' === trim((string) $existing->post_content) || 'publish' !== $existing->post_status || $old_generated_content) {
             wp_update_post(array(
                 'ID' => $existing->ID,
                 'post_excerpt' => $excerpt,
                 'post_content' => $content,
+                'post_status' => 'publish',
+            ));
+        } elseif ($missing_legal_entity && in_array($slug, array('privacy-policy', 'hipaa-policy', 'accessibility-statement'), true)) {
+            wp_update_post(array(
+                'ID' => $existing->ID,
+                'post_excerpt' => $excerpt,
+                'post_content' => prismpath_dba_notice() . (string) $existing->post_content,
                 'post_status' => 'publish',
             ));
         }
@@ -270,7 +290,7 @@ function prismpath_seed_policy_pages(): void
     $privacy = prismpath_create_policy_page_if_missing(
         'Privacy Policy',
         'privacy-policy',
-        '<p>Prismpath Health uses information submitted through this website to respond to inquiries, route consultation requests, and support care coordination. Please do not submit emergencies or detailed clinical history through the contact form.</p><p>Information may be shared with authorized team members or service providers when needed to operate the website, protect the site, and respond to requests. Care-related privacy notices may be provided separately when services begin.</p>',
+        prismpath_dba_notice() . '<p>Prismpath Health uses information submitted through this website to respond to inquiries, route consultation requests, and support care coordination. Please do not submit emergencies or detailed clinical history through the contact form.</p><p>Information may be shared with authorized team members or service providers when needed to operate the website, protect the site, and respond to requests. Care-related privacy notices may be provided separately when services begin.</p>',
         'How Prismpath Health handles website inquiries and privacy review.'
     );
     if ($privacy) {
@@ -281,7 +301,7 @@ function prismpath_seed_policy_pages(): void
     $hipaa = prismpath_create_policy_page_if_missing(
         'HIPAA Policy',
         'hipaa-policy',
-        '<h2>HIPAA Notice and Privacy Practices</h2><p>Prismpath Health is committed to protecting health information and handling protected health information in a manner consistent with applicable privacy and security requirements. This page is intended as website-facing HIPAA policy information and should be reviewed against the final clinical, legal, and operational notice before launch.</p><h2>How information may be used</h2><p>When services begin, health information may be used or disclosed for treatment, payment, and health care operations. Examples may include care coordination, appointment support, billing, benefits verification, quality review, and required administrative activities.</p><h2>Client privacy rights</h2><p>Clients may have rights to request access to records, ask for corrections, request certain restrictions, request confidential communications, receive an accounting of certain disclosures, and receive a copy of the final Notice of Privacy Practices. Rights may depend on applicable law, identity verification, and clinical or operational requirements.</p><h2>Website and emergency limitations</h2><p>Please do not submit emergencies, crisis needs, or detailed clinical history through the website contact form. If you are experiencing an emergency, call 911 or go to the nearest emergency department. Website inquiries are used to respond to requests and are not a substitute for a therapeutic relationship, medical advice, or emergency support.</p><h2>Questions or concerns</h2><p>Questions about privacy practices, records, or HIPAA-related requests should be directed to Prismpath Health through the Contact page or the final privacy contact designated by the practice. Concerns can be raised without retaliation. Final complaint rights and reporting details should be confirmed during legal review before public launch.</p>',
+        prismpath_dba_notice() . '<h2>HIPAA Notice and Privacy Practices</h2><p>Prismpath Health is committed to protecting health information and handling protected health information in a manner consistent with applicable privacy and security requirements. This page is intended as website-facing HIPAA policy information and should be reviewed against the final clinical, legal, and operational notice before launch.</p><h2>How information may be used</h2><p>When services begin, health information may be used or disclosed for treatment, payment, and health care operations. Examples may include care coordination, appointment support, billing, benefits verification, quality review, and required administrative activities.</p><h2>Client privacy rights</h2><p>Clients may have rights to request access to records, ask for corrections, request certain restrictions, request confidential communications, receive an accounting of certain disclosures, and receive a copy of the final Notice of Privacy Practices. Rights may depend on applicable law, identity verification, and clinical or operational requirements.</p><h2>Website and emergency limitations</h2><p>Please do not submit emergencies, crisis needs, or detailed clinical history through the website contact form. If you are experiencing an emergency, call 911 or go to the nearest emergency department. Website inquiries are used to respond to requests and are not a substitute for a therapeutic relationship, medical advice, or emergency support.</p><h2>Questions or concerns</h2><p>Questions about privacy practices, records, or HIPAA-related requests should be directed to Prismpath Health through the Contact page or the final privacy contact designated by the practice. Concerns can be raised without retaliation. Final complaint rights and reporting details should be confirmed during legal review before public launch.</p>',
         'Prismpath Health HIPAA policy information and privacy practices notice.'
     );
     if ($hipaa) {
@@ -291,7 +311,7 @@ function prismpath_seed_policy_pages(): void
     $accessibility = prismpath_create_policy_page_if_missing(
         'Accessibility Statement',
         'accessibility-statement',
-        '<p>Prismpath Health is committed to making its website usable and welcoming for visitors with diverse access needs. We aim for clear language, keyboard-friendly navigation, readable contrast, responsive layouts, and meaningful alternative text where images communicate content.</p><p>If you encounter an accessibility barrier, contact us through the Contact page so our team can review the issue and improve the experience.</p>',
+        prismpath_dba_notice() . '<p>Prismpath Health is committed to making its website usable and welcoming for visitors with diverse access needs. We aim for clear language, keyboard-friendly navigation, readable contrast, responsive layouts, and meaningful alternative text where images communicate content.</p><p>If you encounter an accessibility barrier, contact us through the Contact page so our team can review the issue and improve the experience.</p>',
         'Prismpath Health website accessibility commitment.'
     );
     if ($accessibility) {
@@ -430,7 +450,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-09-hipaa-policy-v6';
+    $target_version = '2026-05-09-legal-dba-v7';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }

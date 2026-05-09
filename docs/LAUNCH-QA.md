@@ -10,6 +10,7 @@ Do not launch until every item below passes on staging.
 - No blog, resource hub, or resource-guide pages are published unless intentionally requested later.
 - Insurance & Payment page is published and lists accepted plans with benefit-verification language.
 - HIPAA Policy page is published and final legal/privacy review is complete.
+- Legal-facing content, footer copyright, and organization schema identify Lbee Health Practive Group PLLC as the legal entity and Prismpath Health as the DBA.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
 - Contact settings are populated with final production details.

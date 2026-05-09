@@ -4,6 +4,7 @@
     $email = prismpath_setting('primary_email', get_option('admin_email'));
     $phone = prismpath_setting('phone', '');
     $text = prismpath_setting('text_number', '');
+    $legal_name = prismpath_setting('legal_name', 'Lbee Health Practive Group PLLC');
     ?>
     <footer class="site-footer">
         <div class="container footer-grid">
@@ -46,7 +47,7 @@
             </div>
         </div>
         <div class="container footer-bottom">
-            <p>&copy; <?php echo esc_html(gmdate('Y')); ?> Prismpath Health. All rights reserved.</p>
+            <p>&copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($legal_name); ?>. Prismpath Health is a DBA. All rights reserved.</p>
             <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>">Site Map</a>
         </div>
     </footer>

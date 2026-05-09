@@ -13,6 +13,7 @@ function prismpath_default_settings(): array
 {
     return array(
         'primary_email' => get_option('admin_email'),
+        'legal_name' => 'Lbee Health Practive Group PLLC',
         'phone' => '',
         'text_number' => '',
         'booking_url' => '',
@@ -89,6 +90,7 @@ function prismpath_render_settings_page(): void
     $settings = prismpath_get_settings();
     $fields = array(
         'primary_email' => 'Primary Email',
+        'legal_name' => 'Legal Entity Name',
         'phone' => 'Phone',
         'text_number' => 'Text Number',
         'booking_url' => 'Main Booking URL',

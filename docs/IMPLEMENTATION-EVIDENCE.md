@@ -29,6 +29,7 @@ Date: 2026-05-09
   - Added reusable insurance/payment section to `/services/` and relevant service-detail pages.
   - Preserved benefit-verification and patient-responsibility language instead of guaranteeing individual coverage before verification.
 - Added and seeded `/hipaa-policy/` with HIPAA notice-style policy content, SEO metadata, sitemap coverage, and a footer link.
+- Added legal entity disclosure for Lbee Health Practive Group PLLC as the legal entity and Prismpath Health as the DBA in legal pages, footer copyright, settings, and organization/service schema.
 - Captured browser screenshot evidence outside the repo:
   - `C:\Users\chara\AppData\Local\Temp\prismpath-insurance-payment.png`
 
