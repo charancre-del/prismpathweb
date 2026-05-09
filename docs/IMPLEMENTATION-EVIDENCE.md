@@ -21,6 +21,12 @@ Date: 2026-05-08
 - Verified the public rendered route audit found no `LBee`, `Prismpath Wellness`, `lbeehealth`, `childcare`, or unsupported bee-brand language.
 - Verified the Whole Family content keeps pediatric ABA, speech therapy, and pediatric occupational therapy routed to Chroma Early Start.
 - Verified the resource guide consultation CTA navigates to `/contact/#consult`, and the contact form still exposes a Whole Family Mental Health service option.
+- Added Insurance & Payment coverage from the LBee codebase:
+  - Published `/insurance-payment/`.
+  - Added accepted plan logos for Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana.
+  - Added reusable insurance/payment section to `/services/` and relevant service-detail pages.
+  - Added the resource guide `/resources/insurance-payment-guide/`.
+  - Preserved benefit-verification and patient-responsibility language instead of guaranteeing individual coverage before verification.
 - Captured browser screenshot evidence outside the repo:
   - `C:\Users\chara\AppData\Local\Temp\prismpath-resources-desktop.png`
   - `C:\Users\chara\AppData\Local\Temp\prismpath-resource-guide-desktop.png`

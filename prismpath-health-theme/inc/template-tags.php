@@ -42,6 +42,31 @@ function prismpath_chroma_early_start_url(): string
     return $url ? $url : 'https://chromaearlystart.com/';
 }
 
+function prismpath_insurance_plans(): array
+{
+    return array(
+        array('name' => 'Optum', 'logo' => 'optum.png'),
+        array('name' => 'Aetna', 'logo' => 'aetna.png'),
+        array('name' => 'AvMed', 'logo' => 'avmed.png'),
+        array('name' => 'Oscar', 'logo' => 'oscar.png'),
+        array('name' => 'Blue Cross Blue Shield', 'logo' => 'bcbs.png'),
+        array('name' => 'Employers Health Network', 'logo' => 'ehn.png'),
+        array('name' => 'Medicare', 'logo' => 'medicare.png'),
+        array('name' => 'Cigna', 'logo' => 'cigna.png'),
+        array('name' => 'Humana', 'logo' => 'humana.png'),
+    );
+}
+
+function prismpath_payment_options(): array
+{
+    return array(
+        'Benefits verification before scheduling so clients can understand estimated costs.',
+        'Self-pay pathways when a plan does not cover a service or a client prefers not to use insurance.',
+        'CareCredit financing for assessment-related out-of-pocket costs when appropriate.',
+        'Deposits may be used to hold insurance-based assessment appointments and are applied toward copays, deductibles, coinsurance, or other patient responsibility.',
+    );
+}
+
 function prismpath_phone_href(string $number): string
 {
     return 'tel:' . preg_replace('/[^0-9+]/', '', $number);
@@ -138,9 +163,9 @@ function prismpath_default_pages(): array
         'therapy' => array(
             'title' => 'Neuroaffirming Therapy',
             'seo_title' => 'Neuroaffirming Therapy for Adults | Prismpath Health',
-            'meta_description' => 'Adult neuroaffirming therapy for anxiety, burnout, relationships, identity, transitions, and daily life, offered virtually where provider licensure allows.',
+            'meta_description' => 'Adult neuroaffirming therapy for anxiety, burnout, relationships, identity, transitions, and daily life, with insurance verification where available.',
             'intro' => 'Therapy at Prismpath Health is collaborative, strengths-based, and responsive to how you process the world.',
-            'points' => array('Individual, couples, and family therapy', 'Support for anxiety, burnout, identity, transitions, and relationships', 'Trauma-informed and LGBTQ+ affirming care', 'Coordination with psychiatry or occupational therapy when useful'),
+            'points' => array('Individual, couples, and family therapy', 'Support for anxiety, burnout, identity, transitions, and relationships', 'Trauma-informed and LGBTQ+ affirming care', 'Coordination with psychiatry or occupational therapy when useful', 'Insurance verification and self-pay pathways'),
             'schema_service_type' => 'Mental health therapy',
             'sections' => array(
                 array('heading' => 'Therapy that starts with context', 'body' => 'Care is shaped around your lived experience, communication style, sensory needs, culture, relationships, and goals. Sessions may focus on anxiety, depression, burnout, masking, identity, trauma recovery, major transitions, parenting stress, or relationship patterns. The goal is not to force a standard version of wellness, but to build language, strategies, and support that fit your actual life.'),
@@ -156,9 +181,9 @@ function prismpath_default_pages(): array
         'psychiatry' => array(
             'title' => 'Psychiatric Care',
             'seo_title' => 'Psychiatric Care and Medication Management | Prismpath Health',
-            'meta_description' => 'Thoughtful psychiatric evaluation and medication management for adults, with neuroaffirming care coordination and virtual care where licensure allows.',
+            'meta_description' => 'Thoughtful psychiatric evaluation and medication management for adults, with insurance verification and virtual care where licensure allows.',
             'intro' => 'Thoughtful medication evaluation and ongoing psychiatric care that considers your goals, routines, sensory profile, and full context.',
-            'points' => array('Psychiatric evaluation and medication management', 'Collaborative treatment planning', 'Coordination with therapy and OT', 'Virtual care where provider licensure allows'),
+            'points' => array('Psychiatric evaluation and medication management', 'Collaborative treatment planning', 'Coordination with therapy and OT', 'Virtual care where provider licensure allows', 'Benefits verification before your first appointment'),
             'schema_service_type' => 'Psychiatric care and medication management',
             'sections' => array(
                 array('heading' => 'Medication support with the whole person in view', 'body' => 'Psychiatric care at Prismpath is designed to be careful, collaborative, and practical. Your provider considers current symptoms, medical and mental health history, sensory factors, sleep, routines, stressors, preferences, and prior medication experiences before discussing options.'),
@@ -174,9 +199,9 @@ function prismpath_default_pages(): array
         'adhd-autism-assessments' => array(
             'title' => 'ADHD & Autism Assessments',
             'seo_title' => 'Adult ADHD and Autism Assessments | Prismpath Health',
-            'meta_description' => 'Respectful adult ADHD and Autism assessments that consider masking, history, context, strengths, and care recommendations.',
+            'meta_description' => 'Respectful adult ADHD and Autism assessments with insurance, self-pay, CareCredit, and deposit pathways explained before scheduling.',
             'intro' => 'Respectful adult assessments designed to help you understand your mind, your history, and your next steps.',
-            'points' => array('Masking-aware, culturally responsive evaluation', 'Clear report and recommendations', 'Support for underdiagnosed adults', 'Referral and care coordination when needed'),
+            'points' => array('Masking-aware, culturally responsive evaluation', 'Clear report and recommendations', 'Support for underdiagnosed adults', 'Referral and care coordination when needed', 'Insurance, self-pay, CareCredit, and deposit guidance'),
             'schema_service_type' => 'Adult ADHD and Autism assessment',
             'sections' => array(
                 array('heading' => 'Assessment for adults seeking clarity', 'body' => 'Adults often seek ADHD or Autism assessment after years of adapting, masking, being misread, or wondering why common strategies never quite fit. Prismpath assessments are designed to look at patterns across development, school, work, relationships, sensory experience, executive functioning, communication, and daily life.'),
@@ -186,15 +211,16 @@ function prismpath_default_pages(): array
             'faqs' => array(
                 array('question' => 'Can adults be assessed for ADHD or Autism?', 'answer' => 'Yes. Many adults pursue evaluation later in life, especially when earlier concerns were missed, masked, or explained in other ways.'),
                 array('question' => 'Does an assessment guarantee a diagnosis?', 'answer' => 'No. The assessment process is designed to evaluate fit carefully and provide recommendations based on clinical findings.'),
+                array('question' => 'Can I use insurance or self-pay for an assessment?', 'answer' => 'Prismpath can verify insurance benefits where available and can discuss self-pay, CareCredit, and deposit options before scheduling. Coverage and patient responsibility depend on the plan, state, provider, deductible, and service.'),
             ),
-            'related_links' => array('adult-adhd-autism-assessment-guide', 'accommodations-documentation-support', 'neuroaffirming-therapy-for-adults'),
+            'related_links' => array('adult-adhd-autism-assessment-guide', 'insurance-payment-guide', 'accommodations-documentation-support', 'neuroaffirming-therapy-for-adults'),
         ),
         'occupational-therapy' => array(
             'title' => 'Occupational Therapy in Daily Life',
             'seo_title' => 'Occupational Therapy for Adults | Prismpath Health',
-            'meta_description' => 'Adult occupational therapy support for sensory regulation, routines, executive functioning, transitions, and daily life participation.',
+            'meta_description' => 'Adult occupational therapy support for sensory regulation, executive functioning, routines, and daily life, with insurance and self-pay options.',
             'intro' => 'Occupational therapy helps turn insight into practical supports for the rhythms, environments, and routines of everyday life.',
-            'points' => array('Sensory regulation and environment fit', 'Executive function systems', 'Routines, habits, and transitions', 'Work, school, home, and life skills'),
+            'points' => array('Sensory regulation and environment fit', 'Executive function systems', 'Routines, habits, and transitions', 'Work, school, home, and life skills', 'Insurance verification and self-pay options'),
             'schema_service_type' => 'Adult occupational therapy',
             'sections' => array(
                 array('heading' => 'Practical support for daily life', 'body' => 'Occupational therapy focuses on participation: the routines, tasks, environments, and transitions that make up a day. For neurodivergent adults, OT may support sensory regulation, executive functioning, energy management, self-care, work or school systems, home routines, and sustainable habits.'),
@@ -280,7 +306,7 @@ function prismpath_default_pages(): array
         'accommodations' => array(
             'title' => 'Accommodations Support',
             'seo_title' => 'Accommodations and Documentation Support | Prismpath Health',
-            'meta_description' => 'Care-aligned accommodations support for adults navigating school, work, testing, or daily-life documentation needs.',
+            'meta_description' => 'Care-aligned accommodations support for adults, with ongoing therapy, psychiatry, insurance, and self-pay pathways when clinically appropriate.',
             'intro' => 'We help clients understand their needs and navigate care documentation where clinically appropriate.',
             'points' => array('Care-aligned documentation support', 'Practical strategy planning', 'Coordination with treating providers', 'Guidance without overpromising outcomes'),
             'schema_service_type' => 'Accommodations support',
@@ -288,6 +314,7 @@ function prismpath_default_pages(): array
                 array('heading' => 'Support for understanding needs', 'body' => 'Accommodations support can help clarify what makes work, school, testing, routines, or environments more accessible. The process may draw from assessment findings, therapy, psychiatry, occupational therapy, and daily-life observations.'),
                 array('heading' => 'Documentation without guarantees', 'body' => 'When clinically appropriate, providers may support documentation or recommendations. Prismpath cannot guarantee that a school, employer, testing board, insurer, or other third party will approve a requested accommodation.'),
                 array('heading' => 'Practical planning matters too', 'body' => 'Documentation is only one part of support. Prismpath can also help translate needs into routines, communication strategies, environmental changes, and care coordination.'),
+                array('heading' => 'Ongoing care and payment pathways', 'body' => 'When someone is interested in ongoing therapy or medication management, Prismpath can discuss insurance verification and self-pay options. Assessment-related costs may also include deposit or financing pathways depending on the service and plan.'),
             ),
             'faqs' => array(
                 array('question' => 'Can Prismpath guarantee accommodations?', 'answer' => 'No. Prismpath can provide clinically appropriate support and documentation when indicated, but outside organizations make their own decisions.'),
@@ -407,6 +434,24 @@ function prismpath_resource_pages(): array
                 array('question' => 'Are accommodations guaranteed if I have documentation?', 'answer' => 'No. Third parties make their own decisions. Documentation can support a request, but it cannot guarantee approval.'),
             ),
             'related_services' => array('accommodations', 'adhd-autism-assessments', 'occupational-therapy'),
+        ),
+        'insurance-payment-guide' => array(
+            'title' => 'Insurance and Payment Options',
+            'seo_title' => 'Insurance and Payment Options | Prismpath Health Resources',
+            'meta_description' => 'Learn about Prismpath Health insurance plans, benefits verification, self-pay options, CareCredit, deposits, and patient responsibility.',
+            'excerpt' => 'A practical guide to accepted plans, benefits verification, self-pay, CareCredit, and deposits.',
+            'sections' => array(
+                array('heading' => 'Accepted insurance plans', 'body' => 'Prismpath accepts Medicare and major commercial plans. Listed plans include Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana.'),
+                array('heading' => 'Benefits verification first', 'body' => 'Before scheduling, the team can verify benefits and provide an estimated cost picture. Actual coverage, deductible application, copays, coinsurance, prior authorization, and patient responsibility depend on the plan, state, provider, service, and member benefits.'),
+                array('heading' => 'Self-pay and financing', 'body' => 'Self-pay may be available when a client does not want to use insurance or when a service is not covered by a plan. For assessments, Prismpath can discuss CareCredit financing and deposit workflows when appropriate.'),
+                array('heading' => 'How deposits work', 'body' => 'For insurance-based assessment appointments, deposits may be used to hold the appointment and are applied toward out-of-pocket costs such as copays, deductibles, coinsurance, or other patient responsibility. If responsibility is lower than the deposit, the difference may be refunded after successful program completion.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Which insurance plans does Prismpath list?', 'answer' => 'Prismpath lists Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana. Benefits still need to be verified for the specific service, provider, state, and member plan.'),
+                array('question' => 'Can I self-pay?', 'answer' => 'Yes. Self-pay pathways may be available if insurance is not used or if a service is not covered by a plan.'),
+                array('question' => 'Is CareCredit available?', 'answer' => 'CareCredit financing may be discussed for assessment-related out-of-pocket costs when appropriate.'),
+            ),
+            'related_services' => array('adhd-autism-assessments', 'therapy', 'psychiatry', 'occupational-therapy'),
         ),
     );
 }

@@ -14,6 +14,7 @@ All public-facing content is rebranded to Prismpath Health. LBee Health and Pris
 - Approach -> `page-approach.php`
 - Resources -> `page-resources.php`
 - Resource guides -> child pages under `/resources/`, rendered by `template-parts/resource-detail.php`
+- Insurance & Payment -> `page-insurance-payment.php`
 - Team -> `page-team.php`
 - Contact -> `page-contact.php`
 - Group Support -> `page-group-support.php`
@@ -31,9 +32,12 @@ Whole Family Mental Health is framed as family-systems support: parent/caregiver
 
 The resource hub supports people-first SEO with plain-language guides for adult ADHD and Autism assessment, neuroaffirming therapy, psychiatric medication management, occupational therapy for sensory regulation and daily life, whole-family caregiver support, and accommodations documentation support.
 
+Insurance and payment content carries forward LBee Health's listed plan coverage: Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana. Public copy should state that benefits are verified before care and that coverage, deductible, copay, coinsurance, prior authorization, provider, state, service, and member-plan rules may affect patient responsibility.
+
 ## Content Guardrails
 
 - Do not promise diagnoses, outcomes, coverage, or availability.
+- Insurance pages may list accepted plans, but must not guarantee individual coverage before benefits verification.
 - Do not collect detailed symptoms or clinical history through the basic consult form.
 - Do not use childcare, bee, or LBee brand language.
 - Chroma Early Start may be referenced only for pediatric therapy pathways.

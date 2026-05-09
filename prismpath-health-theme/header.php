@@ -61,6 +61,7 @@ function prismpath_primary_nav_fallback(): void
         '/adhd-autism-assessments/' => 'Assessments',
         '/whole-family-mental-health/' => 'Whole Family Mental Health',
         '/resources/' => 'Resources',
+        '/insurance-payment/' => 'Insurance',
         '/approach/' => 'Approach',
         '/contact/' => 'Contact',
     );

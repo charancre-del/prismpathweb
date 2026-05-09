@@ -14,6 +14,7 @@ get_header();
     </div>
 </section>
 <?php get_template_part('template-parts/sections/services'); ?>
+<?php get_template_part('template-parts/sections/insurance'); ?>
 <section class="section resource-index-section">
     <div class="container">
         <div class="section-heading">

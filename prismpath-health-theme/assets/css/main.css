@@ -230,6 +230,16 @@ p { margin: 0; color: var(--muted); }
 .resource-card a { margin-top: auto; padding-top: 1.2rem; color: var(--teal-dark); font-weight: 900; }
 .resource-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(300px, .55fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
 .resource-hero .button { margin-top: 0; }
+.insurance-section { background: #fff; border-block: 1px solid var(--line); }
+.insurance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 920px; margin: 0 auto 1.2rem; }
+.insurance-card { min-height: 116px; background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius); display: grid; place-items: center; padding: 1.2rem; }
+.insurance-card img { max-width: 82%; max-height: 62px; object-fit: contain; }
+.payment-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; margin-top: 2rem; }
+.payment-card { background: rgba(220,238,231,.55); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: flex; align-items: flex-start; gap: .65rem; }
+.payment-card svg { color: var(--teal); flex: 0 0 1.1rem; margin-top: .15rem; }
+.payment-card p { font-size: .92rem; color: var(--ink); }
+.insurance-note { max-width: 900px; margin: 1.5rem auto 0; text-align: center; font-size: .95rem; }
+.section-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2rem; }
 .contact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .contact-card { display: grid; gap: .35rem; font-weight: 800; }
 .contact-card span { color: var(--teal); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; }
@@ -252,7 +262,7 @@ p { margin: 0; color: var(--muted); }
   .mobile-toggle { display: block; }
   .mobile-nav { display: none; position: fixed; inset: 82px 0 auto 0; background: #fff; padding: 1.4rem 20px 2rem; box-shadow: var(--shadow); }
   .mobile-nav.is-open { display: grid; gap: 1rem; }
-  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .resource-card-grid, .resource-support-grid { grid-template-columns: repeat(2, 1fr); }
+  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .resource-card-grid, .resource-support-grid, .insurance-grid, .payment-grid { grid-template-columns: repeat(2, 1fr); }
   .split-full, .approach-layout, .ot-layout, .split, .consult-layout, .bio-layout, .reverse, .resource-layout { grid-template-columns: 1fr; }
   .split-full > img { min-height: 360px; }
   .ot-points { grid-template-columns: repeat(2, 1fr); }
@@ -264,7 +274,8 @@ p { margin: 0; color: var(--muted); }
   .container, .narrow { width: min(100% - 28px, var(--max)); }
   .header-inner { min-height: 72px; }
   .mobile-nav { inset-top: 72px; }
-  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .form-grid, .check-grid, .resource-card-grid, .resource-support-grid { grid-template-columns: 1fr; }
+  .service-grid, .process-list, .footer-grid, .contact-grid, .team-grid, .form-grid, .check-grid, .resource-card-grid, .resource-support-grid, .insurance-grid, .payment-grid { grid-template-columns: 1fr; }
+  .section-actions .button { width: 100%; }
   .hero-copy { max-width: 100%; }
   .hero-actions .button { width: 100%; }
   .whole-copy { padding: 42px 20px; }

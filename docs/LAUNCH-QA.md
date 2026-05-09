@@ -8,6 +8,7 @@ Do not launch until every item below passes on staging.
 - All three plugins activate without fatal errors.
 - Required pages exist and use the expected templates.
 - Resource hub and all six resource guide child pages are published under `/resources/`.
+- Insurance & Payment page is published and lists accepted plans with benefit-verification language.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
 - Contact settings are populated with final production details.
@@ -23,6 +24,7 @@ Do not launch until every item below passes on staging.
 - FAQ schema appears only where matching FAQ content is visible on the page.
 - Breadcrumb schema appears on non-home pages.
 - Every indexed page has a unique meta description and canonical URL.
+- Insurance copy does not guarantee individual member coverage before benefits verification.
 - Legacy URLs in `REDIRECTS.csv` return 301 and land on the expected new URL.
 - Search crawl finds no public LBee Health or Prismpath Wellness strings.
 

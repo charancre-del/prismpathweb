@@ -106,5 +106,10 @@ if ('whole-family-mental-health' === $slug) {
     </div>
 </section>
 <?php endif; ?>
+<?php
+if (in_array($slug, array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'accommodations'), true)) {
+    get_template_part('template-parts/sections/insurance');
+}
+?>
 <?php get_template_part('template-parts/sections/process'); ?>
 <?php get_template_part('template-parts/sections/consult'); ?>
