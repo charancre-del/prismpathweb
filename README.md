@@ -8,6 +8,7 @@ Production package for the rebrand from LBee Health to Prismpath Health.
 - `plugins/prismpath-seo-engine/` - SEO, schema, sitemap, robots, and monthly sitemap ping.
 - `plugins/prismpath-lead-log/` - private lead-log CPT.
 - `plugins/prismpath-consult-form/` - secure consultation form shortcode.
+- `plugins/chroma-agent-api/` - API-key protected automation layer from the Wptstchroma repo.
 - `docs/` - install, redirects, content inventory, launch QA, and rollback notes.
 - `dist/` - generated installable zip files after packaging.
 
@@ -19,6 +20,7 @@ Compress-Archive -Path .\prismpath-health-theme\* -DestinationPath .\dist\prismp
 Compress-Archive -Path .\plugins\prismpath-seo-engine\* -DestinationPath .\dist\prismpath-seo-engine.zip -Force
 Compress-Archive -Path .\plugins\prismpath-lead-log\* -DestinationPath .\dist\prismpath-lead-log.zip -Force
 Compress-Archive -Path .\plugins\prismpath-consult-form\* -DestinationPath .\dist\prismpath-consult-form.zip -Force
+Compress-Archive -Path .\plugins\chroma-agent-api\* -DestinationPath .\dist\chroma-agent-api.zip -Force
 Compress-Archive -Path .\docs -DestinationPath .\dist\prismpath-production-docs.zip -Force
 ```
 

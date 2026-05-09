@@ -5,6 +5,7 @@
    - `prismpath-lead-log.zip`
    - `prismpath-consult-form.zip`
    - `prismpath-seo-engine.zip`
+   - `chroma-agent-api.zip`
 3. Go to Appearance -> Prismpath Settings and set:
    - Primary email
    - Phone
@@ -14,9 +15,10 @@
    - Chroma Early Start URL
    - Social links
    - Privacy and accessibility URLs
-4. Confirm Settings -> Reading uses the generated Home page.
-5. Confirm Settings -> Permalinks is set to Post name.
-6. Confirm Appearance -> Menus has `Prismpath Primary` assigned to Primary Menu.
-7. Add clinician profiles under Team Members if they were not imported from the legacy site.
+4. If using Agent API, create API keys only for trusted operators and require HTTPS in production.
+5. Confirm Settings -> Reading uses the generated Home page.
+6. Confirm Settings -> Permalinks is set to Post name.
+7. Confirm Appearance -> Menus has `Prismpath Primary` assigned to Primary Menu.
+8. Add clinician profiles under Team Members if they were not imported from the legacy site.
 
 The theme activation seeder creates missing required pages and a primary menu. It does not overwrite existing pages.

@@ -8,6 +8,7 @@ Date: 2026-05-08
 - `dist/prismpath-seo-engine.zip`
 - `dist/prismpath-lead-log.zip`
 - `dist/prismpath-consult-form.zip`
+- `dist/chroma-agent-api.zip`
 - `dist/prismpath-production-docs.zip`
 
 ## Static Verification Completed
@@ -22,10 +23,10 @@ Date: 2026-05-08
 
 ## WordPress Studio Verification Completed
 
-- Installed the theme and all three plugins into `C:\Users\chara\Studio\prismpath`.
+- Installed the theme and all four production plugins into `C:\Users\chara\Studio\prismpath`.
 - Started the Studio site at `http://localhost:8882`.
 - Activated `prismpath-health-theme`.
-- Activated `prismpath-seo-engine`, `prismpath-lead-log`, and `prismpath-consult-form`.
+- Activated `prismpath-seo-engine`, `prismpath-lead-log`, `prismpath-consult-form`, and `chroma-agent-api`.
 - Verified WordPress recognizes the theme and plugins through Studio WP-CLI.
 - Verified required pages were seeded and published, including `Whole Family Mental Health`.
 - Verified the primary menu was created and assigned.
@@ -44,6 +45,7 @@ Date: 2026-05-08
 - Verified the Whole Family page positions Prismpath as caregiver/family-system mental health support and routes pediatric ABA, speech, and occupational therapy to Chroma Early Start.
 - Verified the Chroma Early Start pediatric therapy CTA points to `https://chromaearlystart.com/` and opens in a new tab.
 - Verified the consult form renders a nonce, accepts a Whole Family Mental Health service selection, accepts text input, and shows no browser console errors.
+- Verified the Agent API route namespace is registered at `/wp-json/chroma-agent/v1/*` and unauthenticated HTTP access is blocked with `caa_https_required`.
 - Fixed a self-redirect issue on `/accommodations/`; the canonical page now returns `200`.
 
 ## Package Structure Verified
@@ -63,6 +65,7 @@ Date: 2026-05-08
 - SEO/schema/sitemap/robots plugin.
 - Consult form plugin with nonce, sanitization, validation, email, redirect state, and optional lead logging.
 - Private lead-log plugin.
+- Chroma Agent API plugin from Wptstchroma for API-key protected automation routes.
 - Install, content, redirect, launch QA, and rollback documentation.
 
 ## Remaining External Gate
