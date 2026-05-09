@@ -9,6 +9,7 @@ Do not launch until every item below passes on staging.
 - Required pages exist and use the expected templates.
 - No blog, resource hub, or resource-guide pages are published unless intentionally requested later.
 - Insurance & Payment page is published and lists accepted plans with benefit-verification language.
+- HIPAA Policy page is published and final legal/privacy review is complete.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
 - Contact settings are populated with final production details.

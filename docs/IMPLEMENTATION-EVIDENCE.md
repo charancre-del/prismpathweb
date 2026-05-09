@@ -28,6 +28,7 @@ Date: 2026-05-09
   - Added accepted plan logos for Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana.
   - Added reusable insurance/payment section to `/services/` and relevant service-detail pages.
   - Preserved benefit-verification and patient-responsibility language instead of guaranteeing individual coverage before verification.
+- Added and seeded `/hipaa-policy/` with HIPAA notice-style policy content, SEO metadata, sitemap coverage, and a footer link.
 - Captured browser screenshot evidence outside the repo:
   - `C:\Users\chara\AppData\Local\Temp\prismpath-insurance-payment.png`
 

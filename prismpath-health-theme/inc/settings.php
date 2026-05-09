@@ -22,6 +22,7 @@ function prismpath_default_settings(): array
         'instagram_url' => '',
         'linkedin_url' => '',
         'privacy_url' => home_url('/privacy-policy/'),
+        'hipaa_url' => home_url('/hipaa-policy/'),
         'accessibility_url' => home_url('/accessibility-statement/'),
     );
 }
@@ -97,6 +98,7 @@ function prismpath_render_settings_page(): void
         'instagram_url' => 'Instagram URL',
         'linkedin_url' => 'LinkedIn URL',
         'privacy_url' => 'Privacy Policy URL',
+        'hipaa_url' => 'HIPAA Policy URL',
         'accessibility_url' => 'Accessibility Statement URL',
     );
     ?>

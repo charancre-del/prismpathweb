@@ -20,6 +20,7 @@ All public-facing content is rebranded to Prismpath Health. LBee Health and Pris
 - Accommodations -> `page-accommodations.php`
 - Team bios -> `single-team_member.php` with `/bio/{slug}` URLs
 - Privacy Policy -> generated website inquiry privacy content, pending final legal review before launch
+- HIPAA Policy -> generated HIPAA notice-style policy content, pending final legal review before launch
 - Accessibility Statement -> generated page content
 
 ## Positioning

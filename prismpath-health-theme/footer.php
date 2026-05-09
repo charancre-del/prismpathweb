@@ -40,6 +40,7 @@
                     <a href="<?php echo esc_url(home_url('/team/')); ?>">Our Team</a>
                     <a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact</a>
                     <a href="<?php echo esc_url(prismpath_setting('privacy_url', home_url('/privacy-policy/'))); ?>">Privacy Policy</a>
+                    <a href="<?php echo esc_url(prismpath_setting('hipaa_url', home_url('/hipaa-policy/'))); ?>">HIPAA Policy</a>
                     <a href="<?php echo esc_url(prismpath_setting('accessibility_url', home_url('/accessibility-statement/'))); ?>">Accessibility Statement</a>
                 </nav>
             </div>

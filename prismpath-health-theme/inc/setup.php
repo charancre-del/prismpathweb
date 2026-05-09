@@ -124,6 +124,10 @@ function prismpath_static_page_seo(string $slug): ?array
             'seo_title' => 'Privacy Policy | Prismpath Health',
             'meta_description' => 'Read how Prismpath Health handles website inquiry information, consultation requests, privacy review, and care-related privacy notices.',
         ),
+        'hipaa-policy' => array(
+            'seo_title' => 'HIPAA Policy and Notice of Privacy Practices | Prismpath Health',
+            'meta_description' => 'Read Prismpath Health HIPAA policy information about protected health information, privacy rights, permitted uses, and how to ask questions.',
+        ),
         'accessibility-statement' => array(
             'seo_title' => 'Accessibility Statement | Prismpath Health',
             'meta_description' => 'Prismpath Health is committed to clear, responsive, keyboard-friendly, and accessible website experiences for visitors with diverse access needs.',
@@ -274,6 +278,16 @@ function prismpath_seed_policy_pages(): void
         prismpath_update_page_seo_meta($privacy, prismpath_static_page_seo('privacy-policy') ?? array());
     }
 
+    $hipaa = prismpath_create_policy_page_if_missing(
+        'HIPAA Policy',
+        'hipaa-policy',
+        '<h2>HIPAA Notice and Privacy Practices</h2><p>Prismpath Health is committed to protecting health information and handling protected health information in a manner consistent with applicable privacy and security requirements. This page is intended as website-facing HIPAA policy information and should be reviewed against the final clinical, legal, and operational notice before launch.</p><h2>How information may be used</h2><p>When services begin, health information may be used or disclosed for treatment, payment, and health care operations. Examples may include care coordination, appointment support, billing, benefits verification, quality review, and required administrative activities.</p><h2>Client privacy rights</h2><p>Clients may have rights to request access to records, ask for corrections, request certain restrictions, request confidential communications, receive an accounting of certain disclosures, and receive a copy of the final Notice of Privacy Practices. Rights may depend on applicable law, identity verification, and clinical or operational requirements.</p><h2>Website and emergency limitations</h2><p>Please do not submit emergencies, crisis needs, or detailed clinical history through the website contact form. If you are experiencing an emergency, call 911 or go to the nearest emergency department. Website inquiries are used to respond to requests and are not a substitute for a therapeutic relationship, medical advice, or emergency support.</p><h2>Questions or concerns</h2><p>Questions about privacy practices, records, or HIPAA-related requests should be directed to Prismpath Health through the Contact page or the final privacy contact designated by the practice. Concerns can be raised without retaliation. Final complaint rights and reporting details should be confirmed during legal review before public launch.</p>',
+        'Prismpath Health HIPAA policy information and privacy practices notice.'
+    );
+    if ($hipaa) {
+        prismpath_update_page_seo_meta($hipaa, prismpath_static_page_seo('hipaa-policy') ?? array());
+    }
+
     $accessibility = prismpath_create_policy_page_if_missing(
         'Accessibility Statement',
         'accessibility-statement',
@@ -416,7 +430,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-09-page-template-metabox-seeder-v5';
+    $target_version = '2026-05-09-hipaa-policy-v6';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }
