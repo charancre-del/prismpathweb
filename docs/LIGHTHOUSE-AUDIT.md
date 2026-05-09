@@ -19,6 +19,21 @@ Theme-level performance fixes completed:
 - Fixed CTA color contrast.
 - Replaced generic `Learn more` service-card links with descriptive link text.
 
+## Local Studio Rerun
+
+After the Local Studio completion pass, Lighthouse was rerun against the major public templates with Studio running at `http://localhost:8882`. Every checked route scored `100` for Performance, Accessibility, Best Practices, and SEO.
+
+| Route | Performance | Accessibility | Best Practices | SEO |
+| --- | ---: | ---: | ---: | ---: |
+| `/` | 100 | 100 | 100 | 100 |
+| `/therapy/` | 100 | 100 | 100 | 100 |
+| `/whole-family-mental-health/` | 100 | 100 | 100 | 100 |
+| `/insurance-payment/` | 100 | 100 | 100 | 100 |
+| `/contact/` | 100 | 100 | 100 | 100 |
+| `/hipaa-policy/` | 100 | 100 | 100 | 100 |
+
+Lighthouse emitted Windows temp-folder cleanup warnings after successful report generation, but JSON reports were written and the scores above were read from those reports.
+
 ## Route Scores
 
 | Route | Performance | Accessibility | Best Practices | SEO | Lighthouse server note |

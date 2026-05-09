@@ -106,13 +106,16 @@ function prismpath_seed_static_page_seo_meta_if_empty(): void
 
 function prismpath_seed_existing_page_meta_once(): void
 {
-    $version = '2026-05-09-seo-metaboxes';
+    $version = '2026-05-09-local-completion-v2';
     if (get_option('prismpath_existing_page_meta_seed_version') === $version) {
         return;
     }
 
     prismpath_seed_all_page_editor_meta(array());
     prismpath_seed_static_page_seo_meta_if_empty();
+    if (function_exists('prismpath_retire_default_hello_world_post')) {
+        prismpath_retire_default_hello_world_post();
+    }
     update_option('prismpath_existing_page_meta_seed_version', $version, false);
 }
 add_action('init', 'prismpath_seed_existing_page_meta_once', 30);

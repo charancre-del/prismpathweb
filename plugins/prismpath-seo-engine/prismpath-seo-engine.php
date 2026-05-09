@@ -467,6 +467,11 @@ add_action('wp_head', 'prismpath_schema_output', 20);
 
 function prismpath_is_sitemap_request(): bool
 {
+    $request_path = isset($_SERVER['REQUEST_URI']) ? (string) parse_url((string) wp_unslash($_SERVER['REQUEST_URI']), PHP_URL_PATH) : '';
+    if ('/sitemap.xml' === $request_path) {
+        return true;
+    }
+
     return (isset($_GET['sitemap']) && 'xml' === sanitize_text_field(wp_unslash($_GET['sitemap'])))
         || '1' === get_query_var('prismpath_sitemap');
 }
@@ -484,11 +489,18 @@ function prismpath_sitemap_query_vars(array $vars): array
 }
 add_filter('query_vars', 'prismpath_sitemap_query_vars');
 
-function prismpath_prevent_sitemap_canonical_redirect($redirect_url)
+function prismpath_prevent_sitemap_canonical_redirect($redirect_url, $requested_url = null)
 {
+    if (is_string($requested_url)) {
+        $requested_path = (string) wp_parse_url($requested_url, PHP_URL_PATH);
+        if ('/sitemap.xml' === $requested_path) {
+            return false;
+        }
+    }
+
     return prismpath_is_sitemap_request() ? false : $redirect_url;
 }
-add_filter('redirect_canonical', 'prismpath_prevent_sitemap_canonical_redirect');
+add_filter('redirect_canonical', 'prismpath_prevent_sitemap_canonical_redirect', 0, 2);
 
 function prismpath_sitemap_xml_escape(string $value): string
 {
@@ -541,7 +553,19 @@ function prismpath_custom_sitemap(): void
     echo '</urlset>';
     exit;
 }
+add_action('parse_request', 'prismpath_custom_sitemap', 0);
 add_action('template_redirect', 'prismpath_custom_sitemap', 0);
+
+function prismpath_sitemap_pre_handle_404($preempt, $query)
+{
+    if (!prismpath_is_sitemap_request()) {
+        return $preempt;
+    }
+
+    prismpath_custom_sitemap();
+    return true;
+}
+add_filter('pre_handle_404', 'prismpath_sitemap_pre_handle_404', 0, 2);
 
 function prismpath_robots_txt(string $output): string
 {

@@ -671,6 +671,7 @@ class SEO_Routes
             if (array_key_exists($alias, $normalized) && !array_key_exists($meta_key, $normalized)) {
                 $normalized[$meta_key] = $normalized[$alias];
             }
+            unset($normalized[$alias]);
         }
 
         return $normalized;

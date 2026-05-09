@@ -291,24 +291,16 @@ class Geo_Routes
 
         $site_url = home_url('/');
         $geo_url = self::public_feed_url();
-        $prismpath_settings = get_option('prismpath_global_settings', []);
-        $legal_name = is_array($prismpath_settings) && !empty($prismpath_settings['legal_name'])
-            ? (string) $prismpath_settings['legal_name']
-            : 'Lbee Health Practive Group PLLC';
         $schema = [
             '@context' => 'https://schema.org',
-            '@type' => 'MedicalOrganization',
-            '@id' => trailingslashit($site_url) . '#organization',
-            'name' => get_bloginfo('name'),
-            'legalName' => self::clean_scalar($legal_name),
-            'url' => trailingslashit($site_url),
-            'subjectOf' => [
-                '@type' => 'DataFeed',
-                '@id' => $geo_url . '#feed',
-                'name' => get_bloginfo('name') . ' Public GEO Feed',
-                'url' => $geo_url,
-                'encodingFormat' => 'application/json',
-                'description' => 'Machine-readable public feed for organization, service area, and structured SEO context.',
+            '@type' => 'DataFeed',
+            '@id' => $geo_url . '#feed',
+            'name' => get_bloginfo('name') . ' Public GEO Feed',
+            'url' => $geo_url,
+            'encodingFormat' => 'application/json',
+            'description' => 'Machine-readable public feed for organization, service area, and structured SEO context.',
+            'about' => [
+                '@id' => trailingslashit($site_url) . '#organization',
             ],
             'potentialAction' => [
                 '@type' => 'ViewAction',

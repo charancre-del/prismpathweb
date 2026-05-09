@@ -2,6 +2,62 @@
 
 Date: 2026-05-09
 
+## Local Studio Completion Verification Completed
+
+- Synced the latest theme and plugin source folders into `C:\Users\chara\Studio\prismpath`.
+- Started WordPress Studio and verified `http://localhost:8882` is reachable.
+- Verified local WordPress settings:
+  - Active theme: `prismpath-health-theme`.
+  - Active plugins: `chroma-agent-api`, `prismpath-consult-form`, `prismpath-lead-log`, and `prismpath-seo-engine`.
+  - Permalink structure: `/%postname%/`.
+  - Site URL and home URL: `http://localhost:8882`.
+- Triggered the non-destructive seeder and verified missing SEO/template metabox values were filled.
+- Added seeder cleanup for the default `Hello world!` starter post; local status is now `draft`.
+- Verified required pages are published: Home, Services, Therapy, Psychiatry, ADHD & Autism Assessments, Occupational Therapy, Whole Family Mental Health, Approach, Insurance & Payment, Team, Contact, Group Support, Referral Partners, Accommodations, Privacy Policy, HIPAA Policy, and Accessibility Statement.
+- Verified temporary resource pages remain `draft`, including `/resources/` and the prior resource-guide child pages.
+- Verified the primary menu contains Prismpath routes for Services, Assessments, Whole Family Mental Health, Approach, Contact, and Insurance.
+- Browser/HTTP route verification:
+  - `200`: `/`, `/services/`, `/therapy/`, `/psychiatry/`, `/adhd-autism-assessments/`, `/occupational-therapy/`, `/whole-family-mental-health/`, `/approach/`, `/insurance-payment/`, `/team/`, `/bio/jonathan-hinds/`, `/contact/`, `/group-support/`, `/referral-partners/`, `/accommodations/`, `/privacy-policy/`, `/hipaa-policy/`, `/accessibility-statement/`, `/sitemap.xml` when redirects are followed, and `/robots.txt`.
+  - `404`: `/not-a-real-page-for-seo-audit/`.
+  - Local WordPress redirects `/sitemap.xml` to the built-in `/wp-sitemap.xml`; the Prismpath custom sitemap route also responds through `/?prismpath_sitemap=1` with `<urlset>` and `<lastmod>` entries.
+- SEO/schema verification:
+  - Indexed pages emit unique meta descriptions, local canonical URLs, and `index, follow, max-image-preview:large`.
+  - 404 and search routes emit `noindex, follow` and no canonical URL.
+  - Home emits `DataFeed`, `MedicalOrganization`, `WebSite`, and `WebPage` JSON-LD.
+  - Service pages emit `MedicalWebPage`, `Service`, visible `FAQPage`, and `BreadcrumbList` JSON-LD.
+  - Team bio pages emit `Person` JSON-LD.
+  - JSON-LD parsed successfully on checked public routes.
+- Content verification:
+  - No checked public route contains `Prismpath Wellness`, `lbeehealth`, or public-facing `LBee Health`.
+  - Legal text includes `Lbee Health Practive Group PLLC dba Prismpath Health`.
+  - Pediatric ABA, speech, and pediatric occupational therapy references route to Chroma Early Start.
+  - Insurance page lists Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana with benefit-verification language and no individual coverage guarantee.
+  - Contact form includes `Whole Family Mental Health`.
+- Form verification:
+  - Contact form renders with nonce.
+  - Invalid POST redirects to `?prismpath_consult=error#consult`.
+  - Valid POST redirects to `?prismpath_consult=sent#consult`.
+  - Lead logging created local `prismpath_lead` records for the QA submissions.
+- Agent API verification:
+  - REST namespace responds at `/wp-json/chroma-agent/v1`.
+  - Unauthenticated local HTTP access to protected Agent API routes returns `403` with `caa_https_required`.
+  - Created a local Studio QA API key in the Agent API key table for validation.
+  - Authenticated proxy-HTTPS checks passed for `/discovery`, `/seo/schema`, `/schema/seo`, and `/seo/options`.
+  - Authenticated dry-run schema write passed for `/seo/schema/{post_id}` with no blocked alias keys.
+- Lighthouse local rerun:
+  - `/`, `/therapy/`, `/whole-family-mental-health/`, `/insurance-payment/`, `/contact/`, and `/hipaa-policy/` scored `100` for Performance, Accessibility, Best Practices, and SEO.
+  - Lighthouse produced Windows temp-folder cleanup warnings after successful report generation; JSON scores were still produced and read.
+- Screenshot evidence captured:
+  - `docs/prismpath-local-home-desktop.png`
+  - `docs/prismpath-local-home-mobile.png`
+  - `docs/prismpath-local-therapy.png`
+  - `docs/prismpath-local-whole-family.png`
+  - `docs/prismpath-local-insurance.png`
+  - `docs/prismpath-local-contact.png`
+  - `docs/prismpath-local-hipaa.png`
+  - `docs/prismpath-local-404.png`
+- Production-only items remain intentionally gated because final production contact/domain/SMTP/API operator details are not all ready: real domain canonicals, production SMTP delivery, final production API operators, DNS/CDN/cache settings, hosting redirects, and rollback process.
+
 ## SEO Content Expansion Verification Completed
 
 - Expanded service-style page content for Therapy, Psychiatry, ADHD & Autism Assessments, Occupational Therapy, Whole Family Mental Health, Approach, Group Support, Referral Partners, and Accommodations.

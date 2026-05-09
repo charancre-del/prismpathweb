@@ -254,6 +254,19 @@ function prismpath_retire_default_sample_page(): void
     ));
 }
 
+function prismpath_retire_default_hello_world_post(): void
+{
+    $post = get_page_by_path('hello-world', OBJECT, 'post');
+    if (!$post instanceof WP_Post || 'Hello world!' !== $post->post_title) {
+        return;
+    }
+
+    wp_update_post(array(
+        'ID' => $post->ID,
+        'post_status' => 'draft',
+    ));
+}
+
 function prismpath_retire_resource_pages(): void
 {
     $slugs = array(
@@ -366,6 +379,7 @@ function prismpath_seed_required_pages(): void
 {
     prismpath_seed_site_identity();
     prismpath_retire_default_sample_page();
+    prismpath_retire_default_hello_world_post();
     prismpath_retire_resource_pages();
 
     $pages = array(
