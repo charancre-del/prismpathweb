@@ -11,6 +11,7 @@
    - Text number
    - Main booking URL
    - Whole Family booking URL
+   - Chroma Early Start URL
    - Social links
    - Privacy and accessibility URLs
 4. Confirm Settings -> Reading uses the generated Home page.

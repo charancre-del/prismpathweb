@@ -21,13 +21,14 @@ All public-facing content is rebranded to Prismpath Health. LBee Health and Pris
 
 ## Positioning
 
-Prismpath Health offers neuroaffirming therapy, psychiatric care, occupational therapy, ADHD & Autism assessments, and Whole Family Mental Health.
+Prismpath Health offers adult neuroaffirming therapy, psychiatric care, occupational therapy, ADHD & Autism assessments, and caregiver-centered Whole Family Mental Health.
 
-Whole Family Mental Health is framed as family-systems support: parent/caregiver guidance, child and teen-informed support, communication, co-regulation, routines, and coordinated care.
+Whole Family Mental Health is framed as family-systems support: parent/caregiver guidance, communication, co-regulation, routines, and coordinated care. Pediatric ABA, speech, and occupational therapy services should be routed to Chroma Early Start.
 
 ## Content Guardrails
 
 - Do not promise diagnoses, outcomes, coverage, or availability.
 - Do not collect detailed symptoms or clinical history through the basic consult form.
-- Do not use childcare, early-learning, bee, or LBee brand language.
+- Do not use childcare, bee, or LBee brand language.
+- Chroma Early Start may be referenced only for pediatric therapy pathways.
 - Use "where provider licensure allows" for virtual care claims.

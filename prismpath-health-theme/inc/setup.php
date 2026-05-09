@@ -64,6 +64,15 @@ function prismpath_create_page_if_missing(string $title, string $slug, string $e
 {
     $existing = get_page_by_path($slug);
     if ($existing instanceof WP_Post) {
+        $current_excerpt = trim((string) $existing->post_excerpt);
+        $old_generated_excerpt = false !== strpos($current_excerpt, 'children, teens')
+            || false !== strpos($current_excerpt, 'child and teen');
+        if ('' === $current_excerpt || $old_generated_excerpt) {
+            wp_update_post(array(
+                'ID' => $existing->ID,
+                'post_excerpt' => $excerpt,
+            ));
+        }
         return (int) $existing->ID;
     }
 
@@ -101,7 +110,7 @@ function prismpath_seed_required_pages(): void
         array('Psychiatry', 'psychiatry', 'Thoughtful psychiatric care and medication management.'),
         array('ADHD & Autism Assessments', 'adhd-autism-assessments', 'Respectful assessments for adults seeking clarity.'),
         array('Occupational Therapy', 'occupational-therapy', 'Practical supports for sensory regulation, routines, and daily life.'),
-        array('Whole Family Mental Health', 'whole-family-mental-health', 'Family-systems support for caregivers, children, teens, and household rhythms.'),
+        array('Whole Family Mental Health', 'whole-family-mental-health', 'Family-systems support for caregivers, with pediatric therapy pathways through Chroma Early Start.'),
         array('Approach', 'approach', 'Neuroaffirming, whole-person care grounded in collaboration.'),
         array('Team', 'team', 'Meet the people behind Prismpath Health.'),
         array('Contact', 'contact', 'Start the conversation with Prismpath Health.'),

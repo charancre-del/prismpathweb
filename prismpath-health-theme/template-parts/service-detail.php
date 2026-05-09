@@ -9,6 +9,14 @@ $slug = $args['slug'] ?? '';
 $content = prismpath_page_content($slug);
 $service = prismpath_service_by_slug($slug);
 $cta_url = 'whole-family-mental-health' === $slug ? prismpath_whole_family_booking_url() : prismpath_booking_url();
+$secondary_url = home_url('/services/');
+$secondary_label = 'Explore Services';
+$secondary_external = false;
+if ('whole-family-mental-health' === $slug) {
+    $secondary_url = prismpath_chroma_early_start_url();
+    $secondary_label = 'Pediatric Therapy at Chroma Early Start';
+    $secondary_external = true;
+}
 ?>
 <section class="page-hero service-page-hero">
     <div class="container split">
@@ -17,7 +25,7 @@ $cta_url = 'whole-family-mental-health' === $slug ? prismpath_whole_family_booki
             <p><?php echo esc_html($content['intro']); ?></p>
             <div class="hero-actions">
                 <a class="button button-primary" href="<?php echo esc_url($cta_url); ?>">Book a Consultation</a>
-                <a class="button button-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Explore Services</a>
+                <a class="button button-outline" href="<?php echo esc_url($secondary_url); ?>"<?php echo $secondary_external ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html($secondary_label); ?></a>
             </div>
         </div>
         <div class="service-panel">

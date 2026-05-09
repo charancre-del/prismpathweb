@@ -26,6 +26,12 @@ function prismpath_whole_family_booking_url(): string
     return $url ? $url : prismpath_booking_url('/contact/#consult');
 }
 
+function prismpath_chroma_early_start_url(): string
+{
+    $url = prismpath_setting('chroma_early_start_url', 'https://chromaearlystart.com/');
+    return $url ? $url : 'https://chromaearlystart.com/';
+}
+
 function prismpath_phone_href(string $number): string
 {
     return 'tel:' . preg_replace('/[^0-9+]/', '', $number);
@@ -87,7 +93,7 @@ function prismpath_services(): array
             'title' => 'Whole Family Mental Health',
             'slug' => 'whole-family-mental-health',
             'icon' => 'family',
-            'summary' => 'Support for parents, caregivers, children, teens, and the systems around them.',
+            'summary' => 'Caregiver and family-system support, with pediatric therapy pathways through Chroma Early Start.',
             'url' => home_url('/whole-family-mental-health/'),
         ),
     );
@@ -141,8 +147,8 @@ function prismpath_default_pages(): array
         ),
         'whole-family-mental-health' => array(
             'title' => 'Whole Family Mental Health',
-            'intro' => 'Family-systems support for parents, caregivers, children, teens, and the household rhythms that shape daily life.',
-            'points' => array('Parent and caregiver guidance', 'Child and teen-informed support', 'Family communication and connection', 'Co-regulation and everyday strategies', 'Coordinated care across providers'),
+            'intro' => 'Family-systems mental health support for parents and caregivers, with pediatric ABA, speech, and occupational therapy services available through Chroma Early Start.',
+            'points' => array('Parent and caregiver guidance', 'Family communication and connection', 'Co-regulation and everyday strategies', 'Coordination across adult and pediatric providers', 'Pediatric therapy pathways through Chroma Early Start'),
         ),
         'approach' => array(
             'title' => 'A Neuroaffirming Approach to Whole-Person Care',

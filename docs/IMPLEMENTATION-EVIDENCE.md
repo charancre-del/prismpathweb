@@ -14,13 +14,11 @@ Date: 2026-05-08
 
 - PHP lint passed across all theme and plugin PHP files.
 - Theme CSS verifier passed through `npm run build`.
-- Public theme/plugin string audit returned no hits for:
+- Public theme/plugin string audit returned no hits for legacy or incorrect brand strings:
   - `LBee`
   - `LBee Health`
   - `Prismpath Wellness`
   - `lbeehealth`
-  - `Chroma`
-  - `chroma`
 
 ## WordPress Studio Verification Completed
 
@@ -38,6 +36,15 @@ Date: 2026-05-08
 - Captured desktop and mobile browser screenshots through Playwright:
   - `docs/prismpath-homepage-desktop.png`
   - `docs/prismpath-homepage-mobile.png`
+
+## End-to-End QA Completed
+
+- Verified required public routes return `200`: `/`, `/services/`, `/therapy/`, `/psychiatry/`, `/adhd-autism-assessments/`, `/occupational-therapy/`, `/whole-family-mental-health/`, `/approach/`, `/team/`, `/contact/`, `/group-support/`, `/referral-partners/`, `/accommodations/`, `/sitemap.xml`, and `/robots.txt`.
+- Verified legacy redirects return `301` to new Prismpath routes for adult assessment, neuroaffirming therapy, occupational therapy, and referral partner paths.
+- Verified the Whole Family page positions Prismpath as caregiver/family-system mental health support and routes pediatric ABA, speech, and occupational therapy to Chroma Early Start.
+- Verified the Chroma Early Start pediatric therapy CTA points to `https://chromaearlystart.com/` and opens in a new tab.
+- Verified the consult form renders a nonce, accepts a Whole Family Mental Health service selection, accepts text input, and shows no browser console errors.
+- Fixed a self-redirect issue on `/accommodations/`; the canonical page now returns `200`.
 
 ## Package Structure Verified
 

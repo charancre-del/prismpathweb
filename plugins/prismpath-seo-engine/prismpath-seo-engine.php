@@ -24,7 +24,7 @@ function prismpath_seo_setting(string $key, string $default = ''): string
 function prismpath_seo_description(): string
 {
     if (is_front_page()) {
-        return 'Prismpath Health provides neuroaffirming therapy, psychiatric care, occupational therapy, ADHD and Autism assessments, and whole-family mental health support.';
+        return 'Prismpath Health provides adult neuroaffirming therapy, psychiatric care, occupational therapy, ADHD and Autism assessments, and caregiver-centered whole-family mental health support.';
     }
     $custom = get_post_meta(get_the_ID(), 'meta_description', true);
     if ($custom) {

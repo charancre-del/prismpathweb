@@ -45,6 +45,9 @@ function prismpath_redirect_legacy_paths(): void
 
     $map = prismpath_legacy_redirect_map();
     if (isset($map[$path])) {
+        if (untrailingslashit($path) === untrailingslashit($map[$path])) {
+            return;
+        }
         wp_safe_redirect(home_url($map[$path]), 301);
         exit;
     }

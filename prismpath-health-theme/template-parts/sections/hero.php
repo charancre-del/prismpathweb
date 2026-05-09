@@ -13,6 +13,7 @@
         <div class="hero-copy">
             <h1>A clearer path to mental health care for every brain and every family.</h1>
             <p>Neuroaffirming therapy, psychiatric care, occupational therapy, and ADHD & Autism assessments for adults, caregivers, and families.</p>
+            <p class="micro-proof">Pediatric ABA, speech, and occupational therapy services are available through Chroma Early Start.</p>
             <div class="hero-actions">
                 <a class="button button-primary" href="<?php echo esc_url(prismpath_booking_url()); ?>">Start Your Journey</a>
                 <a class="button button-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Explore Services</a>
