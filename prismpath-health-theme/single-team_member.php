@@ -19,6 +19,8 @@ while (have_posts()) :
             </div>
             <?php if (has_post_thumbnail()) : ?>
                 <?php the_post_thumbnail('prismpath-card', array('class' => 'bio-photo')); ?>
+            <?php elseif (prismpath_team_photo_url(get_the_ID())) : ?>
+                <img class="bio-photo" src="<?php echo esc_url(prismpath_team_photo_url(get_the_ID())); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
             <?php endif; ?>
         </div>
     </section>

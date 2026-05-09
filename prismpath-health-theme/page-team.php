@@ -27,6 +27,8 @@ $team = new WP_Query(array(
                     <a href="<?php the_permalink(); ?>">
                         <?php if (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail('prismpath-card', array('class' => 'team-photo')); ?>
+                        <?php elseif (prismpath_team_photo_url(get_the_ID())) : ?>
+                            <img class="team-photo" src="<?php echo esc_url(prismpath_team_photo_url(get_the_ID())); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
                         <?php endif; ?>
                         <h2><?php the_title(); ?></h2>
                         <p><?php echo esc_html(get_the_excerpt()); ?></p>
@@ -34,7 +36,7 @@ $team = new WP_Query(array(
                 </article>
             <?php endwhile; wp_reset_postdata(); ?>
         <?php else : ?>
-            <p>No team members have been added yet.</p>
+            <p>Team profiles are being prepared for publication.</p>
         <?php endif; ?>
     </div>
 </section>

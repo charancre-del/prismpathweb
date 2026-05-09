@@ -86,6 +86,34 @@ function prismpath_create_page_if_missing(string $title, string $slug, string $e
     ));
 }
 
+function prismpath_create_policy_page_if_missing(string $title, string $slug, string $content, string $excerpt = ''): int
+{
+    $existing = get_page_by_path($slug);
+    if ($existing instanceof WP_Post) {
+        $old_generated_content = false !== strpos((string) $existing->post_content, 'review against the final production')
+            || false !== strpos((string) $existing->post_content, 'reviewed against the final production')
+            || false !== strpos((string) $existing->post_content, 'Final privacy practices should reflect');
+        if ('' === trim((string) $existing->post_content) || 'publish' !== $existing->post_status || $old_generated_content) {
+            wp_update_post(array(
+                'ID' => $existing->ID,
+                'post_excerpt' => $excerpt,
+                'post_content' => $content,
+                'post_status' => 'publish',
+            ));
+        }
+        return (int) $existing->ID;
+    }
+
+    return (int) wp_insert_post(array(
+        'post_type' => 'page',
+        'post_status' => 'publish',
+        'post_title' => $title,
+        'post_name' => $slug,
+        'post_excerpt' => $excerpt,
+        'post_content' => $content,
+    ));
+}
+
 function prismpath_seed_site_identity(): void
 {
     $current_name = trim((string) get_option('blogname'));
@@ -99,9 +127,75 @@ function prismpath_seed_site_identity(): void
     }
 }
 
+function prismpath_retire_default_sample_page(): void
+{
+    $sample = get_page_by_path('sample-page');
+    if (!$sample instanceof WP_Post || 'Sample Page' !== $sample->post_title) {
+        return;
+    }
+
+    wp_update_post(array(
+        'ID' => $sample->ID,
+        'post_status' => 'draft',
+    ));
+}
+
+function prismpath_seed_policy_pages(): void
+{
+    $privacy = prismpath_create_policy_page_if_missing(
+        'Privacy Policy',
+        'privacy-policy',
+        '<p>Prismpath Health uses information submitted through this website to respond to inquiries, route consultation requests, and support care coordination. Please do not submit emergencies or detailed clinical history through the contact form.</p><p>Information may be shared with authorized team members or service providers when needed to operate the website, protect the site, and respond to requests. Care-related privacy notices may be provided separately when services begin.</p>',
+        'How Prismpath Health handles website inquiries and privacy review.'
+    );
+    if ($privacy) {
+        update_option('wp_page_for_privacy_policy', $privacy);
+    }
+
+    prismpath_create_policy_page_if_missing(
+        'Accessibility Statement',
+        'accessibility-statement',
+        '<p>Prismpath Health is committed to making its website usable and welcoming for visitors with diverse access needs. We aim for clear language, keyboard-friendly navigation, readable contrast, responsive layouts, and meaningful alternative text where images communicate content.</p><p>If you encounter an accessibility barrier, contact us through the Contact page so our team can review the issue and improve the experience.</p>',
+        'Prismpath Health website accessibility commitment.'
+    );
+}
+
+function prismpath_seed_team_members(): void
+{
+    foreach (prismpath_default_team_members() as $member) {
+        $existing = get_page_by_path($member['slug'], OBJECT, 'team_member');
+        $content = '<p>' . implode('</p><p>', array_map('esc_html', $member['bio'])) . '</p>';
+        $postarr = array(
+            'post_type' => 'team_member',
+            'post_status' => 'publish',
+            'post_title' => $member['name'],
+            'post_name' => $member['slug'],
+            'post_excerpt' => $member['role'],
+            'post_content' => $content,
+            'menu_order' => (int) $member['order'],
+        );
+
+        if ($existing instanceof WP_Post) {
+            $postarr['ID'] = $existing->ID;
+            if ('' !== trim((string) $existing->post_content)) {
+                unset($postarr['post_content']);
+            }
+            wp_update_post($postarr);
+            $post_id = (int) $existing->ID;
+        } else {
+            $post_id = (int) wp_insert_post($postarr);
+        }
+
+        if ($post_id && !empty($member['photo'])) {
+            update_post_meta($post_id, '_prismpath_team_photo', sanitize_file_name($member['photo']));
+        }
+    }
+}
+
 function prismpath_seed_required_pages(): void
 {
     prismpath_seed_site_identity();
+    prismpath_retire_default_sample_page();
 
     $pages = array(
         array('Home', 'home', 'A clearer path to mental health care for every brain and every family.'),
@@ -131,6 +225,9 @@ function prismpath_seed_required_pages(): void
         update_option('show_on_front', 'page');
         update_option('page_on_front', $home_id);
     }
+
+    prismpath_seed_policy_pages();
+    prismpath_seed_team_members();
 
     $menu_name = 'Prismpath Primary';
     $menu = wp_get_nav_menu_object($menu_name);

@@ -37,6 +37,7 @@ Date: 2026-05-08
 - Captured desktop and mobile browser screenshots through Playwright:
   - `docs/prismpath-homepage-desktop.png`
   - `docs/prismpath-homepage-mobile.png`
+  - `docs/prismpath-team-desktop.png`
 
 ## End-to-End QA Completed
 
@@ -47,6 +48,9 @@ Date: 2026-05-08
 - Verified the consult form renders a nonce, accepts a Whole Family Mental Health service selection, accepts text input, and shows no browser console errors.
 - Verified the Agent API route namespace is registered at `/wp-json/chroma-agent/v1/*` and unauthenticated HTTP access is blocked with `caa_https_required`.
 - Fixed a self-redirect issue on `/accommodations/`; the canonical page now returns `200`.
+- Verified all public template routes have real titles/H1s and no public rendered LBee, Prismpath Wellness, or lbeehealth strings.
+- Seeded 15 migrated team profiles with real bio content and theme-managed team photos.
+- Published Privacy Policy and Accessibility Statement pages, and moved the default WordPress Sample Page to draft.
 
 ## Package Structure Verified
 
@@ -61,6 +65,8 @@ Date: 2026-05-08
 - Full public content rewrite around Prismpath Health.
 - Homepage, service, contact, team, bio, and support templates.
 - Required page/menu seeder on theme activation.
+- Team profile seeder for migrated clinician bios.
+- Privacy/accessibility page seeder and Sample Page cleanup.
 - Legacy 301 redirect map.
 - SEO/schema/sitemap/robots plugin.
 - Consult form plugin with nonce, sanitization, validation, email, redirect state, and optional lead logging.

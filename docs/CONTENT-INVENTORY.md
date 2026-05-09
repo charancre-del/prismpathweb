@@ -18,6 +18,8 @@ All public-facing content is rebranded to Prismpath Health. LBee Health and Pris
 - Referral Partners -> `page-referral-partners.php`
 - Accommodations -> `page-accommodations.php`
 - Team bios -> `single-team_member.php` with `/bio/{slug}` URLs
+- Privacy Policy -> generated website inquiry privacy content, pending final legal review before launch
+- Accessibility Statement -> generated page content
 
 ## Positioning
 
@@ -31,4 +33,6 @@ Whole Family Mental Health is framed as family-systems support: parent/caregiver
 - Do not collect detailed symptoms or clinical history through the basic consult form.
 - Do not use childcare, bee, or LBee brand language.
 - Chroma Early Start may be referenced only for pediatric therapy pathways.
+- Default WordPress starter content, including Sample Page, must not be public.
+- Team profiles are seeded from the migrated legacy bio templates and should be reviewed before final launch if credentials or availability change.
 - Use "where provider licensure allows" for virtual care claims.

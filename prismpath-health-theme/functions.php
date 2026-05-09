@@ -13,6 +13,7 @@ define('PRISMPATH_VERSION', '1.0.0');
 define('PRISMPATH_THEME_DIR', get_template_directory());
 define('PRISMPATH_THEME_URI', get_template_directory_uri());
 
+require_once PRISMPATH_THEME_DIR . '/inc/team-data.php';
 require_once PRISMPATH_THEME_DIR . '/inc/setup.php';
 require_once PRISMPATH_THEME_DIR . '/inc/settings.php';
 require_once PRISMPATH_THEME_DIR . '/inc/template-tags.php';

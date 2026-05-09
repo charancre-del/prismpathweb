@@ -14,6 +14,16 @@ function prismpath_asset(string $path): string
     return PRISMPATH_THEME_URI . '/assets/' . ltrim($path, '/');
 }
 
+function prismpath_team_photo_url(int $post_id): string
+{
+    $photo = (string) get_post_meta($post_id, '_prismpath_team_photo', true);
+    if ('' === $photo) {
+        return '';
+    }
+
+    return prismpath_asset('images/team/' . sanitize_file_name($photo));
+}
+
 function prismpath_booking_url(string $fallback = '/contact/#consult'): string
 {
     $url = prismpath_setting('booking_url', '');
