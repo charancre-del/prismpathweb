@@ -1,6 +1,6 @@
 # Content Inventory
 
-All public-facing brand content is rebranded to Prismpath Health. Prismpath Wellness should not appear in templates, plugins, metadata, schema, or documentation. LBee should appear only as the legal entity disclosure: Prismpath Health is a DBA of Lbee Health Practive Group PLLC.
+All public-facing brand content is rebranded to Prismpath Health. Prismpath Wellness should not appear in templates, plugins, metadata, schema, or documentation. LBee should appear only as the legal entity disclosure: Lbee Health Practive Group PLLC dba Prismpath Health.
 
 ## Required Pages
 
@@ -27,7 +27,7 @@ All public-facing brand content is rebranded to Prismpath Health. Prismpath Well
 
 Prismpath Health offers adult neuroaffirming therapy, psychiatric care, occupational therapy, ADHD & Autism assessments, and caregiver-centered Whole Family Mental Health.
 
-Legal-facing content should use Lbee Health Practive Group PLLC as the legal entity and Prismpath Health as the public DBA.
+Legal-facing content should use the wording "Lbee Health Practive Group PLLC dba Prismpath Health."
 
 Whole Family Mental Health is framed as family-systems support: parent/caregiver guidance, communication, co-regulation, routines, and coordinated care. Pediatric ABA, speech, and occupational therapy services should be routed to Chroma Early Start.
 

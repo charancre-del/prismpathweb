@@ -146,7 +146,7 @@ function prismpath_legal_name(): string
 
 function prismpath_dba_notice(): string
 {
-    return '<p><strong>Legal entity notice:</strong> Prismpath Health is a DBA of ' . esc_html(prismpath_legal_name()) . '.</p>';
+    return '<p><strong>Legal entity notice:</strong> ' . esc_html(prismpath_legal_name()) . ' dba Prismpath Health.</p>';
 }
 
 function prismpath_create_child_page_if_missing(string $title, string $slug, int $parent_id, string $excerpt = ''): int
@@ -188,7 +188,9 @@ function prismpath_create_policy_page_if_missing(string $title, string $slug, st
         $old_generated_content = false !== strpos((string) $existing->post_content, 'review against the final production')
             || false !== strpos((string) $existing->post_content, 'reviewed against the final production')
             || false !== strpos((string) $existing->post_content, 'Final privacy practices should reflect');
-        $missing_legal_entity = false === strpos((string) $existing->post_content, prismpath_legal_name());
+        $existing_content = (string) $existing->post_content;
+        $missing_legal_entity = false === strpos($existing_content, prismpath_legal_name());
+        $missing_exact_dba_wording = false === strpos($existing_content, prismpath_legal_name() . ' dba Prismpath Health');
         if ('' === trim((string) $existing->post_content) || 'publish' !== $existing->post_status || $old_generated_content) {
             wp_update_post(array(
                 'ID' => $existing->ID,
@@ -196,11 +198,20 @@ function prismpath_create_policy_page_if_missing(string $title, string $slug, st
                 'post_content' => $content,
                 'post_status' => 'publish',
             ));
-        } elseif ($missing_legal_entity && in_array($slug, array('privacy-policy', 'hipaa-policy', 'accessibility-statement'), true)) {
+        } elseif (in_array($slug, array('privacy-policy', 'hipaa-policy', 'accessibility-statement'), true) && ($missing_legal_entity || $missing_exact_dba_wording)) {
+            $updated_content = preg_replace(
+                '/<p><strong>Legal entity notice:<\/strong>.*?<\/p>/',
+                prismpath_dba_notice(),
+                $existing_content,
+                1
+            );
+            if (!is_string($updated_content) || $updated_content === $existing_content) {
+                $updated_content = prismpath_dba_notice() . $existing_content;
+            }
             wp_update_post(array(
                 'ID' => $existing->ID,
                 'post_excerpt' => $excerpt,
-                'post_content' => prismpath_dba_notice() . (string) $existing->post_content,
+                'post_content' => $updated_content,
                 'post_status' => 'publish',
             ));
         }
@@ -450,7 +461,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-09-legal-dba-v7';
+    $target_version = '2026-05-09-legal-dba-wording-v9';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }

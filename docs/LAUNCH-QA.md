@@ -10,7 +10,7 @@ Do not launch until every item below passes on staging.
 - No blog, resource hub, or resource-guide pages are published unless intentionally requested later.
 - Insurance & Payment page is published and lists accepted plans with benefit-verification language.
 - HIPAA Policy page is published and final legal/privacy review is complete.
-- Legal-facing content, footer copyright, and organization schema identify Lbee Health Practive Group PLLC as the legal entity and Prismpath Health as the DBA.
+- Legal-facing content, footer copyright, and organization schema identify `Lbee Health Practive Group PLLC dba Prismpath Health`.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
 - Contact settings are populated with final production details.
@@ -56,6 +56,7 @@ Do not launch until every item below passes on staging.
 - CSS and JS load without 404s.
 - Mobile navigation works without console errors.
 - No large unused debug assets are included in production.
+- Lighthouse should be rerun on staging after production caching/hosting is enabled; local Studio audit evidence reached `100` for Accessibility, Best Practices, and SEO across audited templates, with Performance ranging from `97` to `100` because of local root document response/FCP timing.
 
 ## Rollback
 

@@ -29,7 +29,8 @@ Date: 2026-05-09
   - Added reusable insurance/payment section to `/services/` and relevant service-detail pages.
   - Preserved benefit-verification and patient-responsibility language instead of guaranteeing individual coverage before verification.
 - Added and seeded `/hipaa-policy/` with HIPAA notice-style policy content, SEO metadata, sitemap coverage, and a footer link.
-- Added legal entity disclosure for Lbee Health Practive Group PLLC as the legal entity and Prismpath Health as the DBA in legal pages, footer copyright, settings, and organization/service schema.
+- Added legal entity disclosure as `Lbee Health Practive Group PLLC dba Prismpath Health` in legal pages, footer copyright, settings, and organization/service schema.
+- Completed Lighthouse template audit evidence in `docs/LIGHTHOUSE-AUDIT.md`: all audited public templates scored `100` for Accessibility, Best Practices, and SEO; Studio Performance ranged from `97` to `100` because Lighthouse reported local root document response/FCP timing as the remaining limiter.
 - Captured browser screenshot evidence outside the repo:
   - `C:\Users\chara\AppData\Local\Temp\prismpath-insurance-payment.png`
 
@@ -46,6 +47,7 @@ Date: 2026-05-09
 
 - PHP lint passed across all theme and plugin PHP files.
 - Theme CSS verifier passed through `npm run build`.
+- Lighthouse-driven template fixes added optimized WebP assets, explicit image dimensions, inline minified CSS and navigation script loading, system font stacks, improved CTA contrast, and descriptive service-card link text.
 - Public theme/plugin string audit returned no hits for legacy or incorrect brand strings:
   - `LBee`
   - `LBee Health`

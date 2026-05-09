@@ -15,7 +15,8 @@
         <div class="insurance-grid" aria-label="<?php esc_attr_e('Accepted insurance plans', 'prismpath-health'); ?>">
             <?php foreach (prismpath_insurance_plans() as $plan) : ?>
                 <div class="insurance-card">
-                    <img src="<?php echo esc_url(prismpath_asset('images/insurance/' . $plan['logo'])); ?>" alt="<?php echo esc_attr($plan['name']); ?>">
+                    <?php $logo_path = 'images/insurance/' . $plan['logo']; ?>
+                    <img src="<?php echo esc_url(prismpath_optimized_asset($logo_path)); ?>" alt="<?php echo esc_attr($plan['name']); ?>"<?php echo prismpath_image_size_attrs($logo_path); ?> loading="lazy" decoding="async">
                 </div>
             <?php endforeach; ?>
         </div>

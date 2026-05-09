@@ -1,0 +1,138 @@
+[
+  {
+    "route": "/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 710 ms"
+  },
+  {
+    "route": "/services/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 1,050 ms"
+  },
+  {
+    "route": "/therapy/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 700 ms"
+  },
+  {
+    "route": "/psychiatry/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 1,190 ms"
+  },
+  {
+    "route": "/adhd-autism-assessments/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 890 ms"
+  },
+  {
+    "route": "/occupational-therapy/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 840 ms"
+  },
+  {
+    "route": "/whole-family-mental-health/",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 790 ms"
+  },
+  {
+    "route": "/approach/",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 700 ms"
+  },
+  {
+    "route": "/group-support/",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 730 ms"
+  },
+  {
+    "route": "/referral-partners/",
+    "performance": 98,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 990 ms"
+  },
+  {
+    "route": "/accommodations/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 800 ms"
+  },
+  {
+    "route": "/insurance-payment/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 810 ms"
+  },
+  {
+    "route": "/team/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 1,130 ms"
+  },
+  {
+    "route": "/contact/",
+    "performance": 98,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 840 ms"
+  },
+  {
+    "route": "/privacy-policy/",
+    "performance": 97,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 1,160 ms"
+  },
+  {
+    "route": "/hipaa-policy/",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 690 ms"
+  },
+  {
+    "route": "/accessibility-statement/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "serverResponseTime": "Root document took 740 ms"
+  }
+]

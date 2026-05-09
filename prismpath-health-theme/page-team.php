@@ -28,7 +28,8 @@ $team = new WP_Query(array(
                         <?php if (has_post_thumbnail()) : ?>
                             <?php the_post_thumbnail('prismpath-card', array('class' => 'team-photo')); ?>
                         <?php elseif (prismpath_team_photo_url(get_the_ID())) : ?>
-                            <img class="team-photo" src="<?php echo esc_url(prismpath_team_photo_url(get_the_ID())); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
+                            <?php $team_photo = (string) get_post_meta(get_the_ID(), '_prismpath_team_photo', true); ?>
+                            <img class="team-photo" src="<?php echo esc_url(prismpath_team_photo_url(get_the_ID())); ?>" alt="<?php the_title_attribute(); ?>"<?php echo prismpath_image_size_attrs('images/team/' . sanitize_file_name($team_photo)); ?> loading="lazy" decoding="async">
                         <?php endif; ?>
                         <h2><?php the_title(); ?></h2>
                         <p><?php echo esc_html(get_the_excerpt()); ?></p>

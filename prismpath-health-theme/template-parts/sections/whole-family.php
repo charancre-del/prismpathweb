@@ -21,6 +21,7 @@
             <a class="button button-amber" href="<?php echo esc_url(prismpath_whole_family_booking_url()); ?>">Explore Whole Family Support</a>
             <a class="text-link" href="<?php echo esc_url(prismpath_chroma_early_start_url()); ?>" target="_blank" rel="noopener">View pediatric therapy at Chroma Early Start</a>
         </div>
-        <img src="<?php echo esc_url(prismpath_asset('images/whole-family-path.png')); ?>" alt="Family walking together on a calm path" loading="lazy">
+        <?php $family_image = 'images/whole-family-path.png'; ?>
+        <img src="<?php echo esc_url(prismpath_optimized_asset($family_image)); ?>" alt="Family walking together on a calm path"<?php echo prismpath_image_size_attrs($family_image); ?><?php echo prismpath_responsive_image_attrs($family_image, '(max-width: 900px) 100vw, 50vw'); ?> loading="lazy" decoding="async">
     </div>
 </section>

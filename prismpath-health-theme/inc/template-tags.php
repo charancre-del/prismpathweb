@@ -14,6 +14,76 @@ function prismpath_asset(string $path): string
     return PRISMPATH_THEME_URI . '/assets/' . ltrim($path, '/');
 }
 
+function prismpath_asset_file(string $path): string
+{
+    return PRISMPATH_THEME_DIR . '/assets/' . ltrim($path, '/');
+}
+
+function prismpath_optimized_asset_path(string $path): string
+{
+    $clean = ltrim($path, '/');
+    $info = pathinfo($clean);
+    $dir = $info['dirname'] ?? '';
+    $filename = $info['filename'] ?? '';
+    $candidate = ('.' === $dir ? '' : $dir . '/') . 'optimized/' . $filename . '.webp';
+
+    return file_exists(prismpath_asset_file($candidate)) ? $candidate : $clean;
+}
+
+function prismpath_optimized_asset(string $path): string
+{
+    return prismpath_asset(prismpath_optimized_asset_path($path));
+}
+
+function prismpath_image_size_attrs(string $path): string
+{
+    $asset_path = prismpath_optimized_asset_path($path);
+    $file = prismpath_asset_file($asset_path);
+    if (!file_exists($file)) {
+        return '';
+    }
+
+    $size = getimagesize($file);
+    if (!is_array($size) || empty($size[0]) || empty($size[1])) {
+        return '';
+    }
+
+    return ' width="' . esc_attr((string) $size[0]) . '" height="' . esc_attr((string) $size[1]) . '"';
+}
+
+function prismpath_responsive_image_attrs(string $path, string $sizes): string
+{
+    $asset_path = prismpath_optimized_asset_path($path);
+    $info = pathinfo($asset_path);
+    $dir = $info['dirname'] ?? '';
+    $filename = $info['filename'] ?? '';
+    $extension = $info['extension'] ?? '';
+    if ('' === $filename || '' === $extension) {
+        return '';
+    }
+
+    $candidates = array();
+    foreach (array(640, 960, 1280) as $width) {
+        $candidate = ('.' === $dir ? '' : $dir . '/') . $filename . '-' . $width . '.' . $extension;
+        if (file_exists(prismpath_asset_file($candidate))) {
+            $candidates[] = esc_url(prismpath_asset($candidate)) . ' ' . absint($width) . 'w';
+        }
+    }
+    if (file_exists(prismpath_asset_file($asset_path))) {
+        $size = getimagesize(prismpath_asset_file($asset_path));
+        if (is_array($size) && !empty($size[0])) {
+            $candidates[] = esc_url(prismpath_asset($asset_path)) . ' ' . absint((int) $size[0]) . 'w';
+        }
+    }
+
+    $candidates = array_values(array_unique($candidates));
+    if (empty($candidates)) {
+        return '';
+    }
+
+    return ' srcset="' . esc_attr(implode(', ', $candidates)) . '" sizes="' . esc_attr($sizes) . '"';
+}
+
 function prismpath_team_photo_url(int $post_id): string
 {
     $photo = (string) get_post_meta($post_id, '_prismpath_team_photo', true);
@@ -21,7 +91,7 @@ function prismpath_team_photo_url(int $post_id): string
         return '';
     }
 
-    return prismpath_asset('images/team/' . sanitize_file_name($photo));
+    return prismpath_optimized_asset('images/team/' . sanitize_file_name($photo));
 }
 
 function prismpath_booking_url(string $fallback = '/contact/#consult'): string

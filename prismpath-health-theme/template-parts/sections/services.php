@@ -17,7 +17,7 @@
                     <span class="icon-circle"><?php echo prismpath_icon($service['icon']); ?></span>
                     <h3><?php echo esc_html($service['title']); ?></h3>
                     <p><?php echo esc_html($service['summary']); ?></p>
-                    <a href="<?php echo esc_url($service['url']); ?>">Learn more</a>
+                    <a href="<?php echo esc_url($service['url']); ?>">Learn more about <?php echo esc_html($service['title']); ?></a>
                 </article>
             <?php endforeach; ?>
         </div>

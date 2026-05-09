@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="container footer-bottom">
-            <p>&copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($legal_name); ?>. Prismpath Health is a DBA. All rights reserved.</p>
+            <p>&copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($legal_name); ?> dba Prismpath Health. All rights reserved.</p>
             <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>">Site Map</a>
         </div>
     </footer>
