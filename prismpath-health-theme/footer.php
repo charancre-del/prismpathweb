@@ -19,7 +19,6 @@
                     <a href="<?php echo esc_url(home_url('/services/')); ?>">Services</a>
                     <a href="<?php echo esc_url(home_url('/adhd-autism-assessments/')); ?>">Assessments</a>
                     <a href="<?php echo esc_url(home_url('/whole-family-mental-health/')); ?>">Whole Family Mental Health</a>
-                    <a href="<?php echo esc_url(home_url('/resources/')); ?>">Resources</a>
                     <a href="<?php echo esc_url(home_url('/insurance-payment/')); ?>">Insurance & Payment</a>
                     <a href="<?php echo esc_url(home_url('/approach/')); ?>">Approach</a>
                 </nav>

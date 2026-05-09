@@ -69,27 +69,9 @@ if ('whole-family-mental-health' === $slug) {
         </aside>
     </div>
 </section>
-<?php if (!empty($content['related_links']) || !empty($content['faqs'])) : ?>
-<section class="resource-support-section">
-    <div class="container resource-support-grid">
-        <?php if (!empty($content['related_links']) && is_array($content['related_links'])) : ?>
-            <div class="support-panel">
-                <h2>Helpful next reads</h2>
-                <div class="related-list">
-                    <?php foreach ($content['related_links'] as $resource_slug) :
-                        $resource = prismpath_resource_by_slug($resource_slug);
-                        if (!$resource) {
-                            continue;
-                        }
-                        ?>
-                        <a href="<?php echo esc_url(prismpath_resource_url($resource_slug)); ?>">
-                            <span><?php echo esc_html($resource['title']); ?></span>
-                            <small><?php echo esc_html($resource['excerpt']); ?></small>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        <?php endif; ?>
+<?php if (!empty($content['faqs'])) : ?>
+<section class="faq-support-section">
+    <div class="container faq-support-grid single-column">
         <?php if (!empty($content['faqs']) && is_array($content['faqs'])) : ?>
             <div class="support-panel faq-panel">
                 <h2>Common questions</h2>

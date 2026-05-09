@@ -21,7 +21,7 @@ get_header();
 <?php get_template_part('template-parts/sections/insurance'); ?>
 
 <section class="page-content">
-    <div class="container resource-layout">
+    <div class="container detail-layout">
         <div class="prose">
             <section class="content-section">
                 <h2>How benefits verification works</h2>

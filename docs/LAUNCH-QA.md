@@ -5,9 +5,9 @@ Do not launch until every item below passes on staging.
 ## WordPress
 
 - Theme activates without fatal errors.
-- All three plugins activate without fatal errors.
+- All four production plugins activate without fatal errors.
 - Required pages exist and use the expected templates.
-- Resource hub and all six resource guide child pages are published under `/resources/`.
+- No blog, resource hub, or resource-guide pages are published unless intentionally requested later.
 - Insurance & Payment page is published and lists accepted plans with benefit-verification language.
 - Primary and footer navigation contain Prismpath Health URLs.
 - Permalinks are set to Post name.
@@ -20,7 +20,8 @@ Do not launch until every item below passes on staging.
 - Canonical URLs use the new Prismpath Health domain.
 - Homepage emits `MedicalOrganization` and `WebSite` schema.
 - Service pages emit `Service` schema.
-- Resource guide pages emit `Article` schema.
+- Public service and template pages are SEO optimized with unique meta descriptions, canonical URLs, visible FAQ content where used, and conservative healthcare-safe copy.
+- The Chroma Agent API schema routes are installed for managed schema operations.
 - FAQ schema appears only where matching FAQ content is visible on the page.
 - Breadcrumb schema appears on non-home pages.
 - Every indexed page has a unique meta description and canonical URL.

@@ -155,22 +155,6 @@ function prismpath_schema_output(): void
         )));
     }
 
-    if (is_page() && function_exists('prismpath_resource_by_slug')) {
-        $slug = get_post_field('post_name', get_the_ID());
-        $resource = prismpath_resource_by_slug((string) $slug);
-        if ($resource) {
-            prismpath_jsonld(array(
-                '@context' => 'https://schema.org',
-                '@type' => 'Article',
-                'headline' => get_the_title(),
-                'description' => prismpath_seo_description(),
-                'author' => array('@type' => 'Organization', 'name' => 'Prismpath Health'),
-                'publisher' => array('@type' => 'MedicalOrganization', 'name' => 'Prismpath Health'),
-                'mainEntityOfPage' => get_permalink(),
-            ));
-        }
-    }
-
     if (is_singular()) {
         $record = prismpath_seo_content_record((int) get_the_ID());
         if ($record && !empty($record['faqs']) && is_array($record['faqs'])) {

@@ -9,11 +9,6 @@ get_header();
 
 while (have_posts()) :
     the_post();
-    $resource = prismpath_resource_by_slug(get_post_field('post_name', get_the_ID()));
-    if ($resource) {
-        get_template_part('template-parts/resource-detail', null, array('slug' => get_post_field('post_name', get_the_ID())));
-        continue;
-    }
     ?>
     <section class="page-hero">
         <div class="container narrow">

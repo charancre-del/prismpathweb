@@ -1,35 +1,31 @@
 # Implementation Evidence
 
-Date: 2026-05-08
+Date: 2026-05-09
 
 ## SEO Content Expansion Verification Completed
 
 - Expanded service-style page content for Therapy, Psychiatry, ADHD & Autism Assessments, Occupational Therapy, Whole Family Mental Health, Approach, Group Support, Referral Partners, and Accommodations.
-- Added the `/resources/` hub and six guide pages:
-  - `/resources/adult-adhd-autism-assessment-guide/`
-  - `/resources/neuroaffirming-therapy-for-adults/`
-  - `/resources/psychiatric-medication-management-neurodivergent-adults/`
-  - `/resources/occupational-therapy-sensory-regulation-adults/`
-  - `/resources/whole-family-mental-health-caregiver-support/`
-  - `/resources/accommodations-documentation-support/`
-- Added one-time theme content seeding for resource pages, SEO titles, meta descriptions, and menu/resource updates.
-- Verified local WordPress Studio routes return `200` for all service pages, all resource pages, team, contact, privacy, accessibility, `/sitemap.xml`, and `/robots.txt`.
+- Optimized the actual page and template pages rather than publishing blog/resource pages.
+- Retired the temporary `/resources/` hub and resource child pages to draft.
+- Added one-time theme content seeding for SEO titles, meta descriptions, insurance page updates, and temporary resource-page retirement.
+- Verified local WordPress Studio routes return `200` for all service pages, insurance/payment, team, contact, privacy, accessibility, `/sitemap.xml`, and `/robots.txt`.
 - Verified every checked public route has a canonical URL and unique meta description.
 - Verified JSON-LD parses on all checked public routes.
-- Verified service pages emit `Service` schema, resource guide pages emit `Article` schema, and pages with visible FAQs emit `FAQPage` schema.
-- Verified `/sitemap.xml` includes the resource hub and all six guide URLs.
+- Verified service pages emit `Service` schema and pages with visible FAQs emit `FAQPage` schema.
+- Verified no checked public route emits `Article` schema after removing the unrequested guide/blog layer.
+- Verified `/resources/` and prior resource-guide child URLs return `404` locally after the retirement seeder runs.
+- Verified `/sitemap.xml` includes service, insurance, whole-family, team, contact, policy, and accessibility pages, and does not include `/resources/`.
+- Verified the Chroma Agent API schema endpoints are registered at `/wp-json/chroma-agent/v1/seo/schema` and `/wp-json/chroma-agent/v1/schema/seo`; local HTTP access correctly returns `caa_https_required`.
 - Verified the public rendered route audit found no `LBee`, `Prismpath Wellness`, `lbeehealth`, `childcare`, or unsupported bee-brand language.
 - Verified the Whole Family content keeps pediatric ABA, speech therapy, and pediatric occupational therapy routed to Chroma Early Start.
-- Verified the resource guide consultation CTA navigates to `/contact/#consult`, and the contact form still exposes a Whole Family Mental Health service option.
+- Verified the contact form still exposes a Whole Family Mental Health service option.
 - Added Insurance & Payment coverage from the LBee codebase:
   - Published `/insurance-payment/`.
   - Added accepted plan logos for Optum, Aetna, AvMed, Oscar, Blue Cross Blue Shield, Employers Health Network, Medicare, Cigna, and Humana.
   - Added reusable insurance/payment section to `/services/` and relevant service-detail pages.
-  - Added the resource guide `/resources/insurance-payment-guide/`.
   - Preserved benefit-verification and patient-responsibility language instead of guaranteeing individual coverage before verification.
 - Captured browser screenshot evidence outside the repo:
-  - `C:\Users\chara\AppData\Local\Temp\prismpath-resources-desktop.png`
-  - `C:\Users\chara\AppData\Local\Temp\prismpath-resource-guide-desktop.png`
+  - `C:\Users\chara\AppData\Local\Temp\prismpath-insurance-payment.png`
 
 ## Package Outputs
 
