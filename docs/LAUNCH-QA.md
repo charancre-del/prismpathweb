@@ -22,6 +22,8 @@ Do not launch until every item below passes on staging.
 - Service pages emit `Service` schema.
 - Public service and template pages are SEO optimized with unique meta descriptions, canonical URLs, visible FAQ content where used, and conservative healthcare-safe copy.
 - The Chroma Agent API schema routes are installed for managed schema operations.
+- Prismpath SEO & Template Content metabox changes are reflected on the matching front-end templates.
+- Agent API SEO allowlists include Prismpath SEO/title/meta and template-content override keys.
 - FAQ schema appears only where matching FAQ content is visible on the page.
 - Breadcrumb schema appears on non-home pages.
 - Every indexed page has a unique meta description and canonical URL.

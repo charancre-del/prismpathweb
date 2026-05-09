@@ -30,8 +30,8 @@ if ('whole-family-mental-health' === $slug) {
         </div>
         <div class="service-panel">
             <span class="icon-circle"><?php echo $service ? prismpath_icon($service['icon']) : prismpath_icon('check'); ?></span>
-            <h2>Care shaped around real life.</h2>
-            <p>We combine clinical insight, practical strategy, and respectful collaboration so care feels usable outside the session too.</p>
+            <h2><?php echo esc_html($content['panel_heading'] ?? 'Care shaped around real life.'); ?></h2>
+            <p><?php echo esc_html($content['panel_body'] ?? 'We combine clinical insight, practical strategy, and respectful collaboration so care feels usable outside the session too.'); ?></p>
         </div>
     </div>
 </section>

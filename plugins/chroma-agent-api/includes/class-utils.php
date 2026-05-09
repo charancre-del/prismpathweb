@@ -191,6 +191,8 @@ class Utils
     {
         $saved = get_option(self::OPTION_SEO_OPTION_ALLOWLIST, []);
         $defaults = [
+            'prismpath_global_settings',
+            'prismpath_content_seed_version',
             'chroma_citation_facts',
             'chroma_llm_brand_voice',
             'chroma_llm_brand_context',
@@ -222,6 +224,15 @@ class Utils
     {
         $saved = get_option(self::OPTION_SEO_META_ALLOWLIST, []);
         $defaults = [
+            '_prismpath_seo_title',
+            'meta_description',
+            '_prismpath_page_hero_title',
+            '_prismpath_page_intro',
+            '_prismpath_page_panel_heading',
+            '_prismpath_page_panel_body',
+            '_prismpath_page_points',
+            '_prismpath_page_sections',
+            '_prismpath_page_faqs',
             '_chroma_es_title',
             '_chroma_es_content',
             '_chroma_es_excerpt',

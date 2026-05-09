@@ -106,8 +106,90 @@ function prismpath_jsonld(array $schema): void
     echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>' . "\n";
 }
 
+function prismpath_seo_is_assoc_array(array $value): bool
+{
+    return array_keys($value) !== range(0, count($value) - 1);
+}
+
+function prismpath_seo_normalize_agent_schema_item($item): ?array
+{
+    if (is_string($item)) {
+        $decoded = json_decode($item, true);
+        $item = is_array($decoded) ? $decoded : null;
+    }
+
+    if (!is_array($item)) {
+        return null;
+    }
+
+    foreach (array('schema', 'data', 'json') as $key) {
+        if (isset($item[$key])) {
+            return prismpath_seo_normalize_agent_schema_item($item[$key]);
+        }
+    }
+
+    if (!empty($item['@type']) || !empty($item['@context']) || !empty($item['mainEntity'])) {
+        if (empty($item['@context'])) {
+            $item['@context'] = 'https://schema.org';
+        }
+        return $item;
+    }
+
+    return null;
+}
+
+function prismpath_seo_agent_schemas(int $post_id): array
+{
+    $override = get_post_meta($post_id, '_chroma_schema_override', true);
+    if (!$override) {
+        return array();
+    }
+
+    $candidates = array(
+        get_post_meta($post_id, '_chroma_schema_data', true),
+        get_post_meta($post_id, '_chroma_post_schemas', true),
+    );
+
+    $schemas = array();
+    foreach ($candidates as $candidate) {
+        if (!$candidate) {
+            continue;
+        }
+
+        if (is_string($candidate)) {
+            $decoded = json_decode($candidate, true);
+            $candidate = is_array($decoded) ? $decoded : $candidate;
+        }
+
+        if (is_array($candidate) && prismpath_seo_is_assoc_array($candidate)) {
+            $schema = prismpath_seo_normalize_agent_schema_item($candidate);
+            if ($schema) {
+                $schemas[] = $schema;
+                continue;
+            }
+        }
+
+        foreach ((array) $candidate as $item) {
+            $schema = prismpath_seo_normalize_agent_schema_item($item);
+            if ($schema) {
+                $schemas[] = $schema;
+            }
+        }
+    }
+
+    return $schemas;
+}
+
 function prismpath_schema_output(): void
 {
+    $agent_schemas = is_singular() ? prismpath_seo_agent_schemas((int) get_the_ID()) : array();
+    if ($agent_schemas) {
+        foreach ($agent_schemas as $schema) {
+            prismpath_jsonld($schema);
+        }
+        return;
+    }
+
     if (is_front_page()) {
         $same_as = array_filter(array(
             prismpath_seo_setting('facebook_url'),

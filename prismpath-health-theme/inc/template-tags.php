@@ -319,15 +319,36 @@ function prismpath_default_pages(): array
 function prismpath_page_content(string $slug): array
 {
     $pages = prismpath_default_pages();
-    return $pages[$slug] ?? array(
+    $content = $pages[$slug] ?? array(
         'title' => get_the_title(),
         'intro' => get_the_excerpt() ?: 'Prismpath Health provides neuroaffirming mental health care for individuals, couples, caregivers, and families.',
         'points' => array(),
     );
+
+    if (function_exists('prismpath_page_content_overrides')) {
+        $post_id = (int) get_queried_object_id();
+        if ($post_id) {
+            $content = array_merge($content, prismpath_page_content_overrides($post_id));
+        }
+    }
+
+    return $content;
 }
 
 function prismpath_content_record_by_slug(string $slug): ?array
 {
     $pages = prismpath_default_pages();
-    return $pages[$slug] ?? null;
+    $content = $pages[$slug] ?? null;
+    if (!$content) {
+        return null;
+    }
+
+    if (function_exists('prismpath_page_content_overrides')) {
+        $page = get_page_by_path($slug);
+        if ($page instanceof WP_Post) {
+            $content = array_merge($content, prismpath_page_content_overrides((int) $page->ID));
+        }
+    }
+
+    return $content;
 }

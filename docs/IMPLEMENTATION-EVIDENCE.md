@@ -16,6 +16,9 @@ Date: 2026-05-09
 - Verified `/resources/` and prior resource-guide child URLs return `404` locally after the retirement seeder runs.
 - Verified `/sitemap.xml` includes service, insurance, whole-family, team, contact, policy, and accessibility pages, and does not include `/resources/`.
 - Verified the Chroma Agent API schema endpoints are registered at `/wp-json/chroma-agent/v1/seo/schema` and `/wp-json/chroma-agent/v1/schema/seo`; local HTTP access correctly returns `caa_https_required`.
+- Added a Prismpath page editor metabox for SEO title, meta description, hero title, intro copy, side-panel copy, service highlights, long-form sections, and FAQs.
+- Wired Agent API SEO allowlists to Prismpath-specific SEO and template-content meta keys.
+- Wired the SEO plugin to render Agent API-managed schema overrides when `_chroma_schema_override` and schema payload meta are present.
 - Verified the public rendered route audit found no `LBee`, `Prismpath Wellness`, `lbeehealth`, `childcare`, or unsupported bee-brand language.
 - Verified the Whole Family content keeps pediatric ABA, speech therapy, and pediatric occupational therapy routed to Chroma Early Start.
 - Verified the contact form still exposes a Whole Family Mental Health service option.

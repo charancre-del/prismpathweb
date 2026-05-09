@@ -17,5 +17,6 @@ require_once PRISMPATH_THEME_DIR . '/inc/team-data.php';
 require_once PRISMPATH_THEME_DIR . '/inc/setup.php';
 require_once PRISMPATH_THEME_DIR . '/inc/settings.php';
 require_once PRISMPATH_THEME_DIR . '/inc/template-tags.php';
+require_once PRISMPATH_THEME_DIR . '/inc/editor-meta.php';
 require_once PRISMPATH_THEME_DIR . '/inc/enqueue.php';
 require_once PRISMPATH_THEME_DIR . '/inc/redirects.php';
