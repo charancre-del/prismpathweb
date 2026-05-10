@@ -39,6 +39,7 @@
             <div>
                 <h2>Important</h2>
                 <nav class="footer-nav" aria-label="<?php esc_attr_e('Footer important links', 'prismpath-health'); ?>">
+                    <a href="<?php echo esc_url(home_url('/about/')); ?>">About Us</a>
                     <a href="<?php echo esc_url(home_url('/team/')); ?>">Our Team</a>
                     <a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact</a>
                     <a href="<?php echo esc_url(prismpath_setting('privacy_url', home_url('/privacy-policy/'))); ?>">Privacy Policy</a>

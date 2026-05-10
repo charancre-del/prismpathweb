@@ -12,6 +12,7 @@ All public-facing brand content is rebranded to Prismpath Health. Prismpath Well
 - Occupational Therapy -> `page-occupational-therapy.php`
 - Whole Family Mental Health -> `page-whole-family-mental-health.php`
 - Approach -> `page-approach.php`
+- About Us -> `page-about.php`
 - Insurance & Payment -> `page-insurance-payment.php`
 - Team -> `page-team.php`
 - Contact -> `page-contact.php`

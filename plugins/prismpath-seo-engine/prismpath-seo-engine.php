@@ -13,6 +13,275 @@ if (!defined('ABSPATH')) {
 
 remove_action('wp_head', 'rel_canonical');
 
+function prismpath_seo_admin_menu(): void
+{
+    add_menu_page(
+        __('Prismpath SEO', 'prismpath-seo-engine'),
+        __('Prismpath SEO', 'prismpath-seo-engine'),
+        'manage_options',
+        'prismpath-seo',
+        'prismpath_seo_render_admin_page',
+        'dashicons-search',
+        58
+    );
+}
+add_action('admin_menu', 'prismpath_seo_admin_menu');
+
+function prismpath_seo_plugin_action_links(array $links): array
+{
+    $settings_link = sprintf(
+        '<a href="%s">%s</a>',
+        esc_url(admin_url('admin.php?page=prismpath-seo')),
+        esc_html__('SEO Dashboard', 'prismpath-seo-engine')
+    );
+
+    array_unshift($links, $settings_link);
+    return $links;
+}
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'prismpath_seo_plugin_action_links');
+
+function prismpath_seo_admin_meta_value(int $post_id, string $field): string
+{
+    if ('seo_title' === $field) {
+        $custom = get_post_meta($post_id, '_prismpath_seo_title', true);
+        if (is_string($custom) && $custom) {
+            return wp_strip_all_tags($custom);
+        }
+    }
+
+    if ('meta_description' === $field) {
+        $custom = get_post_meta($post_id, 'meta_description', true);
+        if (is_string($custom) && $custom) {
+            return wp_strip_all_tags($custom);
+        }
+    }
+
+    $record = prismpath_seo_content_record($post_id);
+    if ($record && !empty($record[$field]) && is_string($record[$field])) {
+        return wp_strip_all_tags($record[$field]);
+    }
+
+    $static_record = prismpath_seo_static_record($post_id);
+    if ($static_record && !empty($static_record[$field]) && is_string($static_record[$field])) {
+        return wp_strip_all_tags($static_record[$field]);
+    }
+
+    if ('seo_title' === $field && 'team_member' === get_post_type($post_id)) {
+        return wp_strip_all_tags(get_the_title($post_id) . ' | Prismpath Health Team');
+    }
+
+    if ('meta_description' === $field && 'team_member' === get_post_type($post_id)) {
+        $role = get_the_excerpt($post_id);
+        return wp_strip_all_tags(sprintf(
+            'Meet %s, %s at Prismpath Health, part of the team supporting neuroaffirming mental health care.',
+            get_the_title($post_id),
+            $role ? $role : 'a clinician'
+        ));
+    }
+
+    return '';
+}
+
+function prismpath_seo_admin_service_type(int $post_id): string
+{
+    $record = prismpath_seo_content_record($post_id);
+    if ($record && !empty($record['schema_service_type']) && is_string($record['schema_service_type'])) {
+        return wp_strip_all_tags($record['schema_service_type']);
+    }
+
+    $static_record = prismpath_seo_static_record($post_id);
+    if ($static_record && !empty($static_record['schema_service_type']) && is_string($static_record['schema_service_type'])) {
+        return wp_strip_all_tags($static_record['schema_service_type']);
+    }
+
+    return '';
+}
+
+function prismpath_seo_admin_faq_count(int $post_id): int
+{
+    $record = prismpath_seo_content_record($post_id);
+    if ($record && !empty($record['faqs']) && is_array($record['faqs'])) {
+        return count($record['faqs']);
+    }
+
+    return 0;
+}
+
+function prismpath_seo_admin_schema_label(int $post_id): string
+{
+    if ('team_member' === get_post_type($post_id)) {
+        return 'Person';
+    }
+
+    if ((int) get_option('page_on_front') === $post_id) {
+        return 'MedicalOrganization, WebSite, MedicalWebPage';
+    }
+
+    $service_type = prismpath_seo_admin_service_type($post_id);
+    if ($service_type) {
+        return 'MedicalWebPage, Service';
+    }
+
+    return 'MedicalWebPage';
+}
+
+function prismpath_seo_admin_indexable_posts(): array
+{
+    return get_posts(array(
+        'post_type' => array('page', 'team_member'),
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'orderby' => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    ));
+}
+
+function prismpath_seo_render_status_badge(bool $ok, string $label): string
+{
+    $class = $ok ? 'prismpath-seo-badge is-ok' : 'prismpath-seo-badge is-warning';
+    return '<span class="' . esc_attr($class) . '">' . esc_html($label) . '</span>';
+}
+
+function prismpath_seo_render_admin_page(): void
+{
+    if (!current_user_can('manage_options')) {
+        wp_die(esc_html__('You do not have permission to view this page.', 'prismpath-seo-engine'));
+    }
+
+    $posts = prismpath_seo_admin_indexable_posts();
+    $missing_titles = 0;
+    $missing_descriptions = 0;
+    $service_schema_pages = 0;
+    $faq_pages = 0;
+
+    foreach ($posts as $post) {
+        if (!prismpath_seo_admin_meta_value((int) $post->ID, 'seo_title')) {
+            $missing_titles++;
+        }
+        if (!prismpath_seo_admin_meta_value((int) $post->ID, 'meta_description')) {
+            $missing_descriptions++;
+        }
+        if (prismpath_seo_admin_service_type((int) $post->ID)) {
+            $service_schema_pages++;
+        }
+        if (prismpath_seo_admin_faq_count((int) $post->ID) > 0) {
+            $faq_pages++;
+        }
+    }
+
+    $sitemap_url = home_url('/sitemap.xml');
+    $robots_url = home_url('/robots.txt');
+    ?>
+    <div class="wrap prismpath-seo-admin">
+        <h1><?php esc_html_e('Prismpath SEO Engine', 'prismpath-seo-engine'); ?></h1>
+        <p class="description">
+            <?php esc_html_e('Healthcare-safe metadata, schema, sitemap, robots, breadcrumbs, and AI-readable search output for Prismpath Health.', 'prismpath-seo-engine'); ?>
+        </p>
+
+        <style>
+            .prismpath-seo-admin .prismpath-seo-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 20px 0; }
+            .prismpath-seo-admin .prismpath-seo-card { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 16px; }
+            .prismpath-seo-admin .prismpath-seo-card strong { display: block; font-size: 28px; line-height: 1.1; margin-top: 8px; }
+            .prismpath-seo-admin .prismpath-seo-badge { display: inline-block; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; }
+            .prismpath-seo-admin .prismpath-seo-badge.is-ok { background: #d1e7dd; color: #0f5132; }
+            .prismpath-seo-admin .prismpath-seo-badge.is-warning { background: #fff3cd; color: #664d03; }
+            .prismpath-seo-admin .widefat td { vertical-align: top; }
+            .prismpath-seo-admin code { white-space: normal; }
+            @media (max-width: 1100px) { .prismpath-seo-admin .prismpath-seo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+            @media (max-width: 700px) { .prismpath-seo-admin .prismpath-seo-grid { grid-template-columns: 1fr; } }
+        </style>
+
+        <div class="prismpath-seo-grid" aria-label="<?php esc_attr_e('SEO summary', 'prismpath-seo-engine'); ?>">
+            <div class="prismpath-seo-card">
+                <?php esc_html_e('Indexed pages tracked', 'prismpath-seo-engine'); ?>
+                <strong><?php echo esc_html((string) count($posts)); ?></strong>
+            </div>
+            <div class="prismpath-seo-card">
+                <?php esc_html_e('Service schema pages', 'prismpath-seo-engine'); ?>
+                <strong><?php echo esc_html((string) $service_schema_pages); ?></strong>
+            </div>
+            <div class="prismpath-seo-card">
+                <?php esc_html_e('FAQ schema pages', 'prismpath-seo-engine'); ?>
+                <strong><?php echo esc_html((string) $faq_pages); ?></strong>
+            </div>
+            <div class="prismpath-seo-card">
+                <?php esc_html_e('Metadata gaps', 'prismpath-seo-engine'); ?>
+                <strong><?php echo esc_html((string) ($missing_titles + $missing_descriptions)); ?></strong>
+            </div>
+        </div>
+
+        <h2><?php esc_html_e('Search Infrastructure', 'prismpath-seo-engine'); ?></h2>
+        <table class="widefat striped" role="presentation">
+            <tbody>
+                <tr>
+                    <th scope="row"><?php esc_html_e('Sitemap', 'prismpath-seo-engine'); ?></th>
+                    <td><a href="<?php echo esc_url($sitemap_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($sitemap_url); ?></a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e('Robots.txt', 'prismpath-seo-engine'); ?></th>
+                    <td><a href="<?php echo esc_url($robots_url); ?>" target="_blank" rel="noopener"><?php echo esc_html($robots_url); ?></a></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e('Default robots meta', 'prismpath-seo-engine'); ?></th>
+                    <td><code>index, follow, max-image-preview:large</code></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e('Search and 404 robots meta', 'prismpath-seo-engine'); ?></th>
+                    <td><code>noindex, follow</code></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e('Legal entity', 'prismpath-seo-engine'); ?></th>
+                    <td><?php echo esc_html(prismpath_seo_legal_dba_name()); ?></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2><?php esc_html_e('Page SEO Inventory', 'prismpath-seo-engine'); ?></h2>
+        <table class="widefat striped">
+            <thead>
+                <tr>
+                    <th scope="col"><?php esc_html_e('Page', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('SEO title', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('Meta description', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('Schema', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('FAQ schema', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('Actions', 'prismpath-seo-engine'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($posts as $post) : ?>
+                    <?php
+                    $post_id = (int) $post->ID;
+                    $title = prismpath_seo_admin_meta_value($post_id, 'seo_title');
+                    $description = prismpath_seo_admin_meta_value($post_id, 'meta_description');
+                    $faq_count = prismpath_seo_admin_faq_count($post_id);
+                    ?>
+                    <tr>
+                        <td>
+                            <strong><?php echo esc_html(get_the_title($post_id)); ?></strong><br>
+                            <code><?php echo esc_html((string) get_permalink($post_id)); ?></code>
+                        </td>
+                        <td><?php echo prismpath_seo_render_status_badge((bool) $title, $title ? __('Set', 'prismpath-seo-engine') : __('Missing', 'prismpath-seo-engine')); ?></td>
+                        <td>
+                            <?php echo prismpath_seo_render_status_badge((bool) $description, $description ? __('Set', 'prismpath-seo-engine') : __('Missing', 'prismpath-seo-engine')); ?>
+                            <?php if ($description) : ?>
+                                <br><small><?php echo esc_html(wp_trim_words($description, 18)); ?></small>
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo esc_html(prismpath_seo_admin_schema_label($post_id)); ?></td>
+                        <td><?php echo esc_html($faq_count ? sprintf(_n('%d FAQ', '%d FAQs', $faq_count, 'prismpath-seo-engine'), $faq_count) : __('None', 'prismpath-seo-engine')); ?></td>
+                        <td>
+                            <a href="<?php echo esc_url(get_edit_post_link($post_id, '')); ?>"><?php esc_html_e('Edit', 'prismpath-seo-engine'); ?></a>
+                            |
+                            <a href="<?php echo esc_url((string) get_permalink($post_id)); ?>" target="_blank" rel="noopener"><?php esc_html_e('View', 'prismpath-seo-engine'); ?></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+
 function prismpath_seo_setting(string $key, string $default = ''): string
 {
     if (function_exists('prismpath_setting')) {

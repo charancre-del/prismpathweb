@@ -116,6 +116,10 @@ function prismpath_static_page_seo(string $slug): ?array
             'seo_title' => 'Neuroaffirming Mental Health Resources | Prismpath Health',
             'meta_description' => 'Read Prismpath Health guides for adult ADHD and Autism assessment, therapy, psychiatry, occupational therapy, family support, accommodations, and payment planning.',
         ),
+        'about' => array(
+            'seo_title' => 'About Prismpath Health | Neuroaffirming Whole-Person Care',
+            'meta_description' => 'Learn about Prismpath Health, a neuroaffirming mental health practice supporting adults, caregivers, families, assessments, psychiatry, therapy, and occupational therapy.',
+        ),
         'insurance-payment' => array(
             'seo_title' => 'Insurance and Payment Options | Prismpath Health',
             'meta_description' => 'Prismpath Health accepts Medicare and major commercial plans, verifies benefits, and offers self-pay, CareCredit, and deposit pathways when appropriate.',
@@ -428,6 +432,7 @@ function prismpath_seed_required_pages(): void
         array('Occupational Therapy', 'occupational-therapy', prismpath_page_content('occupational-therapy')['intro']),
         array('Whole Family Mental Health', 'whole-family-mental-health', prismpath_page_content('whole-family-mental-health')['intro']),
         array('Approach', 'approach', prismpath_page_content('approach')['intro']),
+        array('About Us', 'about', 'Learn about Prismpath Health and our neuroaffirming, whole-person approach to care.'),
         array('Insurance & Payment', 'insurance-payment', 'Accepted plans, benefits verification, self-pay, CareCredit, and deposit pathways.'),
         array('Team', 'team', 'Meet the people behind Prismpath Health.'),
         array('Contact', 'contact', 'Start the conversation with Prismpath Health.'),
@@ -477,6 +482,7 @@ function prismpath_seed_required_pages(): void
             'Whole Family Mental Health' => '/whole-family-mental-health/',
             'Insurance' => '/insurance-payment/',
             'Approach' => '/approach/',
+            'About' => '/about/',
             'Resources' => '/resources/',
             'Contact' => '/contact/',
         );
@@ -494,6 +500,7 @@ function prismpath_seed_required_pages(): void
         $menu_items = wp_get_nav_menu_items($menu->term_id);
         $labels = is_array($menu_items) ? wp_list_pluck($menu_items, 'title') : array();
         $extra_menu_items = array(
+            'About' => '/about/',
             'Insurance' => '/insurance-payment/',
             'Resources' => '/resources/',
         );
@@ -514,7 +521,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-09-ai-seo-resource-hub-v2';
+    $target_version = '2026-05-10-about-page-seo-admin-v1';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }

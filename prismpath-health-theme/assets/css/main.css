@@ -100,6 +100,7 @@ p { margin: 0; color: var(--muted); }
 .logo-text span:last-child { font-size: .72rem; letter-spacing: .34em; color: var(--ink); }
 .logo-text-light, .logo-text-light span:last-child { color: var(--white); }
 .primary-nav { display: flex; gap: 1.8rem; align-items: center; font-size: .93rem; font-weight: 800; }
+.primary-nav li, .mobile-nav li { list-style: none; }
 .primary-nav a { color: rgba(18,56,60,.82); }
 .primary-nav a:hover { color: var(--teal); }
 .mobile-toggle { display: none; background: transparent; border: 0; width: 42px; height: 42px; }

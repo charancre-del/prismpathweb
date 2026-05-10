@@ -233,6 +233,10 @@ Date: 2026-05-10
 - Confirmed no viewport horizontal overflow, no broken loaded images, and no unexpected browser console errors on the checked routes.
 - Confirmed the intentional fake 404 route returns `404` with no layout overflow.
 - Fixed the `/resources/` desktop service-card grid so long guide titles no longer expand the five-column grid beyond the viewport.
+- Added a visible Prismpath SEO admin menu and verified WordPress registers `Prismpath SEO` in the dashboard menu.
+- Added and seeded `/about/` as a standalone About Us page with unique SEO title, meta description, canonical URL, and footer/menu access.
+- Removed the legacy `/about` to `/approach/` redirect so the new About Us page can render.
+- Verified staging `/team/` renders 15 team cards matching the migrated LBee TeamPage bio source.
 
 ## Source Structure Verified
 

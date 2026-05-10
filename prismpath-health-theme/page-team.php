@@ -12,11 +12,15 @@ $team = new WP_Query(array(
     'orderby' => 'menu_order title',
     'order' => 'ASC',
 ));
+$team_count = (int) $team->found_posts;
 ?>
 <section class="page-hero">
     <div class="container narrow">
         <h1>The people behind Prismpath Health.</h1>
         <p>Our clinicians bring professional training, practical care experience, and a deep respect for neurodivergent lives.</p>
+        <?php if ($team_count > 0) : ?>
+            <p class="micro-proof">Browse <?php echo esc_html((string) $team_count); ?> provider profiles across assessment, therapy, psychiatric leadership, and family-centered support.</p>
+        <?php endif; ?>
     </div>
 </section>
 <section class="team-list">

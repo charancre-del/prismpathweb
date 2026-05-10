@@ -12,7 +12,6 @@ if (!defined('ABSPATH')) {
 function prismpath_legacy_redirect_map(): array
 {
     return array(
-        '/about' => '/approach/',
         '/about-neuroaffirming-mental-health-care-assessments-support' => '/approach/',
         '/adultautism' => '/adhd-autism-assessments/',
         '/adult-autism-assessment' => '/adhd-autism-assessments/',
