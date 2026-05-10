@@ -224,6 +224,16 @@ Date: 2026-05-10
 - Seeded 15 migrated team profiles with real bio content and theme-managed team photos.
 - Published Privacy Policy and Accessibility Statement pages, and moved the default WordPress Sample Page to draft.
 
+## Staging Visual QA Completed
+
+- Staging URL checked: `https://yg8zo397cu.wpdns.site/`.
+- Fixed staging image delivery by correcting deployed theme asset permissions to `755` for directories and `644` for files.
+- Verified 35 browser-requested theme assets return successfully, including hero images, insurance logos, team photos, favicon, touch icon, manifest, CSS, and JavaScript.
+- Audited 26 public routes at desktop and mobile widths, for 52 route/viewport checks total.
+- Confirmed no viewport horizontal overflow, no broken loaded images, and no unexpected browser console errors on the checked routes.
+- Confirmed the intentional fake 404 route returns `404` with no layout overflow.
+- Fixed the `/resources/` desktop service-card grid so long guide titles no longer expand the five-column grid beyond the viewport.
+
 ## Source Structure Verified
 
 - Theme source folder contains `prismpath-health-theme/` as the WordPress theme root.
