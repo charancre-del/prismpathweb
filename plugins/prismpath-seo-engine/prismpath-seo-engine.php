@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+remove_action('wp_head', 'rel_canonical');
+
 function prismpath_seo_setting(string $key, string $default = ''): string
 {
     if (function_exists('prismpath_setting')) {
@@ -280,6 +282,16 @@ function prismpath_seo_organization_ref(): array
     return array('@id' => home_url('/#organization'));
 }
 
+function prismpath_seo_legal_dba_name(): string
+{
+    $legal_name = prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC');
+    if (false !== stripos($legal_name, 'dba Prismpath Health')) {
+        return $legal_name;
+    }
+
+    return trim($legal_name) . ' dba Prismpath Health';
+}
+
 function prismpath_seo_organization_schema(): array
 {
     $same_as = array_filter(array(
@@ -293,8 +305,8 @@ function prismpath_seo_organization_schema(): array
         '@type' => 'MedicalOrganization',
         '@id' => home_url('/#organization'),
         'name' => 'Prismpath Health',
-        'legalName' => prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC'),
-        'alternateName' => 'Lbee Health Practive Group PLLC dba Prismpath Health',
+        'legalName' => prismpath_seo_legal_dba_name(),
+        'alternateName' => array('Prismpath Health', 'Lbee Health Practive Group PLLC'),
         'url' => home_url('/'),
         'logo' => get_template_directory_uri() . '/assets/icons/icon-512.png',
         'image' => get_template_directory_uri() . '/assets/images/hero-family-prismpath-health.png',
@@ -317,7 +329,15 @@ function prismpath_seo_webpage_type(): string
         return 'CollectionPage';
     }
 
-    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'approach', 'group-support', 'referral-partners', 'accommodations'))) {
+    if (is_page('resources')) {
+        return 'CollectionPage';
+    }
+
+    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'approach', 'group-support', 'referral-partners', 'accommodations', 'insurance-payment'))) {
+        return 'MedicalWebPage';
+    }
+
+    if (is_singular('page') && function_exists('prismpath_resource_record_by_slug') && prismpath_resource_record_by_slug((string) get_post_field('post_name', get_the_ID()))) {
         return 'MedicalWebPage';
     }
 
@@ -416,7 +436,7 @@ function prismpath_schema_output(): void
                 '@type' => 'MedicalOrganization',
                 '@id' => home_url('/#organization'),
                 'name' => 'Prismpath Health',
-                'legalName' => prismpath_seo_setting('legal_name', 'Lbee Health Practive Group PLLC'),
+                'legalName' => prismpath_seo_legal_dba_name(),
             ),
             'audience' => array('@type' => 'Audience', 'audienceType' => 'Adults, caregivers, families, and referral partners'),
             'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
@@ -472,8 +492,17 @@ function prismpath_is_sitemap_request(): bool
         return true;
     }
 
-    return (isset($_GET['sitemap']) && 'xml' === sanitize_text_field(wp_unslash($_GET['sitemap'])))
-        || '1' === get_query_var('prismpath_sitemap');
+    if (isset($_GET['sitemap']) && 'xml' === sanitize_text_field(wp_unslash($_GET['sitemap']))) {
+        return true;
+    }
+
+    global $wp_query;
+    if (!is_object($wp_query)) {
+        return false;
+    }
+
+    return '1' === get_query_var('prismpath_sitemap')
+        || 'index' === get_query_var('sitemap');
 }
 
 function prismpath_sitemap_rewrite(): void
@@ -482,12 +511,33 @@ function prismpath_sitemap_rewrite(): void
 }
 add_action('init', 'prismpath_sitemap_rewrite');
 
+function prismpath_sitemap_maybe_flush_rules(): void
+{
+    $version = '2026-05-09-custom-sitemap-v2';
+    if (get_option('prismpath_sitemap_rewrite_version') === $version) {
+        return;
+    }
+
+    prismpath_sitemap_rewrite();
+    flush_rewrite_rules(false);
+    update_option('prismpath_sitemap_rewrite_version', $version, false);
+}
+add_action('init', 'prismpath_sitemap_maybe_flush_rules', 20);
+
 function prismpath_sitemap_query_vars(array $vars): array
 {
     $vars[] = 'prismpath_sitemap';
     return $vars;
 }
 add_filter('query_vars', 'prismpath_sitemap_query_vars');
+
+function prismpath_disable_core_sitemap_redirect(): void
+{
+    if ('index' === get_query_var('sitemap') || '1' === get_query_var('prismpath_sitemap')) {
+        remove_action('template_redirect', 'redirect_canonical');
+    }
+}
+add_action('template_redirect', 'prismpath_disable_core_sitemap_redirect', -2000);
 
 function prismpath_prevent_sitemap_canonical_redirect($redirect_url, $requested_url = null)
 {
@@ -553,8 +603,8 @@ function prismpath_custom_sitemap(): void
     echo '</urlset>';
     exit;
 }
-add_action('parse_request', 'prismpath_custom_sitemap', 0);
-add_action('template_redirect', 'prismpath_custom_sitemap', 0);
+add_action('parse_request', 'prismpath_custom_sitemap', -1000);
+add_action('template_redirect', 'prismpath_custom_sitemap', -1000);
 
 function prismpath_sitemap_pre_handle_404($preempt, $query)
 {
@@ -565,7 +615,7 @@ function prismpath_sitemap_pre_handle_404($preempt, $query)
     prismpath_custom_sitemap();
     return true;
 }
-add_filter('pre_handle_404', 'prismpath_sitemap_pre_handle_404', 0, 2);
+add_filter('pre_handle_404', 'prismpath_sitemap_pre_handle_404', -1000, 2);
 
 function prismpath_robots_txt(string $output): string
 {

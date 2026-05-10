@@ -22,6 +22,7 @@
                     <a href="<?php echo esc_url(home_url('/whole-family-mental-health/')); ?>">Whole Family Mental Health</a>
                     <a href="<?php echo esc_url(home_url('/insurance-payment/')); ?>">Insurance & Payment</a>
                     <a href="<?php echo esc_url(home_url('/approach/')); ?>">Approach</a>
+                    <a href="<?php echo esc_url(home_url('/resources/')); ?>">Resources</a>
                 </nav>
             </div>
 

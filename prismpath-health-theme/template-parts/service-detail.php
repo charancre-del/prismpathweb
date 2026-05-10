@@ -17,6 +17,9 @@ if ('whole-family-mental-health' === $slug) {
     $secondary_label = 'Pediatric Therapy at Chroma Early Start';
     $secondary_external = true;
 }
+$related_links = !empty($content['related_links']) && is_array($content['related_links'])
+    ? $content['related_links']
+    : prismpath_related_links_for_slug($slug);
 ?>
 <section class="page-hero service-page-hero">
     <div class="container split">
@@ -69,9 +72,9 @@ if ('whole-family-mental-health' === $slug) {
         </aside>
     </div>
 </section>
-<?php if (!empty($content['faqs'])) : ?>
+<?php if (!empty($content['faqs']) || !empty($related_links)) : ?>
 <section class="faq-support-section">
-    <div class="container faq-support-grid single-column">
+    <div class="container faq-support-grid">
         <?php if (!empty($content['faqs']) && is_array($content['faqs'])) : ?>
             <div class="support-panel faq-panel">
                 <h2>Common questions</h2>
@@ -81,6 +84,19 @@ if ('whole-family-mental-health' === $slug) {
                             <summary><?php echo esc_html($faq['question']); ?></summary>
                             <p><?php echo esc_html($faq['answer']); ?></p>
                         </details>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($related_links)) : ?>
+            <div class="support-panel">
+                <h2>Related resources</h2>
+                <div class="related-list">
+                    <?php foreach ($related_links as $link) : ?>
+                        <a href="<?php echo esc_url($link['url']); ?>">
+                            <span><?php echo esc_html($link['label']); ?></span>
+                            <?php if (!empty($link['description'])) : ?><small><?php echo esc_html($link['description']); ?></small><?php endif; ?>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>

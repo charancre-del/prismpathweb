@@ -49,6 +49,19 @@ function prismpath_seed_format_faqs(array $faqs): string
     return implode("\n\n", $blocks);
 }
 
+function prismpath_seed_format_related_links(array $links): string
+{
+    $rows = array();
+    foreach ($links as $link) {
+        if (empty($link['label']) || empty($link['url'])) {
+            continue;
+        }
+        $rows[] = trim((string) $link['label']) . ' | ' . trim((string) $link['url']) . ' | ' . trim((string) ($link['description'] ?? ''));
+    }
+
+    return implode("\n", $rows);
+}
+
 function prismpath_seed_page_editor_meta(int $post_id, array $content): void
 {
     prismpath_seed_meta_if_empty($post_id, '_prismpath_seo_title', (string) ($content['seo_title'] ?? ''));
@@ -69,11 +82,16 @@ function prismpath_seed_page_editor_meta(int $post_id, array $content): void
     if (!empty($content['faqs']) && is_array($content['faqs'])) {
         prismpath_seed_meta_if_empty($post_id, '_prismpath_page_faqs', prismpath_seed_format_faqs($content['faqs']));
     }
+
+    if (!empty($content['related_links']) && is_array($content['related_links'])) {
+        prismpath_seed_meta_if_empty($post_id, '_prismpath_page_related_links', prismpath_seed_format_related_links($content['related_links']));
+    }
 }
 
 function prismpath_seed_all_page_editor_meta(array $page_ids_by_slug): void
 {
-    foreach (prismpath_default_pages() as $slug => $content) {
+    $records = array_merge(prismpath_default_pages(), function_exists('prismpath_resource_pages') ? prismpath_resource_pages() : array());
+    foreach ($records as $slug => $content) {
         $post_id = (int) ($page_ids_by_slug[$slug] ?? 0);
         if (!$post_id) {
             $page = get_page_by_path($slug);
@@ -92,7 +110,7 @@ function prismpath_seed_static_page_seo_meta_if_empty(): void
         return;
     }
 
-    foreach (array('services', 'insurance-payment', 'team', 'contact', 'privacy-policy', 'hipaa-policy', 'accessibility-statement') as $slug) {
+    foreach (array('services', 'resources', 'insurance-payment', 'team', 'contact', 'privacy-policy', 'hipaa-policy', 'accessibility-statement') as $slug) {
         $page = get_page_by_path($slug);
         $content = prismpath_static_page_seo($slug);
         if (!$page instanceof WP_Post || !is_array($content)) {
@@ -106,7 +124,7 @@ function prismpath_seed_static_page_seo_meta_if_empty(): void
 
 function prismpath_seed_existing_page_meta_once(): void
 {
-    $version = '2026-05-09-local-completion-v2';
+    $version = '2026-05-09-ai-seo-resource-hub-v2';
     if (get_option('prismpath_existing_page_meta_seed_version') === $version) {
         return;
     }

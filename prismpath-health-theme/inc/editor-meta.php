@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 
 function prismpath_editor_supported_page_slugs(): array
 {
-    return array_keys(prismpath_default_pages());
+    return array_merge(array_keys(prismpath_default_pages()), array_keys(prismpath_resource_pages()));
 }
 
 function prismpath_editor_field_value(int $post_id, string $key): string
@@ -101,6 +101,13 @@ function prismpath_editor_render_page_metabox(WP_Post $post): void
                         <p class="description"><?php esc_html_e('Use blocks separated by a blank line. First line is the question; remaining lines are the answer.', 'prismpath-health'); ?></p>
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row"><label for="prismpath_page_related_links"><?php esc_html_e('Related links', 'prismpath-health'); ?></label></th>
+                    <td>
+                        <textarea class="large-text code" id="prismpath_page_related_links" name="prismpath_page_related_links" rows="5"><?php echo esc_textarea(prismpath_editor_field_value($post->ID, '_prismpath_page_related_links')); ?></textarea>
+                        <p class="description"><?php esc_html_e('Enter one per line as Label | URL | optional description. Leave blank to use the default related links.', 'prismpath-health'); ?></p>
+                    </td>
+                </tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -138,6 +145,7 @@ function prismpath_editor_save_page_metabox(int $post_id): void
         'prismpath_page_points' => '_prismpath_page_points',
         'prismpath_page_sections' => '_prismpath_page_sections',
         'prismpath_page_faqs' => '_prismpath_page_faqs',
+        'prismpath_page_related_links' => '_prismpath_page_related_links',
     );
     foreach ($textarea_fields as $input => $meta_key) {
         $value = isset($_POST[$input]) ? sanitize_textarea_field(wp_unslash($_POST[$input])) : '';
@@ -221,5 +229,33 @@ function prismpath_page_content_overrides(int $post_id): array
         $overrides['faqs'] = $faqs;
     }
 
+    $related = prismpath_parse_related_links_meta((string) get_post_meta($post_id, '_prismpath_page_related_links', true));
+    if ($related) {
+        $overrides['related_links'] = $related;
+    }
+
     return $overrides;
+}
+
+function prismpath_parse_related_links_meta(string $value): array
+{
+    $lines = preg_split('/\R/u', trim($value));
+    if (!is_array($lines)) {
+        return array();
+    }
+
+    $links = array();
+    foreach ($lines as $line) {
+        $parts = array_map('trim', explode('|', (string) $line));
+        if (count($parts) < 2 || '' === $parts[0] || '' === $parts[1]) {
+            continue;
+        }
+        $links[] = array(
+            'label' => $parts[0],
+            'url' => $parts[1],
+            'description' => $parts[2] ?? '',
+        );
+    }
+
+    return $links;
 }

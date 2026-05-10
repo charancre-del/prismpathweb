@@ -1,6 +1,78 @@
 # Implementation Evidence
 
-Date: 2026-05-09
+Date: 2026-05-10
+
+## Theme + Plugin SEO/GEO Launch Implementation Completed
+
+- Re-enabled the non-blog resource hub requested for Google SEO, AI Overviews eligibility, GEO, and AI citation support.
+- Published and seeded `/resources/` plus seven resource-guide pages:
+  - Adult ADHD & Autism Assessment Guide.
+  - Neuroaffirming Therapy for Adults.
+  - Psychiatric Medication Management for Neurodivergent Adults.
+  - Occupational Therapy for Sensory Regulation and Daily Life.
+  - Whole Family Mental Health and Caregiver Support.
+  - Accommodations and Documentation Support.
+  - Insurance and Payment Guide.
+- Added resource guide rendering through the theme instead of posts/blogs, with long-form sections, visible FAQs, related service links, references, updated dates, and consult CTAs.
+- Expanded the metabox/seeder model so resource pages and service templates can seed and override SEO title, meta description, hero copy, long-form sections, FAQs, and related links without overwriting later editor content.
+- Updated service templates to link to relevant resource guides and contact/next-step pages.
+- Updated navigation and footer fallbacks to include the Resources hub.
+- Hardened the SEO plugin:
+  - WordPress core duplicate canonical output is removed so indexed pages emit one canonical.
+  - Resource guides are treated as `MedicalWebPage`.
+  - Resource hub is treated as `CollectionPage`.
+  - Service, FAQ, breadcrumb, person, website, and organization schema remain aligned with visible page content.
+  - Legal schema naming now uses `Lbee Health Practive Group PLLC dba Prismpath Health`.
+- Replaced the inherited Chroma-style GEO feed internals with Prismpath-specific machine-readable facts at `/wp-json/chroma-agent/v1/geo-feed`.
+  - Feed includes brand, legal DBA, virtual-care service-area policy, conservative claims policy, services, resources, public pages, team records, canonical URLs, last-modified values, record hashes, and reference URLs.
+  - Public GEO feed exposes 5 services, 7 resources, and published site pages for AI citation context.
+  - Protected Agent API routes remain authenticated; unauthenticated production checks return `401`.
+- Updated crawler policy to allow Google and major AI crawlers in the plugin-generated robots output and in the static production `robots.txt` deployment override.
+- Adjusted theme compatibility for the target host's WordPress runtime by lowering `Requires PHP` to `7.4` and replacing the PHP 8-only `str_ends_with()` call.
+
+## Production SSH Deployment Verification Completed
+
+- SSH access verified with the existing RSA key for `yg8zlbs@65.181.120.41`.
+- Production WordPress install located at `/home/yg8zlbs/public_html`.
+- Synced source folders into production:
+  - `wp-content/themes/prismpath-health-theme`
+  - `wp-content/plugins/prismpath-seo-engine`
+  - `wp-content/plugins/prismpath-consult-form`
+  - `wp-content/plugins/prismpath-lead-log`
+  - `wp-content/plugins/chroma-agent-api`
+- Activated production theme and plugins with WP-CLI:
+  - Active theme: `prismpath-health-theme`.
+  - Active plugins: `chroma-agent-api`, `prismpath-consult-form`, `prismpath-lead-log`, and `prismpath-seo-engine`.
+- Set production permalinks to `/%postname%/` and flushed rewrite rules.
+- Updated production site identity:
+  - Blog name: `Prismpath Health`.
+  - Tagline: `Whole-family neuroaffirming mental health care`.
+- Production seeded pages verified as published, including all service pages, policy pages, `/resources/`, and all seven resource guides.
+- Production route checks against `https://yg8zo397cu.wpdns.site` returned `200` for home, services, service pages, approach, insurance/payment, team, contact, group support, referral partners, accommodations, privacy, HIPAA, accessibility, resource hub, resource guides, sitemap, and GEO feed.
+- Production SEO checks verified tested indexed pages emit one meta description, one canonical URL, `index, follow, max-image-preview:large`, and JSON-LD where expected.
+- Production sitemap check verified `/sitemap.xml` returns XML and includes service, HIPAA, team, and resource URLs.
+- Production GEO feed check verified:
+  - `success: true`
+  - Brand: `Prismpath Health`
+  - Legal entity: `Lbee Health Practive Group PLLC dba Prismpath Health`
+  - Service count: `5`
+  - Resource count: `7`
+  - Public crawler policy present.
+- Production contact form checks:
+  - Nonce renders.
+  - Invalid POST redirects to `?prismpath_consult=error#consult`.
+  - Valid POST redirects to `?prismpath_consult=sent#consult`.
+  - Lead log records valid submissions.
+  - Test lead records were deleted after validation.
+- Production Agent API protected route checks:
+  - `/wp-json/chroma-agent/v1/discovery`: `401` unauthenticated.
+  - `/wp-json/chroma-agent/v1/resources`: `401` unauthenticated.
+  - `/wp-json/chroma-agent/v1/seo/schema`: `401` unauthenticated.
+- Production temporary-domain robots caveat:
+  - A static `robots.txt` with AI crawler allow rules and sitemap was deployed to `/home/yg8zlbs/public_html/robots.txt`.
+  - `https://yg8zo397cu.wpdns.site/robots.txt?deploy=20260510` returns the correct allow rules.
+  - The normal temporary `https://yg8zo397cu.wpdns.site/robots.txt` URL is still serving a platform/CDN-cached `Disallow: /` response despite a successful Rocket.net CDN purge API response.
+  - This must be rechecked on the final production domain before Google indexing; the source/site configuration is correct, but the temporary host/CDN edge is still returning the old robots body.
 
 ## Local Studio Completion Verification Completed
 

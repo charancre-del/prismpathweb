@@ -214,6 +214,217 @@ function prismpath_service_by_slug(string $slug): ?array
     return null;
 }
 
+function prismpath_resource_pages(): array
+{
+    return array(
+        'adult-adhd-autism-assessment-guide' => array(
+            'title' => 'Adult ADHD & Autism Assessment Guide',
+            'seo_title' => 'Adult ADHD and Autism Assessment Guide | Prismpath Health',
+            'meta_description' => 'A conservative guide to adult ADHD and Autism assessment, documentation, recommendations, payment pathways, and next steps at Prismpath Health.',
+            'intro' => 'Assessment can help adults make sense of long-standing patterns, support needs, strengths, and next steps without reducing a person to a label.',
+            'schema_service_type' => 'Adult ADHD and Autism assessment education',
+            'related_service' => 'adhd-autism-assessments',
+            'sections' => array(
+                array('heading' => 'Why adults seek assessment', 'body' => 'Many adults pursue ADHD or Autism assessment after years of masking, burnout, misunderstood sensory needs, executive-function strain, or relationship and work patterns that have never been fully explained. A careful evaluation looks at development, current functioning, strengths, support needs, and differential considerations.'),
+                array('heading' => 'What a thoughtful process can include', 'body' => 'A clinically appropriate assessment may include interviews, standardized measures, history review, collateral information when available, and discussion of recommendations. The process does not guarantee a diagnosis, accommodation approval, medication, or insurance coverage.'),
+                array('heading' => 'How results can be used', 'body' => 'Assessment findings may inform therapy, psychiatry, occupational therapy, accommodations planning, communication strategies, or referrals. Reports should be practical, respectful, and aligned with the client\'s real daily life.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Can adults be newly evaluated for ADHD or Autism?', 'answer' => 'Yes. Adults can seek evaluation when symptoms, history, and current support needs suggest assessment may be useful.'),
+                array('question' => 'Does an assessment guarantee a diagnosis?', 'answer' => 'No. Diagnosis depends on clinical findings and cannot be promised before evaluation.'),
+                array('question' => 'Will a report guarantee accommodations?', 'answer' => 'No. Prismpath may provide clinically appropriate documentation, but schools, employers, testing boards, and insurers make their own decisions.'),
+            ),
+            'references' => array(
+                array('label' => 'NIMH: ADHD', 'url' => 'https://www.nimh.nih.gov/health/publications/adhd-what-you-need-to-know'),
+                array('label' => 'NIMH: Autism Spectrum Disorder', 'url' => 'https://www.nimh.nih.gov/health/topics/autism-spectrum-disorders-asd'),
+            ),
+        ),
+        'neuroaffirming-therapy-for-adults' => array(
+            'title' => 'Neuroaffirming Therapy for Adults',
+            'seo_title' => 'Neuroaffirming Therapy for Adults | Prismpath Health',
+            'meta_description' => 'Learn how neuroaffirming adult therapy can support anxiety, burnout, identity, relationships, transitions, and care coordination.',
+            'intro' => 'Neuroaffirming therapy supports distress and daily-life goals while respecting neurodivergent experience, communication, sensory needs, and autonomy.',
+            'schema_service_type' => 'Adult neuroaffirming therapy education',
+            'related_service' => 'therapy',
+            'sections' => array(
+                array('heading' => 'What neuroaffirming therapy means', 'body' => 'Neuroaffirming care can name anxiety, depression, trauma, burnout, executive-function strain, sensory overwhelm, and relationship stress without treating neurodivergence itself as something to erase.'),
+                array('heading' => 'Common therapy goals', 'body' => 'Therapy may focus on self-understanding, boundaries, communication, nervous-system awareness, relationship patterns, burnout recovery, identity, and strategies that fit the client\'s actual life.'),
+                array('heading' => 'Coordinated care when useful', 'body' => 'With consent, therapy can coordinate with psychiatry, occupational therapy, assessment, or outside providers so care is less fragmented.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Do I need a diagnosis to start therapy?', 'answer' => 'No. Therapy can begin around goals, patterns, stress, identity, or support needs even without a formal diagnosis.'),
+                array('question' => 'Is neuroaffirming therapy only for Autism or ADHD?', 'answer' => 'No. It can support many adults whose needs, processing, communication, or sensory experiences have not fit standard care models.'),
+            ),
+            'references' => array(
+                array('label' => 'Google: People-first content', 'url' => 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content'),
+                array('label' => 'NIMH: Autism Spectrum Disorder', 'url' => 'https://www.nimh.nih.gov/health/topics/autism-spectrum-disorders-asd'),
+            ),
+        ),
+        'psychiatric-medication-management-neurodivergent-adults' => array(
+            'title' => 'Psychiatric Medication Management for Neurodivergent Adults',
+            'seo_title' => 'Psychiatric Medication Management for Neurodivergent Adults | Prismpath Health',
+            'meta_description' => 'A careful guide to psychiatric evaluation, medication management, monitoring, and coordinated care for neurodivergent adults.',
+            'intro' => 'Psychiatric care can be one part of a broader mental health plan when medication evaluation, monitoring, or diagnostic clarification may be useful.',
+            'schema_service_type' => 'Psychiatric medication management education',
+            'related_service' => 'psychiatry',
+            'sections' => array(
+                array('heading' => 'Medication is one possible tool', 'body' => 'A psychiatric visit may lead to medication options, therapy recommendations, additional assessment, care coordination, or another plan. Medication is never guaranteed before evaluation.'),
+                array('heading' => 'What providers consider', 'body' => 'Psychiatric evaluation may consider current symptoms, history, sleep, routines, sensory profile, medical factors, prior medication experiences, risks, benefits, and client preferences.'),
+                array('heading' => 'Follow-up and monitoring', 'body' => 'Ongoing medication management typically includes monitoring response, side effects, functional goals, and fit over time. Virtual care depends on licensure, clinical appropriateness, and applicable rules.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Does a psychiatry appointment guarantee medication?', 'answer' => 'No. The plan depends on clinical evaluation and shared decision-making.'),
+                array('question' => 'Can medication management coordinate with therapy?', 'answer' => 'Yes, when clinically appropriate and with consent, psychiatry can coordinate with therapy, OT, assessment, or outside providers.'),
+            ),
+            'references' => array(
+                array('label' => 'NIMH: ADHD', 'url' => 'https://www.nimh.nih.gov/health/publications/adhd-what-you-need-to-know'),
+            ),
+        ),
+        'occupational-therapy-sensory-regulation-adults' => array(
+            'title' => 'Occupational Therapy for Sensory Regulation and Daily Life',
+            'seo_title' => 'Occupational Therapy for Sensory Regulation and Daily Life | Prismpath Health',
+            'meta_description' => 'Learn how adult occupational therapy can support sensory regulation, executive functioning, routines, transitions, and daily life.',
+            'intro' => 'Occupational therapy helps adults build practical supports for the tasks, routines, environments, and transitions that shape everyday life.',
+            'schema_service_type' => 'Adult occupational therapy education',
+            'related_service' => 'occupational-therapy',
+            'sections' => array(
+                array('heading' => 'Daily life is the focus', 'body' => 'Adult OT may support self-care, home routines, work or school systems, transitions, sensory regulation, executive functioning, and sustainable participation in meaningful activities.'),
+                array('heading' => 'Sensory and environmental fit', 'body' => 'Care may include sensory mapping, environmental adjustments, pacing, recovery planning, and tools that reduce friction without asking someone to ignore their body.'),
+                array('heading' => 'Pediatric OT routes to Chroma Early Start', 'body' => 'Prismpath focuses this pathway on adult occupational therapy. Pediatric occupational therapy, ABA, and speech therapy are available through Chroma Early Start.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Can adults receive occupational therapy?', 'answer' => 'Yes. OT can support adults with sensory needs, executive functioning, routines, and daily-life participation.'),
+                array('question' => 'Does Prismpath provide pediatric OT?', 'answer' => 'Prismpath routes pediatric occupational therapy to Chroma Early Start.'),
+            ),
+            'references' => array(
+                array('label' => 'AOTA: Mental health and occupational therapy', 'url' => 'https://www.aota.org/practice/clinical-topics/mental-health'),
+            ),
+        ),
+        'whole-family-mental-health-caregiver-support' => array(
+            'title' => 'Whole Family Mental Health and Caregiver Support',
+            'seo_title' => 'Whole Family Mental Health and Caregiver Support | Prismpath Health',
+            'meta_description' => 'A guide to caregiver-centered whole family mental health support, family systems, co-regulation, routines, and Chroma Early Start pediatric therapy routing.',
+            'intro' => 'Whole family mental health focuses on the adults and family system: stress, communication, routines, co-regulation, advocacy, and care coordination.',
+            'schema_service_type' => 'Caregiver and family mental health education',
+            'related_service' => 'whole-family-mental-health',
+            'sections' => array(
+                array('heading' => 'Caregivers need support too', 'body' => 'Caregivers often carry planning, advocacy, transitions, school communication, emotional labor, and coordination across providers. Supporting caregivers can support the whole family system.'),
+                array('heading' => 'What family-system support may include', 'body' => 'Care may focus on communication, co-regulation, routines, stress, boundaries, shared language, and coordination with pediatric or adult providers.'),
+                array('heading' => 'Pediatric therapy belongs with Chroma Early Start', 'body' => 'Prismpath provides caregiver and family-system mental health support. Pediatric ABA, speech therapy, and pediatric occupational therapy are available through Chroma Early Start.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Is Whole Family Mental Health pediatric therapy?', 'answer' => 'No. Prismpath focuses on caregiver and family-system mental health support. Pediatric therapy services route to Chroma Early Start.'),
+                array('question' => 'Can caregivers seek support if their child receives care elsewhere?', 'answer' => 'Caregiver support may be appropriate depending on clinical fit, consent, and coordination needs.'),
+            ),
+            'references' => array(
+                array('label' => 'NIMH: Autism Spectrum Disorder', 'url' => 'https://www.nimh.nih.gov/health/topics/autism-spectrum-disorders-asd'),
+            ),
+        ),
+        'accommodations-documentation-support' => array(
+            'title' => 'Accommodations and Documentation Support',
+            'seo_title' => 'Accommodations and Documentation Support | Prismpath Health',
+            'meta_description' => 'Learn how clinically appropriate accommodations support may connect assessment, therapy, psychiatry, OT, and documentation without approval guarantees.',
+            'intro' => 'Accommodations support helps clients understand needs, communicate barriers, and plan documentation when clinically appropriate.',
+            'schema_service_type' => 'Accommodations and documentation education',
+            'related_service' => 'accommodations',
+            'sections' => array(
+                array('heading' => 'Documentation starts with care', 'body' => 'Clinically appropriate documentation may draw from assessment, therapy, psychiatry, occupational therapy, and observed daily-life needs. It should reflect real support needs rather than generic requests.'),
+                array('heading' => 'Approvals are not guaranteed', 'body' => 'Prismpath can support documentation when clinically appropriate, but schools, employers, testing boards, insurers, and other third parties make their own decisions.'),
+                array('heading' => 'Strategy matters alongside paperwork', 'body' => 'Accommodation planning may also include communication strategies, environment changes, routines, and care coordination.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Can Prismpath guarantee an accommodation?', 'answer' => 'No. Outside organizations decide whether to approve requested accommodations.'),
+                array('question' => 'Do I need an assessment first?', 'answer' => 'Sometimes. Requirements depend on the request, the outside organization, and the clinical situation.'),
+            ),
+            'references' => array(
+                array('label' => 'NIMH: ADHD', 'url' => 'https://www.nimh.nih.gov/health/publications/adhd-what-you-need-to-know'),
+            ),
+        ),
+        'insurance-payment-guide' => array(
+            'title' => 'Insurance and Payment Guide',
+            'seo_title' => 'Insurance and Payment Guide | Prismpath Health',
+            'meta_description' => 'Understand Prismpath Health insurance verification, accepted plan references, self-pay, CareCredit, deposits, and patient responsibility language.',
+            'intro' => 'Insurance and payment planning should be clear before care begins, while still avoiding promises about coverage or final patient responsibility.',
+            'schema_service_type' => 'Insurance and payment education',
+            'related_service' => 'insurance-payment',
+            'sections' => array(
+                array('heading' => 'Accepted plans are not coverage guarantees', 'body' => 'Prismpath can list accepted plan networks and verify benefits, but coverage depends on the member plan, provider, state, service, authorization rules, deductible, copay, coinsurance, and medical-necessity requirements.'),
+                array('heading' => 'Assessment payment pathways', 'body' => 'Assessment-related costs may use insurance when available, self-pay, CareCredit financing when appropriate, and deposits that are applied toward patient responsibility.'),
+                array('heading' => 'Questions to ask before scheduling', 'body' => 'Clients should ask about benefits verification, estimated responsibility, authorization needs, cancellation policies, and whether a service is expected to be billed through insurance or self-pay.'),
+            ),
+            'faqs' => array(
+                array('question' => 'Does accepting an insurance plan mean my visit is covered?', 'answer' => 'No. Coverage depends on the member plan, provider, service, state, authorization, deductible, copay, and coinsurance.'),
+                array('question' => 'Are self-pay and CareCredit available?', 'answer' => 'Self-pay and CareCredit may be available for some services when appropriate. Final options should be confirmed before scheduling.'),
+            ),
+            'references' => array(
+                array('label' => 'Google: Helpful content guidance', 'url' => 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content'),
+            ),
+        ),
+    );
+}
+
+function prismpath_resource_record_by_slug(string $slug): ?array
+{
+    $resources = prismpath_resource_pages();
+    return $resources[$slug] ?? null;
+}
+
+function prismpath_is_resource_slug(string $slug): bool
+{
+    return null !== prismpath_resource_record_by_slug($slug);
+}
+
+function prismpath_resource_url(string $slug): string
+{
+    return home_url('/resources/' . trim($slug, '/') . '/');
+}
+
+function prismpath_related_links_for_slug(string $slug): array
+{
+    $links = array();
+    $resource_map = array(
+        'therapy' => 'neuroaffirming-therapy-for-adults',
+        'psychiatry' => 'psychiatric-medication-management-neurodivergent-adults',
+        'adhd-autism-assessments' => 'adult-adhd-autism-assessment-guide',
+        'occupational-therapy' => 'occupational-therapy-sensory-regulation-adults',
+        'whole-family-mental-health' => 'whole-family-mental-health-caregiver-support',
+        'accommodations' => 'accommodations-documentation-support',
+        'insurance-payment' => 'insurance-payment-guide',
+    );
+
+    if (isset($resource_map[$slug])) {
+        $resource = prismpath_resource_record_by_slug($resource_map[$slug]);
+        if ($resource) {
+            $links[] = array(
+                'label' => $resource['title'],
+                'url' => prismpath_resource_url($resource_map[$slug]),
+                'description' => $resource['intro'],
+            );
+        }
+    }
+
+    $record = prismpath_resource_record_by_slug($slug);
+    if ($record && !empty($record['related_service'])) {
+        $service_slug = (string) $record['related_service'];
+        $service = prismpath_service_by_slug($service_slug);
+        $service_page = $service ? null : get_page_by_path($service_slug);
+        $label = $service ? $service['title'] : ($service_page instanceof WP_Post ? $service_page->post_title : 'Related Service');
+        $links[] = array(
+            'label' => $label,
+            'url' => home_url('/' . $service_slug . '/'),
+            'description' => 'Explore the related Prismpath Health service pathway.',
+        );
+    }
+
+    $links[] = array(
+        'label' => 'Contact Prismpath Health',
+        'url' => home_url('/contact/'),
+        'description' => 'Ask about fit, insurance verification, and next steps.',
+    );
+
+    return $links;
+}
+
 function prismpath_icon(string $name): string
 {
     $icons = array(
@@ -408,7 +619,7 @@ function prismpath_page_content(string $slug): array
 function prismpath_content_record_by_slug(string $slug): ?array
 {
     $pages = prismpath_default_pages();
-    $content = $pages[$slug] ?? null;
+    $content = $pages[$slug] ?? prismpath_resource_record_by_slug($slug);
     if (!$content) {
         return null;
     }

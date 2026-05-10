@@ -62,6 +62,7 @@ function prismpath_primary_nav_fallback(): void
         '/whole-family-mental-health/' => 'Whole Family Mental Health',
         '/insurance-payment/' => 'Insurance',
         '/approach/' => 'Approach',
+        '/resources/' => 'Resources',
         '/contact/' => 'Contact',
     );
     foreach ($items as $url => $label) {

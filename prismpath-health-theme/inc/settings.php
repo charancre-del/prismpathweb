@@ -61,7 +61,7 @@ function prismpath_sanitize_settings($input): array
 
     foreach (prismpath_default_settings() as $key => $default) {
         $value = $input[$key] ?? '';
-        if (str_ends_with($key, '_url')) {
+        if (substr($key, -4) === '_url') {
             $clean[$key] = esc_url_raw($value);
         } elseif ('primary_email' === $key) {
             $clean[$key] = sanitize_email($value);

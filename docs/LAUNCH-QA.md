@@ -7,7 +7,8 @@ Do not launch until every item below passes on staging.
 - Theme activates without fatal errors.
 - All four production plugins activate without fatal errors.
 - Required pages exist and use the expected templates.
-- No blog, resource hub, or resource-guide pages are published unless intentionally requested later.
+- No blog posts are published unless intentionally requested later.
+- Resource hub and resource-guide pages are published intentionally for Google SEO, AI Overviews eligibility, GEO, and AI citation support.
 - Insurance & Payment page is published and lists accepted plans with benefit-verification language.
 - HIPAA Policy page is published and final legal/privacy review is complete.
 - Legal-facing content, footer copyright, and organization schema identify `Lbee Health Practive Group PLLC dba Prismpath Health`.
@@ -19,6 +20,7 @@ Do not launch until every item below passes on staging.
 
 - `/sitemap.xml` returns valid XML.
 - `robots.txt` includes the sitemap URL.
+- Temporary hosting/CDN domains must be checked for platform-level robots overrides before indexing; final production domain must serve `Allow: /` and the sitemap URL without relying on cache-busting query strings.
 - Canonical URLs use the new Prismpath Health domain.
 - Homepage emits `MedicalOrganization` and `WebSite` schema.
 - Service pages emit `Service` schema.

@@ -67,11 +67,15 @@ function prismpath_create_page_if_missing(string $title, string $slug, string $e
         $current_excerpt = trim((string) $existing->post_excerpt);
         $old_generated_excerpt = false !== strpos($current_excerpt, 'children, teens')
             || false !== strpos($current_excerpt, 'child and teen');
+        $updates = array('ID' => $existing->ID);
         if ('' === $current_excerpt || $old_generated_excerpt) {
-            wp_update_post(array(
-                'ID' => $existing->ID,
-                'post_excerpt' => $excerpt,
-            ));
+            $updates['post_excerpt'] = $excerpt;
+        }
+        if ('publish' !== $existing->post_status) {
+            $updates['post_status'] = 'publish';
+        }
+        if (count($updates) > 1) {
+            wp_update_post($updates);
         }
         return (int) $existing->ID;
     }
@@ -107,6 +111,10 @@ function prismpath_static_page_seo(string $slug): ?array
         'services' => array(
             'seo_title' => 'Neuroaffirming Mental Health Services | Prismpath Health',
             'meta_description' => 'Explore Prismpath Health services for adult therapy, psychiatry, occupational therapy, ADHD and Autism assessment, caregiver support, and accommodations.',
+        ),
+        'resources' => array(
+            'seo_title' => 'Neuroaffirming Mental Health Resources | Prismpath Health',
+            'meta_description' => 'Read Prismpath Health guides for adult ADHD and Autism assessment, therapy, psychiatry, occupational therapy, family support, accommodations, and payment planning.',
         ),
         'insurance-payment' => array(
             'seo_title' => 'Insurance and Payment Options | Prismpath Health',
@@ -231,14 +239,16 @@ function prismpath_create_policy_page_if_missing(string $title, string $slug, st
 function prismpath_seed_site_identity(): void
 {
     $current_name = trim((string) get_option('blogname'));
-    if ('' === $current_name || in_array($current_name, array('Prismpath', 'Just another WordPress site'), true)) {
+    if ('' === $current_name || in_array($current_name, array('Prismpath', 'prismpathhealth', 'Just another WordPress site'), true)) {
         update_option('blogname', 'Prismpath Health');
     }
 
     $current_description = trim((string) get_option('blogdescription'));
-    if ('' === $current_description || 'Just another WordPress site' === $current_description) {
+    if ('' === $current_description || in_array($current_description, array('Just another WordPress site', 'My WordPress Blog'), true)) {
         update_option('blogdescription', 'Whole-family neuroaffirming mental health care');
     }
+
+    update_option('blog_public', '1');
 }
 
 function prismpath_retire_default_sample_page(): void
@@ -292,6 +302,34 @@ function prismpath_retire_resource_pages(): void
             ));
         }
     }
+}
+
+function prismpath_seed_resource_pages(): array
+{
+    $resource_ids = array();
+    $hub_id = prismpath_create_page_if_missing(
+        'Resources',
+        'resources',
+        'SEO-friendly Prismpath Health guides for adult neuroaffirming care, assessment, caregiver support, accommodations, and payment planning.'
+    );
+
+    if ($hub_id) {
+        $resource_ids['resources'] = $hub_id;
+        prismpath_update_page_seo_meta($hub_id, prismpath_static_page_seo('resources') ?? array());
+    }
+
+    foreach (prismpath_resource_pages() as $slug => $resource) {
+        $id = prismpath_create_child_page_if_missing(
+            (string) $resource['title'],
+            $slug,
+            $hub_id,
+            (string) $resource['intro']
+        );
+        $resource_ids[$slug] = $id;
+        prismpath_update_page_seo_meta($id, $resource);
+    }
+
+    return $resource_ids;
 }
 
 function prismpath_remove_resources_menu_item($menu_id): void
@@ -380,7 +418,6 @@ function prismpath_seed_required_pages(): void
     prismpath_seed_site_identity();
     prismpath_retire_default_sample_page();
     prismpath_retire_default_hello_world_post();
-    prismpath_retire_resource_pages();
 
     $pages = array(
         array('Home', 'home', 'A clearer path to mental health care for every brain and every family.'),
@@ -414,6 +451,7 @@ function prismpath_seed_required_pages(): void
             $home_id = $id;
         }
     }
+    $page_ids_by_slug = array_merge($page_ids_by_slug, prismpath_seed_resource_pages());
     if (function_exists('prismpath_seed_all_page_editor_meta')) {
         prismpath_seed_all_page_editor_meta($page_ids_by_slug);
     }
@@ -439,6 +477,7 @@ function prismpath_seed_required_pages(): void
             'Whole Family Mental Health' => '/whole-family-mental-health/',
             'Insurance' => '/insurance-payment/',
             'Approach' => '/approach/',
+            'Resources' => '/resources/',
             'Contact' => '/contact/',
         );
         foreach ($menu_items as $label => $path) {
@@ -454,9 +493,9 @@ function prismpath_seed_required_pages(): void
     } else {
         $menu_items = wp_get_nav_menu_items($menu->term_id);
         $labels = is_array($menu_items) ? wp_list_pluck($menu_items, 'title') : array();
-        prismpath_remove_resources_menu_item($menu->term_id);
         $extra_menu_items = array(
             'Insurance' => '/insurance-payment/',
+            'Resources' => '/resources/',
         );
         foreach ($extra_menu_items as $label => $path) {
             if (!in_array($label, $labels, true)) {
@@ -475,7 +514,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-09-legal-dba-wording-v9';
+    $target_version = '2026-05-09-ai-seo-resource-hub-v2';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }
