@@ -57,12 +57,12 @@
 function prismpath_primary_nav_fallback(): void
 {
     $items = array(
+        '/about/' => 'About',
         '/services/' => 'Services',
         '/adhd-autism-assessments/' => 'Assessments',
         '/whole-family-mental-health/' => 'Whole Family Mental Health',
         '/insurance-payment/' => 'Insurance',
         '/approach/' => 'Approach',
-        '/about/' => 'About',
         '/resources/' => 'Resources',
         '/contact/' => 'Contact',
     );

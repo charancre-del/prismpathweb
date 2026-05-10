@@ -417,6 +417,58 @@ function prismpath_seed_team_members(): void
     }
 }
 
+function prismpath_primary_menu_items(): array
+{
+    return array(
+        'About' => '/about/',
+        'Services' => '/services/',
+        'Assessments' => '/adhd-autism-assessments/',
+        'Whole Family Mental Health' => '/whole-family-mental-health/',
+        'Insurance' => '/insurance-payment/',
+        'Approach' => '/approach/',
+        'Resources' => '/resources/',
+        'Contact' => '/contact/',
+    );
+}
+
+function prismpath_sync_primary_menu(): void
+{
+    $menu_name = 'Prismpath Primary';
+    $menu = wp_get_nav_menu_object($menu_name);
+    $menu_id = $menu ? (int) $menu->term_id : 0;
+    if (!$menu_id) {
+        $created_menu_id = wp_create_nav_menu($menu_name);
+        if (is_wp_error($created_menu_id)) {
+            return;
+        }
+        $menu_id = (int) $created_menu_id;
+    }
+
+    $existing_items = wp_get_nav_menu_items($menu_id);
+    $existing_by_title = array();
+    if (is_array($existing_items)) {
+        foreach ($existing_items as $item) {
+            $existing_by_title[(string) $item->title] = (int) $item->ID;
+        }
+    }
+
+    $position = 1;
+    foreach (prismpath_primary_menu_items() as $label => $path) {
+        $item_id = $existing_by_title[$label] ?? 0;
+        wp_update_nav_menu_item($menu_id, $item_id, array(
+            'menu-item-title' => $label,
+            'menu-item-url' => home_url($path),
+            'menu-item-status' => 'publish',
+            'menu-item-position' => $position,
+        ));
+        $position++;
+    }
+
+    $locations = get_theme_mod('nav_menu_locations', array());
+    $locations['primary'] = $menu_id;
+    set_theme_mod('nav_menu_locations', $locations);
+}
+
 function prismpath_seed_required_pages(): void
 {
     prismpath_seed_site_identity();
@@ -469,51 +521,7 @@ function prismpath_seed_required_pages(): void
     prismpath_seed_policy_pages();
     prismpath_seed_team_members();
 
-    $menu_name = 'Prismpath Primary';
-    $menu = wp_get_nav_menu_object($menu_name);
-    if (!$menu) {
-        $menu_id = wp_create_nav_menu($menu_name);
-        if (is_wp_error($menu_id)) {
-            return;
-        }
-        $menu_items = array(
-            'Services' => '/services/',
-            'Assessments' => '/adhd-autism-assessments/',
-            'Whole Family Mental Health' => '/whole-family-mental-health/',
-            'Insurance' => '/insurance-payment/',
-            'Approach' => '/approach/',
-            'About' => '/about/',
-            'Resources' => '/resources/',
-            'Contact' => '/contact/',
-        );
-        foreach ($menu_items as $label => $path) {
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => $label,
-                'menu-item-url' => home_url($path),
-                'menu-item-status' => 'publish',
-            ));
-        }
-        $locations = get_theme_mod('nav_menu_locations', array());
-        $locations['primary'] = $menu_id;
-        set_theme_mod('nav_menu_locations', $locations);
-    } else {
-        $menu_items = wp_get_nav_menu_items($menu->term_id);
-        $labels = is_array($menu_items) ? wp_list_pluck($menu_items, 'title') : array();
-        $extra_menu_items = array(
-            'About' => '/about/',
-            'Insurance' => '/insurance-payment/',
-            'Resources' => '/resources/',
-        );
-        foreach ($extra_menu_items as $label => $path) {
-            if (!in_array($label, $labels, true)) {
-                wp_update_nav_menu_item($menu->term_id, 0, array(
-                    'menu-item-title' => $label,
-                    'menu-item-url' => home_url($path),
-                    'menu-item-status' => 'publish',
-                ));
-            }
-        }
-    }
+    prismpath_sync_primary_menu();
 
     flush_rewrite_rules();
 }
