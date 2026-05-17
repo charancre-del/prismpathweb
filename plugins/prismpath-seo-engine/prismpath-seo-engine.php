@@ -109,26 +109,47 @@ function prismpath_seo_admin_faq_count(int $post_id): int
 
 function prismpath_seo_admin_schema_label(int $post_id): string
 {
-    if ('team_member' === get_post_type($post_id)) {
-        return 'Person';
+    return implode(', ', prismpath_seo_admin_schema_types($post_id));
+}
+
+function prismpath_seo_admin_schema_types(int $post_id): array
+{
+    $agent_status = prismpath_seo_agent_schema_status($post_id);
+    if (!empty($agent_status['valid']) && !empty($agent_status['types'])) {
+        return $agent_status['types'];
     }
 
-    if ((int) get_option('page_on_front') === $post_id) {
-        return 'MedicalOrganization, WebSite, MedicalWebPage';
+    return prismpath_seo_schema_types_for_post($post_id);
+}
+
+function prismpath_seo_admin_schema_source_label(int $post_id): string
+{
+    $agent_status = prismpath_seo_agent_schema_status($post_id);
+    if (empty($agent_status['override'])) {
+        return __('Auto', 'prismpath-seo-engine');
     }
 
-    $service_type = prismpath_seo_admin_service_type($post_id);
-    if ($service_type) {
-        return 'MedicalWebPage, Service';
+    return !empty($agent_status['valid'])
+        ? __('Agent override', 'prismpath-seo-engine')
+        : __('Auto fallback', 'prismpath-seo-engine');
+}
+
+function prismpath_seo_admin_schema_override_label(int $post_id): string
+{
+    $agent_status = prismpath_seo_agent_schema_status($post_id);
+    if (empty($agent_status['override'])) {
+        return __('Inactive', 'prismpath-seo-engine');
     }
 
-    return 'MedicalWebPage';
+    return !empty($agent_status['valid'])
+        ? __('Active and valid', 'prismpath-seo-engine')
+        : __('Active but invalid', 'prismpath-seo-engine');
 }
 
 function prismpath_seo_admin_indexable_posts(): array
 {
     return get_posts(array(
-        'post_type' => array('page', 'team_member'),
+        'post_type' => array('page', 'post', 'team_member'),
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'orderby' => array('menu_order' => 'ASC', 'title' => 'ASC'),
@@ -152,19 +173,24 @@ function prismpath_seo_render_admin_page(): void
     $missing_descriptions = 0;
     $service_schema_pages = 0;
     $faq_pages = 0;
+    $agent_override_pages = 0;
 
     foreach ($posts as $post) {
+        $post_id = (int) $post->ID;
         if (!prismpath_seo_admin_meta_value((int) $post->ID, 'seo_title')) {
             $missing_titles++;
         }
         if (!prismpath_seo_admin_meta_value((int) $post->ID, 'meta_description')) {
             $missing_descriptions++;
         }
-        if (prismpath_seo_admin_service_type((int) $post->ID)) {
+        if (in_array('Service', prismpath_seo_admin_schema_types($post_id), true)) {
             $service_schema_pages++;
         }
         if (prismpath_seo_admin_faq_count((int) $post->ID) > 0) {
             $faq_pages++;
+        }
+        if (!empty(prismpath_seo_agent_schema_status($post_id)['override'])) {
+            $agent_override_pages++;
         }
     }
 
@@ -178,7 +204,7 @@ function prismpath_seo_render_admin_page(): void
         </p>
 
         <style>
-            .prismpath-seo-admin .prismpath-seo-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 20px 0; }
+            .prismpath-seo-admin .prismpath-seo-grid { display: grid; gap: 16px; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 20px 0; }
             .prismpath-seo-admin .prismpath-seo-card { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 16px; }
             .prismpath-seo-admin .prismpath-seo-card strong { display: block; font-size: 28px; line-height: 1.1; margin-top: 8px; }
             .prismpath-seo-admin .prismpath-seo-badge { display: inline-block; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; }
@@ -206,6 +232,10 @@ function prismpath_seo_render_admin_page(): void
             <div class="prismpath-seo-card">
                 <?php esc_html_e('Metadata gaps', 'prismpath-seo-engine'); ?>
                 <strong><?php echo esc_html((string) ($missing_titles + $missing_descriptions)); ?></strong>
+            </div>
+            <div class="prismpath-seo-card">
+                <?php esc_html_e('Agent schema overrides', 'prismpath-seo-engine'); ?>
+                <strong><?php echo esc_html((string) $agent_override_pages); ?></strong>
             </div>
         </div>
 
@@ -243,6 +273,8 @@ function prismpath_seo_render_admin_page(): void
                     <th scope="col"><?php esc_html_e('SEO title', 'prismpath-seo-engine'); ?></th>
                     <th scope="col"><?php esc_html_e('Meta description', 'prismpath-seo-engine'); ?></th>
                     <th scope="col"><?php esc_html_e('Schema', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('Schema source', 'prismpath-seo-engine'); ?></th>
+                    <th scope="col"><?php esc_html_e('Agent override', 'prismpath-seo-engine'); ?></th>
                     <th scope="col"><?php esc_html_e('FAQ schema', 'prismpath-seo-engine'); ?></th>
                     <th scope="col"><?php esc_html_e('Actions', 'prismpath-seo-engine'); ?></th>
                 </tr>
@@ -254,6 +286,7 @@ function prismpath_seo_render_admin_page(): void
                     $title = prismpath_seo_admin_meta_value($post_id, 'seo_title');
                     $description = prismpath_seo_admin_meta_value($post_id, 'meta_description');
                     $faq_count = prismpath_seo_admin_faq_count($post_id);
+                    $agent_status = prismpath_seo_agent_schema_status($post_id);
                     ?>
                     <tr>
                         <td>
@@ -268,6 +301,10 @@ function prismpath_seo_render_admin_page(): void
                             <?php endif; ?>
                         </td>
                         <td><?php echo esc_html(prismpath_seo_admin_schema_label($post_id)); ?></td>
+                        <td><?php echo esc_html(prismpath_seo_admin_schema_source_label($post_id)); ?></td>
+                        <td>
+                            <?php echo prismpath_seo_render_status_badge(empty($agent_status['override']) || !empty($agent_status['valid']), prismpath_seo_admin_schema_override_label($post_id)); ?>
+                        </td>
                         <td><?php echo esc_html($faq_count ? sprintf(_n('%d FAQ', '%d FAQs', $faq_count, 'prismpath-seo-engine'), $faq_count) : __('None', 'prismpath-seo-engine')); ?></td>
                         <td>
                             <a href="<?php echo esc_url(get_edit_post_link($post_id, '')); ?>"><?php esc_html_e('Edit', 'prismpath-seo-engine'); ?></a>
@@ -348,6 +385,23 @@ function prismpath_seo_schema_filter(array $schema): array
 
 function prismpath_seo_document_title(string $title): string
 {
+    if (is_home() && !is_front_page()) {
+        $posts_page_id = (int) get_option('page_for_posts');
+        if ($posts_page_id) {
+            $custom = get_post_meta($posts_page_id, '_prismpath_seo_title', true);
+            if ($custom) {
+                return wp_strip_all_tags($custom);
+            }
+
+            $static_record = prismpath_seo_static_record($posts_page_id);
+            if ($static_record && !empty($static_record['seo_title'])) {
+                return wp_strip_all_tags($static_record['seo_title']);
+            }
+        }
+
+        return 'Blog | Prismpath Health';
+    }
+
     if (!is_singular()) {
         if (is_404()) {
             return 'Page Not Found | Prismpath Health';
@@ -384,6 +438,26 @@ function prismpath_seo_description(): string
     if (is_front_page()) {
         return 'Prismpath Health provides adult neuroaffirming therapy, psychiatric care, occupational therapy, ADHD and Autism assessments, and caregiver-centered whole-family mental health support.';
     }
+    if (is_home() && !is_front_page()) {
+        $posts_page_id = (int) get_option('page_for_posts');
+        if ($posts_page_id) {
+            $custom = get_post_meta($posts_page_id, 'meta_description', true);
+            if ($custom) {
+                return wp_strip_all_tags($custom);
+            }
+
+            $static_record = prismpath_seo_static_record($posts_page_id);
+            if ($static_record && !empty($static_record['meta_description'])) {
+                return wp_strip_all_tags($static_record['meta_description']);
+            }
+
+            if (has_excerpt($posts_page_id)) {
+                return wp_strip_all_tags(get_the_excerpt($posts_page_id));
+            }
+        }
+
+        return 'Read Prismpath Health blog updates and neuroaffirming mental health resources for adults, caregivers, ADHD, Autism, therapy, psychiatry, and occupational therapy.';
+    }
     $custom = get_post_meta(get_the_ID(), 'meta_description', true);
     if ($custom) {
         return wp_strip_all_tags($custom);
@@ -418,6 +492,11 @@ function prismpath_seo_canonical_url(): string
 
     if (is_singular()) {
         return (string) get_permalink();
+    }
+
+    if (is_home() && !is_front_page()) {
+        $posts_page_id = (int) get_option('page_for_posts');
+        return $posts_page_id ? (string) get_permalink($posts_page_id) : home_url('/blog/');
     }
 
     if (is_front_page()) {
@@ -469,6 +548,10 @@ add_action('wp_head', 'prismpath_seo_meta_tags', 2);
 
 function prismpath_jsonld(array $schema): void
 {
+    if (!$schema) {
+        return;
+    }
+
     echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>' . "\n";
 }
 
@@ -494,7 +577,14 @@ function prismpath_seo_normalize_agent_schema_item($item): ?array
         }
     }
 
-    if (!empty($item['@type']) || !empty($item['@context']) || !empty($item['mainEntity'])) {
+    if (!empty($item['@graph']) && is_array($item['@graph'])) {
+        if (empty($item['@context'])) {
+            $item['@context'] = 'https://schema.org';
+        }
+        return $item;
+    }
+
+    if (!empty($item['@type'])) {
         if (empty($item['@context'])) {
             $item['@context'] = 'https://schema.org';
         }
@@ -504,11 +594,23 @@ function prismpath_seo_normalize_agent_schema_item($item): ?array
     return null;
 }
 
-function prismpath_seo_agent_schemas(int $post_id): array
+function prismpath_seo_agent_schema_status(int $post_id): array
 {
+    static $cache = array();
+    if (isset($cache[$post_id])) {
+        return $cache[$post_id];
+    }
+
     $override = get_post_meta($post_id, '_chroma_schema_override', true);
     if (!prismpath_seo_truthy($override)) {
-        return array();
+        $cache[$post_id] = array(
+            'override' => false,
+            'valid' => false,
+            'schemas' => array(),
+            'types' => array(),
+            'source' => 'auto',
+        );
+        return $cache[$post_id];
     }
 
     $candidates = array(
@@ -517,6 +619,7 @@ function prismpath_seo_agent_schemas(int $post_id): array
     );
 
     $schemas = array();
+    $invalid_sources = 0;
     foreach ($candidates as $candidate) {
         if (!$candidate) {
             continue;
@@ -524,7 +627,12 @@ function prismpath_seo_agent_schemas(int $post_id): array
 
         if (is_string($candidate)) {
             $decoded = json_decode($candidate, true);
-            $candidate = is_array($decoded) ? $decoded : $candidate;
+            if (is_array($decoded)) {
+                $candidate = $decoded;
+            } else {
+                $invalid_sources++;
+                continue;
+            }
         }
 
         if (is_array($candidate) && prismpath_seo_is_assoc_array($candidate)) {
@@ -543,7 +651,24 @@ function prismpath_seo_agent_schemas(int $post_id): array
         }
     }
 
-    return $schemas;
+    $schemas = prismpath_seo_schema_dedupe_nodes($schemas);
+    $valid = !empty($schemas);
+    $cache[$post_id] = array(
+        'override' => true,
+        'valid' => $valid,
+        'schemas' => $schemas,
+        'types' => $valid ? prismpath_seo_schema_types_from_nodes($schemas) : array(),
+        'source' => $valid ? 'agent' : 'auto_fallback',
+        'invalid_sources' => $invalid_sources,
+    );
+
+    return $cache[$post_id];
+}
+
+function prismpath_seo_agent_schemas(int $post_id): array
+{
+    $status = prismpath_seo_agent_schema_status($post_id);
+    return !empty($status['valid']) ? $status['schemas'] : array();
 }
 
 function prismpath_seo_organization_ref(): array
@@ -559,6 +684,86 @@ function prismpath_seo_legal_dba_name(): string
     }
 
     return trim($legal_name) . ' dba Prismpath Health';
+}
+
+function prismpath_seo_schema_clean(array $schema): array
+{
+    foreach ($schema as $key => $value) {
+        if (is_array($value)) {
+            $value = prismpath_seo_schema_clean($value);
+        }
+
+        if ($value === null || $value === '' || $value === array()) {
+            unset($schema[$key]);
+            continue;
+        }
+
+        $schema[$key] = $value;
+    }
+
+    return $schema;
+}
+
+function prismpath_seo_schema_dedupe_nodes(array $nodes): array
+{
+    $deduped = array();
+    $seen = array();
+
+    foreach ($nodes as $node) {
+        if (!is_array($node)) {
+            continue;
+        }
+
+        $node = prismpath_seo_schema_clean($node);
+        if (!$node) {
+            continue;
+        }
+
+        $key = !empty($node['@id'])
+            ? (string) $node['@id']
+            : md5((string) wp_json_encode($node));
+
+        if (isset($seen[$key])) {
+            continue;
+        }
+
+        $seen[$key] = true;
+        $deduped[] = $node;
+    }
+
+    return $deduped;
+}
+
+function prismpath_seo_schema_types_from_nodes(array $nodes): array
+{
+    $types = array();
+    $add_type = static function ($type) use (&$types): void {
+        foreach ((array) $type as $item) {
+            if (is_string($item) && $item && !in_array($item, $types, true)) {
+                $types[] = $item;
+            }
+        }
+    };
+
+    foreach ($nodes as $node) {
+        if (!is_array($node)) {
+            continue;
+        }
+
+        if (!empty($node['@type'])) {
+            $add_type($node['@type']);
+        }
+
+        if (!empty($node['@graph']) && is_array($node['@graph'])) {
+            foreach ($node['@graph'] as $graph_node) {
+                if (is_array($graph_node) && !empty($graph_node['@type'])) {
+                    $add_type($graph_node['@type']);
+                }
+            }
+        }
+    }
+
+    return $types;
 }
 
 function prismpath_seo_organization_schema(): array
@@ -588,44 +793,193 @@ function prismpath_seo_organization_schema(): array
     ));
 }
 
-function prismpath_seo_webpage_type(): string
+function prismpath_seo_website_schema(): array
 {
-    if (is_page('contact')) {
+    return array(
+        '@type' => 'WebSite',
+        '@id' => home_url('/#website'),
+        'name' => 'Prismpath Health',
+        'url' => home_url('/'),
+        'publisher' => prismpath_seo_organization_ref(),
+        'potentialAction' => array(
+            '@type' => 'SearchAction',
+            'target' => home_url('/?s={search_term_string}'),
+            'query-input' => 'required name=search_term_string',
+        ),
+    );
+}
+
+function prismpath_seo_current_post_id(): int
+{
+    if (is_home() && !is_front_page()) {
+        return (int) get_option('page_for_posts');
+    }
+
+    if (is_front_page()) {
+        return (int) get_option('page_on_front');
+    }
+
+    return is_singular() ? (int) get_the_ID() : 0;
+}
+
+function prismpath_seo_resource_record_for_slug(string $slug): ?array
+{
+    if (!$slug || !function_exists('prismpath_resource_record_by_slug')) {
+        return null;
+    }
+
+    $record = prismpath_resource_record_by_slug($slug);
+    return is_array($record) ? $record : null;
+}
+
+function prismpath_seo_current_schema_context(): array
+{
+    $post_id = prismpath_seo_current_post_id();
+    $slug = $post_id ? (string) get_post_field('post_name', $post_id) : '';
+    $url = prismpath_seo_canonical_url();
+    $record = $post_id ? prismpath_seo_content_record($post_id) : null;
+    $resource_record = prismpath_seo_resource_record_for_slug($slug);
+
+    $context = array(
+        'post_id' => $post_id,
+        'post_type' => $post_id ? (string) get_post_type($post_id) : '',
+        'slug' => $slug,
+        'url' => $url ?: home_url('/'),
+        'title' => wp_get_document_title(),
+        'description' => prismpath_seo_description(),
+        'record' => $record,
+        'resource_record' => $resource_record,
+        'static_record' => $post_id ? prismpath_seo_static_record($post_id) : null,
+        'is_front' => is_front_page(),
+        'is_blog_index' => is_home() && !is_front_page(),
+        'is_singular' => is_singular(),
+        'is_post' => is_singular('post'),
+        'is_team_member' => is_singular('team_member'),
+    );
+
+    return apply_filters('prismpath_seo_schema_context', $context);
+}
+
+function prismpath_seo_webpage_type_for_context(array $context)
+{
+    if (!empty($context['is_blog_index'])) {
+        return 'CollectionPage';
+    }
+
+    if (!empty($context['is_team_member'])) {
+        return 'ProfilePage';
+    }
+
+    $slug = (string) ($context['slug'] ?? '');
+    if ('about' === $slug) {
+        return array('AboutPage', 'ProfilePage');
+    }
+
+    if ('contact' === $slug) {
         return 'ContactPage';
     }
 
-    if (is_page('team')) {
+    if (in_array($slug, array('team', 'resources'), true)) {
         return 'CollectionPage';
     }
 
-    if (is_page('resources')) {
-        return 'CollectionPage';
-    }
-
-    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'approach', 'group-support', 'referral-partners', 'accommodations', 'insurance-payment'))) {
-        return 'MedicalWebPage';
-    }
-
-    if (is_singular('page') && function_exists('prismpath_resource_record_by_slug') && prismpath_resource_record_by_slug((string) get_post_field('post_name', get_the_ID()))) {
+    if (prismpath_seo_context_is_medical_page($context)) {
         return 'MedicalWebPage';
     }
 
     return 'WebPage';
 }
 
-function prismpath_seo_webpage_schema(): array
+function prismpath_seo_webpage_type(): string
 {
+    $type = prismpath_seo_webpage_type_for_context(prismpath_seo_current_schema_context());
+    return is_array($type) ? (string) reset($type) : (string) $type;
+}
+
+function prismpath_seo_context_is_medical_page(array $context): bool
+{
+    $slug = (string) ($context['slug'] ?? '');
+    if (!empty($context['resource_record'])) {
+        return true;
+    }
+
+    $medical_slugs = array(
+        'therapy',
+        'psychiatry',
+        'adhd-autism-assessments',
+        'occupational-therapy',
+        'whole-family-mental-health',
+        'approach',
+        'group-support',
+        'referral-partners',
+        'accommodations',
+        'insurance-payment',
+    );
+
+    return in_array($slug, $medical_slugs, true);
+}
+
+function prismpath_seo_context_has_service_schema(array $context): bool
+{
+    if (!empty($context['resource_record']) || 'page' !== ($context['post_type'] ?? '')) {
+        return false;
+    }
+
+    $record = $context['record'] ?? null;
+    return is_array($record) && !empty($record['schema_service_type']);
+}
+
+function prismpath_seo_webpage_main_entity(array $context): ?array
+{
+    $slug = (string) ($context['slug'] ?? '');
+    if ('about' === $slug) {
+        return prismpath_seo_organization_ref();
+    }
+
+    if ('contact' === $slug) {
+        return array('@id' => ($context['url'] ?? home_url('/contact/')) . '#contact');
+    }
+
+    if (!empty($context['is_team_member'])) {
+        return array('@id' => ($context['url'] ?? get_permalink()) . '#person');
+    }
+
+    if (prismpath_seo_context_has_service_schema($context)) {
+        return array('@id' => ($context['url'] ?? get_permalink()) . '#service');
+    }
+
+    if (!empty($context['is_post'])) {
+        return array('@id' => ($context['url'] ?? get_permalink()) . '#article');
+    }
+
+    if (in_array($slug, array('team', 'resources'), true) || !empty($context['is_blog_index'])) {
+        return array('@id' => ($context['url'] ?? get_permalink()) . '#itemlist');
+    }
+
+    return null;
+}
+
+function prismpath_seo_webpage_schema(array $context = array()): array
+{
+    $context = $context ?: prismpath_seo_current_schema_context();
+    $post_id = (int) ($context['post_id'] ?? 0);
+    $url = (string) ($context['url'] ?? prismpath_seo_canonical_url());
+    $type = prismpath_seo_webpage_type_for_context($context);
+
     return prismpath_seo_schema_filter(array(
-        '@context' => 'https://schema.org',
-        '@type' => prismpath_seo_webpage_type(),
-        '@id' => get_permalink() . '#webpage',
-        'url' => get_permalink(),
-        'name' => wp_get_document_title(),
-        'description' => prismpath_seo_description(),
+        '@type' => $type,
+        '@id' => $url . '#webpage',
+        'url' => $url,
+        'name' => $context['title'] ?? wp_get_document_title(),
+        'description' => $context['description'] ?? prismpath_seo_description(),
         'isPartOf' => array('@id' => home_url('/#website')),
         'publisher' => prismpath_seo_organization_ref(),
-        'datePublished' => get_the_date('c'),
-        'dateModified' => get_the_modified_date('c'),
+        'about' => 'about' === ($context['slug'] ?? '') ? prismpath_seo_organization_ref() : null,
+        'mainEntity' => prismpath_seo_webpage_main_entity($context),
+        'mentions' => 'about' === ($context['slug'] ?? '') ? array('@id' => $url . '#itemlist') : null,
+        'specialty' => prismpath_seo_context_is_medical_page($context) ? 'MentalHealth' : null,
+        'datePublished' => $post_id ? get_the_date('c', $post_id) : null,
+        'dateModified' => $post_id ? get_the_modified_date('c', $post_id) : null,
     ));
 }
 
@@ -645,7 +999,6 @@ function prismpath_seo_team_photo_url(int $post_id): string
 function prismpath_seo_person_schema(int $post_id): array
 {
     return prismpath_seo_schema_filter(array(
-        '@context' => 'https://schema.org',
         '@type' => 'Person',
         '@id' => get_permalink($post_id) . '#person',
         'name' => get_the_title($post_id),
@@ -657,99 +1010,488 @@ function prismpath_seo_person_schema(int $post_id): array
     ));
 }
 
+function prismpath_seo_service_schema(array $context): array
+{
+    if (!prismpath_seo_context_has_service_schema($context)) {
+        return array();
+    }
+
+    $record = $context['record'] ?? array();
+    $url = (string) ($context['url'] ?? get_permalink());
+
+    return prismpath_seo_schema_filter(array(
+        '@type' => 'Service',
+        '@id' => $url . '#service',
+        'name' => $context['title'] ?? get_the_title(),
+        'description' => $context['description'] ?? prismpath_seo_description(),
+        'serviceType' => is_array($record) ? ($record['schema_service_type'] ?? null) : null,
+        'provider' => prismpath_seo_organization_ref(),
+        'audience' => array('@type' => 'Audience', 'audienceType' => 'Adults, caregivers, families, and referral partners'),
+        'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
+        'availableChannel' => array('@type' => 'ServiceChannel', 'serviceUrl' => $url, 'availableLanguage' => 'English'),
+        'url' => $url,
+    ));
+}
+
+function prismpath_seo_team_item_list_schema(array $context): array
+{
+    $members = get_posts(array(
+        'post_type' => 'team_member',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'orderby' => array('menu_order' => 'ASC', 'title' => 'ASC'),
+    ));
+
+    if (!$members) {
+        return array();
+    }
+
+    $items = array();
+    foreach ($members as $index => $member) {
+        $items[] = array(
+            '@type' => 'ListItem',
+            'position' => $index + 1,
+            'name' => get_the_title($member),
+            'item' => get_permalink($member),
+        );
+    }
+
+    return array(
+        '@type' => 'ItemList',
+        '@id' => ($context['url'] ?? home_url('/team/')) . '#itemlist',
+        'name' => 'Prismpath Health providers',
+        'itemListElement' => $items,
+    );
+}
+
+function prismpath_seo_blog_item_list_schema(array $context): array
+{
+    $posts = get_posts(array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 10,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ));
+
+    if (!$posts) {
+        return array();
+    }
+
+    $items = array();
+    foreach ($posts as $index => $post) {
+        $items[] = array(
+            '@type' => 'ListItem',
+            'position' => $index + 1,
+            'name' => get_the_title($post),
+            'item' => get_permalink($post),
+        );
+    }
+
+    return array(
+        '@type' => 'ItemList',
+        '@id' => ($context['url'] ?? home_url('/blog/')) . '#itemlist',
+        'name' => 'Prismpath Health blog posts',
+        'itemListElement' => $items,
+    );
+}
+
+function prismpath_seo_resource_item_list_schema(array $context): array
+{
+    if ('resources' !== ($context['slug'] ?? '') || !function_exists('prismpath_resource_pages')) {
+        return array();
+    }
+
+    $resources = prismpath_resource_pages();
+    if (!is_array($resources) || !$resources) {
+        return array();
+    }
+
+    $items = array();
+    $position = 1;
+    foreach ($resources as $slug => $resource) {
+        if (!is_array($resource) || empty($resource['title'])) {
+            continue;
+        }
+
+        $items[] = array(
+            '@type' => 'ListItem',
+            'position' => $position,
+            'name' => wp_strip_all_tags((string) $resource['title']),
+            'item' => function_exists('prismpath_resource_url') ? prismpath_resource_url((string) $slug) : home_url('/resources/' . trim((string) $slug, '/') . '/'),
+        );
+        $position++;
+    }
+
+    return array(
+        '@type' => 'ItemList',
+        '@id' => ($context['url'] ?? home_url('/resources/')) . '#itemlist',
+        'name' => 'Prismpath Health resources',
+        'itemListElement' => $items,
+    );
+}
+
+function prismpath_seo_blog_posting_schema(array $context): array
+{
+    if (empty($context['is_post']) || empty($context['post_id'])) {
+        return array();
+    }
+
+    $post_id = (int) $context['post_id'];
+    $image = has_post_thumbnail($post_id) ? get_the_post_thumbnail_url($post_id, 'full') : get_template_directory_uri() . '/assets/images/hero-family-prismpath-health.png';
+    $author_name = get_the_author_meta('display_name', (int) get_post_field('post_author', $post_id));
+
+    return prismpath_seo_schema_filter(array(
+        '@type' => array('BlogPosting', 'Article'),
+        '@id' => ($context['url'] ?? get_permalink($post_id)) . '#article',
+        'headline' => get_the_title($post_id),
+        'description' => $context['description'] ?? prismpath_seo_description(),
+        'image' => $image,
+        'datePublished' => get_the_date('c', $post_id),
+        'dateModified' => get_the_modified_date('c', $post_id),
+        'author' => array('@type' => 'Person', 'name' => $author_name ?: 'Prismpath Health'),
+        'publisher' => prismpath_seo_organization_ref(),
+        'mainEntityOfPage' => array('@id' => ($context['url'] ?? get_permalink($post_id)) . '#webpage'),
+        'url' => $context['url'] ?? get_permalink($post_id),
+    ));
+}
+
+function prismpath_seo_faq_schema(array $context): array
+{
+    $record = $context['record'] ?? null;
+    if (!is_array($record) || empty($record['faqs']) || !is_array($record['faqs'])) {
+        return array();
+    }
+
+    $questions = array();
+    foreach ($record['faqs'] as $faq) {
+        if (empty($faq['question']) || empty($faq['answer'])) {
+            continue;
+        }
+
+        $questions[] = array(
+            '@type' => 'Question',
+            'name' => wp_strip_all_tags($faq['question']),
+            'acceptedAnswer' => array(
+                '@type' => 'Answer',
+                'text' => wp_strip_all_tags($faq['answer']),
+            ),
+        );
+    }
+
+    if (!$questions) {
+        return array();
+    }
+
+    return array(
+        '@type' => 'FAQPage',
+        '@id' => ($context['url'] ?? get_permalink()) . '#faq',
+        'mainEntity' => $questions,
+    );
+}
+
+function prismpath_seo_contact_point_schema(array $context): array
+{
+    if ('contact' !== ($context['slug'] ?? '')) {
+        return array();
+    }
+
+    return prismpath_seo_schema_filter(array(
+        '@type' => 'ContactPoint',
+        '@id' => ($context['url'] ?? home_url('/contact/')) . '#contact',
+        'contactType' => 'customer support',
+        'email' => prismpath_seo_setting('primary_email'),
+        'telephone' => prismpath_seo_setting('phone'),
+        'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
+        'availableLanguage' => 'English',
+    ));
+}
+
+function prismpath_seo_job_posting_schema(array $context): array
+{
+    if ('careers' !== ($context['slug'] ?? '') || empty($context['post_id'])) {
+        return array();
+    }
+
+    $raw = get_post_meta((int) $context['post_id'], '_prismpath_job_postings', true);
+    if (is_string($raw)) {
+        $decoded = json_decode($raw, true);
+        $raw = is_array($decoded) ? $decoded : array();
+    }
+
+    $jobs = is_array($raw) && prismpath_seo_is_assoc_array($raw) ? array($raw) : (array) $raw;
+    $nodes = array();
+    foreach ($jobs as $index => $job) {
+        if (!is_array($job)) {
+            continue;
+        }
+
+        $required = array('title', 'description', 'datePosted', 'employmentType');
+        foreach ($required as $key) {
+            if (empty($job[$key])) {
+                continue 2;
+            }
+        }
+
+        $nodes[] = prismpath_seo_schema_filter(array(
+            '@type' => 'JobPosting',
+            '@id' => ($context['url'] ?? home_url('/careers/')) . '#job-' . ($index + 1),
+            'title' => wp_strip_all_tags((string) $job['title']),
+            'description' => wp_kses_post((string) $job['description']),
+            'datePosted' => sanitize_text_field((string) $job['datePosted']),
+            'validThrough' => !empty($job['validThrough']) ? sanitize_text_field((string) $job['validThrough']) : null,
+            'employmentType' => sanitize_text_field((string) $job['employmentType']),
+            'hiringOrganization' => prismpath_seo_organization_ref(),
+            'jobLocationType' => !empty($job['jobLocationType']) ? sanitize_text_field((string) $job['jobLocationType']) : 'TELECOMMUTE',
+            'applicantLocationRequirements' => array('@type' => 'Country', 'name' => 'United States'),
+        ));
+    }
+
+    return $nodes;
+}
+
+function prismpath_seo_post_has_complete_job_posting(int $post_id): bool
+{
+    $raw = get_post_meta($post_id, '_prismpath_job_postings', true);
+    if (is_string($raw)) {
+        $decoded = json_decode($raw, true);
+        $raw = is_array($decoded) ? $decoded : array();
+    }
+
+    $jobs = is_array($raw) && prismpath_seo_is_assoc_array($raw) ? array($raw) : (array) $raw;
+    foreach ($jobs as $job) {
+        if (!is_array($job)) {
+            continue;
+        }
+
+        if (!empty($job['title']) && !empty($job['description']) && !empty($job['datePosted']) && !empty($job['employmentType'])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function prismpath_seo_breadcrumb_schema(array $context): array
+{
+    if (!empty($context['is_front'])) {
+        return array();
+    }
+
+    $url = (string) ($context['url'] ?? prismpath_seo_canonical_url());
+    return array(
+        '@type' => 'BreadcrumbList',
+        '@id' => $url . '#breadcrumb',
+        'itemListElement' => array(
+            array('@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => home_url('/')),
+            array('@type' => 'ListItem', 'position' => 2, 'name' => wp_get_document_title(), 'item' => $url ?: home_url('/')),
+        ),
+    );
+}
+
+function prismpath_seo_schema_registry(array $context): array
+{
+    $registry = array(
+        'organization' => 'prismpath_seo_build_organization_node',
+        'website' => 'prismpath_seo_build_website_node',
+        'webpage' => 'prismpath_seo_build_webpage_node',
+        'person' => 'prismpath_seo_build_person_node',
+        'service' => 'prismpath_seo_build_service_node',
+        'team_item_list' => 'prismpath_seo_build_team_item_list_node',
+        'blog_item_list' => 'prismpath_seo_build_blog_item_list_node',
+        'resource_item_list' => 'prismpath_seo_build_resource_item_list_node',
+        'blog_posting' => 'prismpath_seo_build_blog_posting_node',
+        'faq' => 'prismpath_seo_build_faq_node',
+        'contact_point' => 'prismpath_seo_build_contact_point_node',
+        'job_posting' => 'prismpath_seo_build_job_posting_node',
+        'breadcrumb' => 'prismpath_seo_build_breadcrumb_node',
+    );
+
+    return apply_filters('prismpath_seo_schema_registry', $registry, $context);
+}
+
+function prismpath_seo_build_organization_node(array $context)
+{
+    if (empty($context['is_front']) && !in_array(($context['slug'] ?? ''), array('about', 'contact'), true)) {
+        return array();
+    }
+
+    $schema = prismpath_seo_organization_schema();
+    unset($schema['@context']);
+    if ('contact' === ($context['slug'] ?? '')) {
+        $schema['contactPoint'] = array('@id' => ($context['url'] ?? home_url('/contact/')) . '#contact');
+    }
+
+    return $schema;
+}
+
+function prismpath_seo_build_website_node(array $context)
+{
+    return !empty($context['is_front']) ? prismpath_seo_website_schema() : array();
+}
+
+function prismpath_seo_build_webpage_node(array $context)
+{
+    if (is_404() || is_search() || empty($context['url'])) {
+        return array();
+    }
+
+    return prismpath_seo_webpage_schema($context);
+}
+
+function prismpath_seo_build_person_node(array $context)
+{
+    return !empty($context['is_team_member']) && !empty($context['post_id'])
+        ? prismpath_seo_person_schema((int) $context['post_id'])
+        : array();
+}
+
+function prismpath_seo_build_service_node(array $context)
+{
+    return prismpath_seo_service_schema($context);
+}
+
+function prismpath_seo_build_team_item_list_node(array $context)
+{
+    return in_array(($context['slug'] ?? ''), array('about', 'team'), true)
+        ? prismpath_seo_team_item_list_schema($context)
+        : array();
+}
+
+function prismpath_seo_build_blog_item_list_node(array $context)
+{
+    return !empty($context['is_blog_index']) ? prismpath_seo_blog_item_list_schema($context) : array();
+}
+
+function prismpath_seo_build_resource_item_list_node(array $context)
+{
+    return prismpath_seo_resource_item_list_schema($context);
+}
+
+function prismpath_seo_build_blog_posting_node(array $context)
+{
+    return prismpath_seo_blog_posting_schema($context);
+}
+
+function prismpath_seo_build_faq_node(array $context)
+{
+    return prismpath_seo_faq_schema($context);
+}
+
+function prismpath_seo_build_contact_point_node(array $context)
+{
+    return prismpath_seo_contact_point_schema($context);
+}
+
+function prismpath_seo_build_job_posting_node(array $context)
+{
+    return prismpath_seo_job_posting_schema($context);
+}
+
+function prismpath_seo_build_breadcrumb_node(array $context)
+{
+    return prismpath_seo_breadcrumb_schema($context);
+}
+
+function prismpath_seo_schema_nodes(array $context = array()): array
+{
+    $context = $context ?: prismpath_seo_current_schema_context();
+    $nodes = array();
+
+    foreach (prismpath_seo_schema_registry($context) as $callback) {
+        if (!is_callable($callback)) {
+            continue;
+        }
+
+        $node = call_user_func($callback, $context);
+        if (!$node) {
+            continue;
+        }
+
+        if (is_array($node) && prismpath_seo_is_assoc_array($node)) {
+            $nodes[] = $node;
+            continue;
+        }
+
+        foreach ((array) $node as $nested_node) {
+            if (is_array($nested_node)) {
+                $nodes[] = $nested_node;
+            }
+        }
+    }
+
+    $nodes = prismpath_seo_schema_dedupe_nodes($nodes);
+    return apply_filters('prismpath_seo_schema_nodes', $nodes, $context);
+}
+
+function prismpath_seo_schema_graph(array $nodes): array
+{
+    return array(
+        '@context' => 'https://schema.org',
+        '@graph' => array_values(prismpath_seo_schema_dedupe_nodes($nodes)),
+    );
+}
+
+function prismpath_seo_schema_types_for_post(int $post_id): array
+{
+    $post_type = (string) get_post_type($post_id);
+    $slug = (string) get_post_field('post_name', $post_id);
+    $record = prismpath_seo_content_record($post_id);
+    $resource_record = prismpath_seo_resource_record_for_slug($slug);
+    $types = array();
+
+    if ((int) get_option('page_on_front') === $post_id) {
+        $types = array('MedicalOrganization', 'WebSite', 'WebPage');
+    } elseif ((int) get_option('page_for_posts') === $post_id || 'blog' === $slug) {
+        $types = array('CollectionPage', 'ItemList', 'BreadcrumbList');
+    } elseif ('post' === $post_type) {
+        $types = array('WebPage', 'BlogPosting', 'Article', 'BreadcrumbList');
+    } elseif ('team_member' === $post_type) {
+        $types = array('ProfilePage', 'Person', 'BreadcrumbList');
+    } elseif ('about' === $slug) {
+        $types = array('MedicalOrganization', 'AboutPage', 'ProfilePage', 'ItemList', 'BreadcrumbList');
+    } elseif ('team' === $slug) {
+        $types = array('CollectionPage', 'ItemList', 'BreadcrumbList');
+    } elseif ('resources' === $slug) {
+        $types = array('CollectionPage', 'ItemList', 'BreadcrumbList');
+    } elseif ('contact' === $slug) {
+        $types = array('MedicalOrganization', 'ContactPage', 'ContactPoint', 'BreadcrumbList');
+    } elseif (in_array($slug, array('privacy-policy', 'hipaa-policy', 'accessibility-statement', 'careers'), true)) {
+        $types = array('WebPage', 'BreadcrumbList');
+        if ('careers' === $slug && prismpath_seo_post_has_complete_job_posting($post_id)) {
+            $types[] = 'JobPosting';
+        }
+    } elseif ($resource_record) {
+        $types = array('MedicalWebPage', 'BreadcrumbList');
+    } elseif (is_array($record) && !empty($record['schema_service_type'])) {
+        $types = array('MedicalWebPage', 'Service', 'BreadcrumbList');
+    } else {
+        $types = array('WebPage', 'BreadcrumbList');
+    }
+
+    if (is_array($record) && !empty($record['faqs']) && is_array($record['faqs'])) {
+        $types[] = 'FAQPage';
+    }
+
+    return array_values(array_unique($types));
+}
+
 function prismpath_schema_output(): void
 {
-    $agent_schemas = is_singular() ? prismpath_seo_agent_schemas((int) get_the_ID()) : array();
-    if ($agent_schemas) {
-        foreach ($agent_schemas as $schema) {
-            prismpath_jsonld($schema);
-        }
+    if (is_admin() || is_feed() || is_404() || is_search()) {
         return;
     }
 
-    if (is_front_page()) {
-        prismpath_jsonld(prismpath_seo_organization_schema());
-        prismpath_jsonld(array(
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-            '@id' => home_url('/#website'),
-            'name' => 'Prismpath Health',
-            'url' => home_url('/'),
-            'publisher' => prismpath_seo_organization_ref(),
-            'potentialAction' => array(
-                '@type' => 'SearchAction',
-                'target' => home_url('/?s={search_term_string}'),
-                'query-input' => 'required name=search_term_string',
-            ),
-        ));
+    $post_id = prismpath_seo_current_post_id();
+    $agent_schemas = $post_id ? prismpath_seo_agent_schemas($post_id) : array();
+    if ($agent_schemas) {
+        prismpath_jsonld(count($agent_schemas) === 1 ? $agent_schemas[0] : prismpath_seo_schema_graph($agent_schemas));
+        return;
     }
 
-    if (is_singular()) {
-        prismpath_jsonld(prismpath_seo_webpage_schema());
-    }
-
-    if (is_singular('team_member')) {
-        prismpath_jsonld(prismpath_seo_person_schema((int) get_the_ID()));
-    }
-
-    if (is_page(array('therapy', 'psychiatry', 'adhd-autism-assessments', 'occupational-therapy', 'whole-family-mental-health', 'group-support', 'referral-partners', 'accommodations'))) {
-        $record = prismpath_seo_content_record((int) get_the_ID());
-        prismpath_jsonld(prismpath_seo_schema_filter(array(
-            '@context' => 'https://schema.org',
-            '@type' => 'Service',
-            '@id' => get_permalink() . '#service',
-            'name' => get_the_title(),
-            'description' => prismpath_seo_description(),
-            'serviceType' => $record['schema_service_type'] ?? null,
-            'provider' => array(
-                '@type' => 'MedicalOrganization',
-                '@id' => home_url('/#organization'),
-                'name' => 'Prismpath Health',
-                'legalName' => prismpath_seo_legal_dba_name(),
-            ),
-            'audience' => array('@type' => 'Audience', 'audienceType' => 'Adults, caregivers, families, and referral partners'),
-            'areaServed' => array('@type' => 'Country', 'name' => 'United States'),
-            'availableChannel' => array('@type' => 'ServiceChannel', 'serviceUrl' => get_permalink(), 'availableLanguage' => 'English'),
-            'url' => get_permalink(),
-        )));
-    }
-
-    if (is_singular()) {
-        $record = prismpath_seo_content_record((int) get_the_ID());
-        if ($record && !empty($record['faqs']) && is_array($record['faqs'])) {
-            $questions = array();
-            foreach ($record['faqs'] as $faq) {
-                if (empty($faq['question']) || empty($faq['answer'])) {
-                    continue;
-                }
-                $questions[] = array(
-                    '@type' => 'Question',
-                    'name' => wp_strip_all_tags($faq['question']),
-                    'acceptedAnswer' => array(
-                        '@type' => 'Answer',
-                        'text' => wp_strip_all_tags($faq['answer']),
-                    ),
-                );
-            }
-            if ($questions) {
-                prismpath_jsonld(array(
-                    '@context' => 'https://schema.org',
-                    '@type' => 'FAQPage',
-                    'mainEntity' => $questions,
-                ));
-            }
-        }
-    }
-
-    if (!is_front_page()) {
-        prismpath_jsonld(array(
-            '@context' => 'https://schema.org',
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => array(
-                array('@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => home_url('/')),
-                array('@type' => 'ListItem', 'position' => 2, 'name' => wp_get_document_title(), 'item' => is_singular() ? get_permalink() : home_url('/')),
-            ),
-        ));
+    $nodes = prismpath_seo_schema_nodes();
+    if ($nodes) {
+        prismpath_jsonld(prismpath_seo_schema_graph($nodes));
     }
 }
 add_action('wp_head', 'prismpath_schema_output', 20);
@@ -852,7 +1594,7 @@ function prismpath_custom_sitemap(): void
         $front_page_id ? get_post_modified_time('c', true, $front_page_id) : ''
     );
 
-    $pages = get_posts(array('post_type' => array('page', 'team_member'), 'post_status' => 'publish', 'posts_per_page' => -1));
+    $pages = get_posts(array('post_type' => array('page', 'post', 'team_member'), 'post_status' => 'publish', 'posts_per_page' => -1));
     foreach ($pages as $page) {
         $permalink = get_permalink($page);
         if ($permalink) {

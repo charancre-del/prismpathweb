@@ -110,7 +110,7 @@ function prismpath_seed_static_page_seo_meta_if_empty(): void
         return;
     }
 
-    foreach (array('services', 'resources', 'insurance-payment', 'team', 'contact', 'privacy-policy', 'hipaa-policy', 'accessibility-statement') as $slug) {
+    foreach (array('services', 'resources', 'blog', 'about', 'careers', 'insurance-payment', 'team', 'contact', 'privacy-policy', 'hipaa-policy', 'accessibility-statement') as $slug) {
         $page = get_page_by_path($slug);
         $content = prismpath_static_page_seo($slug);
         if (!$page instanceof WP_Post || !is_array($content)) {
@@ -124,7 +124,7 @@ function prismpath_seed_static_page_seo_meta_if_empty(): void
 
 function prismpath_seed_existing_page_meta_once(): void
 {
-    $version = '2026-05-09-ai-seo-resource-hub-v2';
+    $version = '2026-05-12-blog-contact-static-seo-v1';
     if (get_option('prismpath_existing_page_meta_seed_version') === $version) {
         return;
     }

@@ -23,6 +23,7 @@
                     <a href="<?php echo esc_url(home_url('/insurance-payment/')); ?>">Insurance & Payment</a>
                     <a href="<?php echo esc_url(home_url('/approach/')); ?>">Approach</a>
                     <a href="<?php echo esc_url(home_url('/resources/')); ?>">Resources</a>
+                    <a href="<?php echo esc_url(home_url('/blog/')); ?>">Blog</a>
                 </nav>
             </div>
 
@@ -41,6 +42,7 @@
                 <nav class="footer-nav" aria-label="<?php esc_attr_e('Footer important links', 'prismpath-health'); ?>">
                     <a href="<?php echo esc_url(home_url('/about/')); ?>">About Us</a>
                     <a href="<?php echo esc_url(home_url('/team/')); ?>">Our Team</a>
+                    <a href="<?php echo esc_url(home_url('/careers/')); ?>">Careers</a>
                     <a href="<?php echo esc_url(home_url('/contact/')); ?>">Contact</a>
                     <a href="<?php echo esc_url(prismpath_setting('privacy_url', home_url('/privacy-policy/'))); ?>">Privacy Policy</a>
                     <a href="<?php echo esc_url(prismpath_setting('hipaa_url', home_url('/hipaa-policy/'))); ?>">HIPAA Policy</a>

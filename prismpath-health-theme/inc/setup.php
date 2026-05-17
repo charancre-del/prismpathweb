@@ -116,9 +116,17 @@ function prismpath_static_page_seo(string $slug): ?array
             'seo_title' => 'Neuroaffirming Mental Health Resources | Prismpath Health',
             'meta_description' => 'Read Prismpath Health guides for adult ADHD and Autism assessment, therapy, psychiatry, occupational therapy, family support, accommodations, and payment planning.',
         ),
+        'blog' => array(
+            'seo_title' => 'Prismpath Health Blog | Neuroaffirming Mental Health Resources',
+            'meta_description' => 'Read Prismpath Health blog updates and neuroaffirming mental health resources for adults, caregivers, ADHD, Autism, therapy, psychiatry, and occupational therapy.',
+        ),
         'about' => array(
             'seo_title' => 'About Prismpath Health | Neuroaffirming Whole-Person Care',
             'meta_description' => 'Learn about Prismpath Health, a neuroaffirming mental health practice supporting adults, caregivers, families, assessments, psychiatry, therapy, and occupational therapy.',
+        ),
+        'careers' => array(
+            'seo_title' => 'Careers at Prismpath Health | Neuroaffirming Mental Health Jobs',
+            'meta_description' => 'Join Prismpath Health and explore neuroaffirming mental health careers in virtual therapy, psychiatry, ADHD and Autism assessment, occupational therapy, and care coordination.',
         ),
         'insurance-payment' => array(
             'seo_title' => 'Insurance and Payment Options | Prismpath Health',
@@ -253,6 +261,30 @@ function prismpath_seed_site_identity(): void
     }
 
     update_option('blog_public', '1');
+}
+
+function prismpath_seed_contact_settings(): void
+{
+    $settings = get_option('prismpath_global_settings', array());
+    if (!is_array($settings)) {
+        $settings = array();
+    }
+
+    $defaults = array(
+        'primary_email' => 'hello@lbeehealth.com',
+        'phone' => '561-730-2457',
+        'text_number' => '561-448-4229',
+        'mailing_address' => 'Miami, FL 33179',
+    );
+
+    foreach ($defaults as $key => $value) {
+        $current = trim((string) ($settings[$key] ?? ''));
+        if ('' === $current || ('primary_email' === $key && get_option('admin_email') === $current)) {
+            $settings[$key] = $value;
+        }
+    }
+
+    update_option('prismpath_global_settings', $settings, false);
 }
 
 function prismpath_retire_default_sample_page(): void
@@ -477,6 +509,7 @@ function prismpath_seed_required_pages(): void
 
     $pages = array(
         array('Home', 'home', 'A clearer path to mental health care for every brain and every family.'),
+        array('Blog', 'blog', 'Neuroaffirming mental health notes, practice updates, and resources from Prismpath Health.'),
         array('Services', 'services', 'Neuroaffirming therapy, psychiatry, occupational therapy, assessments, and whole-family support.'),
         array('Therapy', 'therapy', prismpath_page_content('therapy')['intro']),
         array('Psychiatry', 'psychiatry', prismpath_page_content('psychiatry')['intro']),
@@ -485,6 +518,7 @@ function prismpath_seed_required_pages(): void
         array('Whole Family Mental Health', 'whole-family-mental-health', prismpath_page_content('whole-family-mental-health')['intro']),
         array('Approach', 'approach', prismpath_page_content('approach')['intro']),
         array('About Us', 'about', 'Learn about Prismpath Health and our neuroaffirming, whole-person approach to care.'),
+        array('Careers', 'careers', 'Join Prismpath Health and help build neuroaffirming mental health care for adults, caregivers, and families.'),
         array('Insurance & Payment', 'insurance-payment', 'Accepted plans, benefits verification, self-pay, CareCredit, and deposit pathways.'),
         array('Team', 'team', 'Meet the people behind Prismpath Health.'),
         array('Contact', 'contact', 'Start the conversation with Prismpath Health.'),
@@ -494,6 +528,7 @@ function prismpath_seed_required_pages(): void
     );
 
     $home_id = 0;
+    $blog_id = 0;
     $page_ids_by_slug = array();
     foreach ($pages as $page) {
         $id = prismpath_create_page_if_missing($page[0], $page[1], $page[2]);
@@ -507,6 +542,9 @@ function prismpath_seed_required_pages(): void
         if ('home' === $page[1]) {
             $home_id = $id;
         }
+        if ('blog' === $page[1]) {
+            $blog_id = $id;
+        }
     }
     $page_ids_by_slug = array_merge($page_ids_by_slug, prismpath_seed_resource_pages());
     if (function_exists('prismpath_seed_all_page_editor_meta')) {
@@ -517,7 +555,11 @@ function prismpath_seed_required_pages(): void
         update_option('show_on_front', 'page');
         update_option('page_on_front', $home_id);
     }
+    if ($blog_id) {
+        update_option('page_for_posts', $blog_id);
+    }
 
+    prismpath_seed_contact_settings();
     prismpath_seed_policy_pages();
     prismpath_seed_team_members();
 
@@ -529,7 +571,7 @@ add_action('after_switch_theme', 'prismpath_seed_required_pages');
 
 function prismpath_seed_content_updates(): void
 {
-    $target_version = '2026-05-10-about-page-seo-admin-v1';
+    $target_version = '2026-05-12-blog-contact-lbee-v1';
     if (get_option('prismpath_content_seed_version') === $target_version) {
         return;
     }

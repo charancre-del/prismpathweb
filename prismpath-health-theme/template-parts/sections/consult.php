@@ -8,13 +8,13 @@
 <section id="consult" class="section consult-section">
     <div class="container consult-layout">
         <div>
-            <h2>Ready to take the first step?</h2>
-            <p>Tell us a little about the care you are looking for. We will help you find a clear next step.</p>
+            <h2>We're here to help.</h2>
+            <p>Tell us what kind of support you are looking for. We can verify your insurance, answer questions, or help you book the right next step.</p>
             <ul class="trust-list">
                 <li><?php echo prismpath_icon('check'); ?>Neuroaffirming</li>
                 <li><?php echo prismpath_icon('check'); ?>Trauma-informed</li>
                 <li><?php echo prismpath_icon('check'); ?>LGBTQ+ affirming</li>
-                <li><?php echo prismpath_icon('check'); ?>Private and respectful</li>
+                <li><?php echo prismpath_icon('check'); ?>Virtual care where licensure allows</li>
             </ul>
         </div>
         <div class="consult-form-wrap">
