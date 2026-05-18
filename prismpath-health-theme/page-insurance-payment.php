@@ -12,7 +12,7 @@ get_header();
         <h1>Insurance and payment options.</h1>
         <p>Prismpath Health accepts Medicare and major commercial insurance plans, verifies benefits before scheduling, and offers self-pay pathways when insurance is not used or does not cover a service.</p>
         <div class="hero-actions">
-            <a class="button button-primary" href="<?php echo esc_url(home_url('/contact/#consult')); ?>">Check Your Coverage</a>
+            <a class="button button-primary" href="#insurance-verification">Check Your Coverage</a>
             <a class="button button-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Explore Services</a>
         </div>
     </div>
@@ -44,6 +44,25 @@ get_header();
                 <?php endforeach; ?>
             </ul>
         </aside>
+    </div>
+</section>
+
+<section id="insurance-verification" class="section insurance-form-section">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Benefits verification</p>
+            <h2>Share your insurance details.</h2>
+            <p>Complete this secure administrative form and the Prismpath Health team will follow up with preliminary information and next steps. Full insurance verification may take additional time depending on the plan.</p>
+        </div>
+        <div class="insurance-form-wrap service-panel">
+            <?php
+            if (shortcode_exists('prismpath_insurance_verification_form')) {
+                echo do_shortcode('[prismpath_insurance_verification_form]');
+            } else {
+                echo '<p class="notice">Activate the Prismpath Consult Form plugin to display the insurance verification form.</p>';
+            }
+            ?>
+        </div>
     </div>
 </section>
 
