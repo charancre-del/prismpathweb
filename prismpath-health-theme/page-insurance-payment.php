@@ -51,17 +51,15 @@ get_header();
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Benefits verification</p>
-            <h2>Share your insurance details.</h2>
-            <p>Complete this secure administrative form and the Prismpath Health team will follow up with preliminary information and next steps. Full insurance verification may take additional time depending on the plan.</p>
+            <h2>Share your insurance details through Jotform.</h2>
+            <p>Use Prismpath Health's secure insurance verification form to send the information our team needs for preliminary benefits review and next steps.</p>
         </div>
-        <div class="insurance-form-wrap service-panel">
-            <?php
-            if (shortcode_exists('prismpath_insurance_verification_form')) {
-                echo do_shortcode('[prismpath_insurance_verification_form]');
-            } else {
-                echo '<p class="notice">Activate the Prismpath Consult Form plugin to display the insurance verification form.</p>';
-            }
-            ?>
+        <div class="insurance-form-wrap insurance-jotform-card">
+            <div>
+                <h3>Insurance Verification Form</h3>
+                <p>You'll open the secure form in a new tab. Coverage, appointment timing, authorizations, and final patient responsibility depend on the plan and are not guaranteed by submitting the form.</p>
+            </div>
+            <a class="button button-coral" href="https://form.jotform.com/251107144019042" target="_blank" rel="noopener">Open Insurance Form</a>
         </div>
     </div>
 </section>
