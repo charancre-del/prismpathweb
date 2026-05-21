@@ -11,6 +11,19 @@ $careers_email = sanitize_email(prismpath_setting('careers_email', prismpath_set
 $careers_url = $careers_email
     ? 'mailto:' . $careers_email . '?subject=' . rawurlencode('Careers at Prismpath Health')
     : home_url('/contact/');
+$content = array(
+    'title' => 'Careers at Prismpath Health.',
+    'intro' => 'Join a neuroaffirming mental health team building clearer, more respectful care pathways for adults, caregivers, and families.',
+    'primary_cta_label' => 'Send Your Resume',
+    'primary_cta_url' => $careers_url,
+    'secondary_cta_label' => 'About Prismpath',
+    'secondary_cta_url' => home_url('/about/'),
+    'panel_heading' => 'Care that respects every brain.',
+    'panel_body' => 'Our team works from a whole-person, relationship-centered philosophy grounded in compassion, curiosity, and practical support.',
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 
 $roles = array(
     array(
@@ -59,17 +72,18 @@ $process_steps = array(
 <section class="page-hero service-page-hero careers-hero">
     <div class="container split">
         <div>
-            <h1><?php esc_html_e('Careers at Prismpath Health.', 'prismpath-health'); ?></h1>
-            <p><?php esc_html_e('Join a neuroaffirming mental health team building clearer, more respectful care pathways for adults, caregivers, and families.', 'prismpath-health'); ?></p>
+            <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+            <h1><?php echo esc_html($content['title']); ?></h1>
+            <p><?php echo esc_html($content['intro']); ?></p>
             <div class="hero-actions">
-                <a class="button button-primary" href="<?php echo esc_url($careers_url); ?>"><?php esc_html_e('Send Your Resume', 'prismpath-health'); ?></a>
-                <a class="button button-outline" href="<?php echo esc_url(home_url('/about/')); ?>"><?php esc_html_e('About Prismpath', 'prismpath-health'); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url($content['primary_cta_url']); ?>"><?php echo esc_html($content['primary_cta_label']); ?></a>
+                <a class="button button-outline" href="<?php echo esc_url($content['secondary_cta_url']); ?>"><?php echo esc_html($content['secondary_cta_label']); ?></a>
             </div>
         </div>
         <div class="service-panel">
             <span class="icon-circle"><?php echo prismpath_icon('check'); ?></span>
-            <h2><?php esc_html_e('Care that respects every brain.', 'prismpath-health'); ?></h2>
-            <p><?php esc_html_e('Our team works from a whole-person, relationship-centered philosophy grounded in compassion, curiosity, and practical support.', 'prismpath-health'); ?></p>
+            <h2><?php echo esc_html($content['panel_heading']); ?></h2>
+            <p><?php echo esc_html($content['panel_body']); ?></p>
         </div>
     </div>
 </section>

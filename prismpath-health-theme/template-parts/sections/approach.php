@@ -6,18 +6,22 @@
  */
 ?>
 <section id="approach" class="section approach-section">
-    <div class="container approach-layout">
-        <div class="prism-card" aria-hidden="true">
-            <svg viewBox="0 0 260 180">
-                <path d="M74 154 130 28l56 126H74Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>
-                <path d="M100 128c25-38 55-58 94-66" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-                <path d="M155 79h86M154 90h76M151 102h65" stroke="currentColor" stroke-width="3" opacity=".35"/>
-            </svg>
+    <div class="container approach-grid">
+        <div class="reveal">
+            <p class="eyebrow"><?php echo esc_html(prismpath_home_field('approach_eyebrow')); ?></p>
+            <h2><?php echo esc_html(prismpath_home_field('approach_title')); ?></h2>
+            <p><?php echo esc_html(prismpath_home_field('approach_intro')); ?></p>
+            <blockquote><?php echo esc_html(prismpath_home_field('approach_quote')); ?></blockquote>
+            <a class="text-link" href="<?php echo esc_url(home_url('/approach/')); ?>"><?php esc_html_e('Learn about our approach', 'prismpath-health'); ?></a>
         </div>
-        <div>
-            <h2>A neuroaffirming approach to whole-person care.</h2>
-            <p>We see you as more than a diagnosis. Our care is strengths-based, relationship-centered, and grounded in compassion, curiosity, and collaboration.</p>
-            <a href="<?php echo esc_url(home_url('/approach/')); ?>">Learn about our approach</a>
+        <div class="approach-values reveal">
+            <?php foreach (prismpath_home_pipe_rows('approach_values', array('title', 'description')) as $index => $value) : ?>
+                <article class="value-item">
+                    <span><?php echo esc_html(str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT)); ?></span>
+                    <h3><?php echo esc_html($value['title']); ?></h3>
+                    <p><?php echo esc_html($value['description']); ?></p>
+                </article>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

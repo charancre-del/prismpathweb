@@ -6,6 +6,15 @@
  */
 
 get_header();
+$content = array(
+    'title' => 'About Prismpath Health.',
+    'intro' => 'Neuroaffirming mental health care, assessment, psychiatry, occupational therapy, and caregiver-centered support for adults and families.',
+    'primary_cta_label' => 'Start a Conversation',
+    'primary_cta_url' => home_url('/contact/'),
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 $providers = new WP_Query(array(
     'post_type' => 'team_member',
     'posts_per_page' => -1,
@@ -15,9 +24,10 @@ $providers = new WP_Query(array(
 ?>
 <section class="page-hero">
     <div class="container narrow">
-        <h1>About Prismpath Health.</h1>
-        <p>Neuroaffirming mental health care, assessment, psychiatry, occupational therapy, and caregiver-centered support for adults and families.</p>
-        <a class="button button-primary" href="<?php echo esc_url(home_url('/contact/')); ?>">Start a Conversation</a>
+        <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+        <h1><?php echo esc_html($content['title']); ?></h1>
+        <p><?php echo esc_html($content['intro']); ?></p>
+        <a class="button button-primary" href="<?php echo esc_url($content['primary_cta_url']); ?>"><?php echo esc_html($content['primary_cta_label']); ?></a>
     </div>
 </section>
 

@@ -5,24 +5,20 @@
  * @package Prismpath_Health
  */
 
-$steps = array(
-    array('Reach out', 'Share what you are looking for and how we can help.'),
-    array('We connect', 'We match you with the right provider or team path.'),
-    array('Your first visit', 'A collaborative session to understand your goals and next steps.'),
-    array('Ongoing support', 'Care that grows with you and adapts to real life.'),
-);
+$steps = prismpath_home_pipe_rows('process_steps', array('title', 'description'));
 ?>
-<section class="section process-section">
+<section class="section process-section journey-section">
     <div class="container">
-        <div class="section-heading">
-            <h2>Getting started is simple.</h2>
+        <div class="section-heading reveal">
+            <p class="eyebrow"><?php echo esc_html(prismpath_home_field('process_eyebrow')); ?></p>
+            <h2><?php echo esc_html(prismpath_home_field('process_title')); ?></h2>
         </div>
         <ol class="process-list">
             <?php foreach ($steps as $index => $step) : ?>
-                <li>
+                <li class="reveal">
                     <span><?php echo esc_html((string) ($index + 1)); ?></span>
-                    <h3><?php echo esc_html($step[0]); ?></h3>
-                    <p><?php echo esc_html($step[1]); ?></p>
+                    <h3><?php echo esc_html($step['title']); ?></h3>
+                    <p><?php echo esc_html($step['description']); ?></p>
                 </li>
             <?php endforeach; ?>
         </ol>

@@ -7,11 +7,19 @@
 
 get_header();
 $resources = prismpath_resource_pages();
+$content = array(
+    'title' => 'Guides for clearer next steps.',
+    'intro' => 'Conservative, people-first resources for adult neuroaffirming care, assessment, caregiver support, accommodations, and payment planning.',
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 ?>
 <section class="page-hero">
     <div class="container narrow">
-        <h1><?php esc_html_e('Guides for clearer next steps.', 'prismpath-health'); ?></h1>
-        <p><?php esc_html_e('Conservative, people-first resources for adult neuroaffirming care, assessment, caregiver support, accommodations, and payment planning.', 'prismpath-health'); ?></p>
+        <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+        <h1><?php echo esc_html($content['title']); ?></h1>
+        <p><?php echo esc_html($content['intro']); ?></p>
     </div>
 </section>
 

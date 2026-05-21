@@ -7,20 +7,18 @@
 ?>
 <section class="section ot-section">
     <div class="container ot-layout">
-        <div>
-            <h2>Occupational Therapy in Daily Life</h2>
-            <p>We help you build skills and supports that make daily life feel more workable, confident, and sustainable.</p>
+        <div class="reveal">
+            <h2><?php echo esc_html(prismpath_home_field('ot_title')); ?></h2>
+            <p><?php echo esc_html(prismpath_home_field('ot_intro')); ?></p>
             <div class="ot-points">
-                <span>Sensory regulation</span>
-                <span>Executive function</span>
-                <span>Routines and habits</span>
-                <span>Work/life skills</span>
-                <span>Confidence in daily life</span>
+                <?php foreach (prismpath_home_lines('ot_points') as $point) : ?>
+                    <span><?php echo esc_html($point); ?></span>
+                <?php endforeach; ?>
             </div>
             <a class="button button-outline" href="<?php echo esc_url(home_url('/occupational-therapy/')); ?>">Explore Occupational Therapy</a>
         </div>
-        <div class="soft-panel">
-            <p>Insight matters. So do the systems, environments, and supports that help your day actually work.</p>
+        <div class="soft-panel reveal">
+            <p><?php echo esc_html(prismpath_home_field('ot_quote')); ?></p>
         </div>
     </div>
 </section>

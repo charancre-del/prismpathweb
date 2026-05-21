@@ -10,11 +10,19 @@ $email = prismpath_setting('primary_email', get_option('admin_email'));
 $phone = prismpath_setting('phone', '');
 $text = prismpath_setting('text_number', '');
 $address = prismpath_setting('mailing_address', 'Miami, FL 33179');
+$content = array(
+    'title' => 'Contact Us.',
+    'intro' => 'We want to be part of your journey. Reach out and our team can help verify insurance, answer questions, or book you directly.',
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 ?>
 <section class="page-hero">
     <div class="container narrow">
-        <h1>Contact Us.</h1>
-        <p>We want to be part of your journey. Reach out and our team can help verify insurance, answer questions, or book you directly.</p>
+        <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+        <h1><?php echo esc_html($content['title']); ?></h1>
+        <p><?php echo esc_html($content['intro']); ?></p>
     </div>
 </section>
 <section class="contact-options">

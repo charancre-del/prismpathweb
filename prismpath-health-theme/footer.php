@@ -10,8 +10,8 @@
         <div class="container footer-grid">
             <div class="footer-brand">
                 <?php prismpath_render_logo(true); ?>
-                <p>Neuroaffirming mental health care for individuals, couples, caregivers, and family systems.</p>
-                <p class="footer-small">Virtual care nationwide where provider licensure allows.</p>
+                <p><?php echo esc_html(prismpath_setting('footer_description', 'Neuroaffirming mental health care for individuals, couples, caregivers, and family systems.')); ?></p>
+                <p class="footer-small"><?php echo esc_html(prismpath_setting('footer_microcopy', 'Virtual care nationwide where provider licensure allows.')); ?></p>
             </div>
 
             <div>

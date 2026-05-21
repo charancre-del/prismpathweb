@@ -6,11 +6,19 @@
  */
 
 get_header();
+$content = array(
+    'title' => 'Insurance and payment options.',
+    'intro' => 'Prismpath Health accepts Medicare and major commercial insurance plans, verifies benefits before scheduling, and offers self-pay pathways when insurance is not used or does not cover a service.',
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 ?>
 <section class="page-hero">
     <div class="container narrow">
-        <h1>Insurance and payment options.</h1>
-        <p>Prismpath Health accepts Medicare and major commercial insurance plans, verifies benefits before scheduling, and offers self-pay pathways when insurance is not used or does not cover a service.</p>
+        <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+        <h1><?php echo esc_html($content['title']); ?></h1>
+        <p><?php echo esc_html($content['intro']); ?></p>
         <div class="hero-actions">
             <a class="button button-primary" href="#insurance-verification">Check Your Coverage</a>
             <a class="button button-outline" href="<?php echo esc_url(home_url('/services/')); ?>">Explore Services</a>

@@ -9,6 +9,10 @@ $slug = $args['slug'] ?? '';
 $content = prismpath_page_content($slug);
 $service = prismpath_service_by_slug($slug);
 $cta_url = 'whole-family-mental-health' === $slug ? prismpath_whole_family_booking_url() : prismpath_booking_url();
+$cta_label = $content['primary_cta_label'] ?? 'Book a Consultation';
+if (!empty($content['primary_cta_url'])) {
+    $cta_url = $content['primary_cta_url'];
+}
 $secondary_url = home_url('/services/');
 $secondary_label = 'Explore Services';
 $secondary_external = false;
@@ -17,24 +21,33 @@ if ('whole-family-mental-health' === $slug) {
     $secondary_label = 'Pediatric Therapy at Chroma Early Start';
     $secondary_external = true;
 }
+if (!empty($content['secondary_cta_label'])) {
+    $secondary_label = $content['secondary_cta_label'];
+}
+if (!empty($content['secondary_cta_url'])) {
+    $secondary_url = $content['secondary_cta_url'];
+    $secondary_external = 0 !== strpos($secondary_url, home_url('/'));
+}
 $related_links = !empty($content['related_links']) && is_array($content['related_links'])
     ? $content['related_links']
     : prismpath_related_links_for_slug($slug);
 ?>
 <section class="page-hero service-page-hero">
     <div class="container split">
-        <div>
+        <div class="reveal">
+            <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
             <h1><?php echo esc_html($content['title']); ?></h1>
             <p><?php echo esc_html($content['intro']); ?></p>
             <div class="hero-actions">
-                <a class="button button-primary" href="<?php echo esc_url($cta_url); ?>">Book a Consultation</a>
+                <a class="button button-primary" href="<?php echo esc_url($cta_url); ?>"><?php echo esc_html($cta_label); ?></a>
                 <a class="button button-outline" href="<?php echo esc_url($secondary_url); ?>"<?php echo $secondary_external ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html($secondary_label); ?></a>
             </div>
         </div>
-        <div class="service-panel">
+        <div class="service-panel reveal">
             <span class="icon-circle"><?php echo $service ? prismpath_icon($service['icon']) : prismpath_icon('check'); ?></span>
             <h2><?php echo esc_html($content['panel_heading'] ?? 'Care shaped around real life.'); ?></h2>
             <p><?php echo esc_html($content['panel_body'] ?? 'We combine clinical insight, practical strategy, and respectful collaboration so care feels usable outside the session too.'); ?></p>
+            <?php if (!empty($content['ethos_quote'])) : ?><blockquote><?php echo esc_html($content['ethos_quote']); ?></blockquote><?php endif; ?>
         </div>
     </div>
 </section>

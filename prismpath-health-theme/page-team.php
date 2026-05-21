@@ -13,11 +13,19 @@ $team = new WP_Query(array(
     'order' => 'ASC',
 ));
 $team_count = (int) $team->found_posts;
+$content = array(
+    'title' => 'The people behind Prismpath Health.',
+    'intro' => 'Our clinicians bring professional training, practical care experience, and a deep respect for neurodivergent lives.',
+);
+if (function_exists('prismpath_page_content_overrides')) {
+    $content = array_merge($content, prismpath_page_content_overrides((int) get_queried_object_id()));
+}
 ?>
 <section class="page-hero">
     <div class="container narrow">
-        <h1>The people behind Prismpath Health.</h1>
-        <p>Our clinicians bring professional training, practical care experience, and a deep respect for neurodivergent lives.</p>
+        <?php if (!empty($content['eyebrow'])) : ?><p class="eyebrow"><?php echo esc_html($content['eyebrow']); ?></p><?php endif; ?>
+        <h1><?php echo esc_html($content['title']); ?></h1>
+        <p><?php echo esc_html($content['intro']); ?></p>
         <?php if ($team_count > 0) : ?>
             <p class="micro-proof">Browse <?php echo esc_html((string) $team_count); ?> provider profiles across assessment, therapy, psychiatric leadership, and family-centered support.</p>
         <?php endif; ?>

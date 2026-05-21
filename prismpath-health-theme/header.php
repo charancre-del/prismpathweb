@@ -28,7 +28,7 @@
         </nav>
 
         <a class="button button-coral header-cta" href="<?php echo esc_url(prismpath_booking_url()); ?>">
-            <?php esc_html_e('Book a Consultation', 'prismpath-health'); ?>
+            <?php echo esc_html(prismpath_setting('header_cta_label', __('Book a Consultation', 'prismpath-health'))); ?>
         </a>
 
         <button class="mobile-toggle" type="button" data-mobile-toggle aria-expanded="false" aria-controls="mobile-menu">
@@ -47,7 +47,7 @@
         ));
         ?>
         <a class="button button-coral" href="<?php echo esc_url(prismpath_booking_url()); ?>">
-            <?php esc_html_e('Book a Consultation', 'prismpath-health'); ?>
+            <?php echo esc_html(prismpath_setting('header_cta_label', __('Book a Consultation', 'prismpath-health'))); ?>
         </a>
     </nav>
 </header>
