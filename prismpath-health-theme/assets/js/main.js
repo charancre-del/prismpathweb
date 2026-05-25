@@ -26,10 +26,16 @@
     return;
   }
 
-  if (reduceMotion || !('IntersectionObserver' in window)) {
+  document.documentElement.classList.add('reveal-ready');
+
+  const revealAll = function () {
     revealItems.forEach(function (item) {
       item.classList.add('in');
     });
+  };
+
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealAll();
     return;
   }
 
@@ -45,4 +51,8 @@
   revealItems.forEach(function (item) {
     observer.observe(item);
   });
+
+  window.addEventListener('load', function () {
+    window.setTimeout(revealAll, 1400);
+  }, { once: true });
 })();
