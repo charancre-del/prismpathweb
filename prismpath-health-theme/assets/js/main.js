@@ -52,7 +52,5 @@
     observer.observe(item);
   });
 
-  window.addEventListener('load', function () {
-    window.setTimeout(revealAll, 1400);
-  }, { once: true });
+  window.setTimeout(revealAll, 1400);
 })();

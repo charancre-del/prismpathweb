@@ -270,6 +270,15 @@ blockquote {
   gap: 72px;
   align-items: center;
 }
+.hero-grid > *,
+.approach-grid > *,
+.family-grid > *,
+.ot-layout > *,
+.split > *,
+.consult-layout > *,
+.bio-layout > *,
+.detail-layout > *,
+.reverse > * { min-width: 0; }
 .hero-copy h1 { max-width: 780px; }
 .hero-lede {
   max-width: 660px;
@@ -925,6 +934,7 @@ blockquote {
   h1 { font-size: 2.8rem; }
   h2 { font-size: 2.25rem; }
   h3 { font-size: 1.25rem; }
+  .page-hero h1 { font-size: clamp(2.15rem, 10vw, 2.8rem); }
   .header-inner { min-height: 72px; }
   .mobile-nav { inset: 72px 0 auto 0; }
   .home-hero { padding: 48px 0 72px; }
